@@ -3,61 +3,56 @@
 Things still to decide. When one is agreed, move it to [DECISIONS.md](DECISIONS.md) and
 delete it here. Options marked *(suggested)* are only suggestions and not approved.
 
+Every idea here has to follow the originality rules in DECISIONS.md: it comes from real
+crafts, places and materials, never from other games, and never from the first things an AI
+would suggest.
+
 ## 1. Theme and characters
-- Who are the two characters? Ideas: Sun & Moon, a couple, a robot and a ghost, two thieves,
-  an explorer and a guide, fire and water.
-- What mood should it have: cozy and relaxing, funny and chaotic, or tense?
+- **Leading direction, still open to challenge:** "two players make the world they walk on."
+  Each world is a real craft, the characters become its tools, and the craft's making
+  process is the puzzle.
+- Which crafts? Each one needs real references gathered first.
+- What exactly are the two characters in each craft, and how does each become a tool?
 - Is there a story, or just a series of puzzles?
 
 ## 2. How the game looks and moves
-- **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
-  puzzles, and is easy to keep in sync online.
-- **Side view with jumping** (like Fireboy and Watergirl): more action and timing, but harder
-  to build and to sync online.
-- 2D or 3D? Art style (pixel art, flat shapes, hand-drawn)?
+- Gameplay is on a flat 2D plane. Which view on that plane?
+  - **Top-down grid** (one tile per step) *(suggested)*: calm, suits thinking puzzles, and
+    is easy to keep in sync online.
+  - **Side view**: more timing, but harder to build and to sync online.
+- How does the 2.5D scene frame the flat play area on a small phone screen?
 
-## 3. Split abilities: what can each player do?
-- Walk on different surfaces (light/shadow, fire/water)
-- One is strong (pushes or carries things), the other is small (fits through gaps)
-- One can jump or fly, the other can build bridges or move platforms
-- One controls the world (rotates rooms, flips switches), the other walks through it
-- Should the abilities stay the same for the whole game, or grow and change?
+## 3. Split abilities
+- In each craft, which player makes or reveals the path, and which one uses it?
+- Do the roles stay fixed, swap between levels, or swap within a level?
 
-## 4. Split information: what is hidden, and from whom?
-- Each player can't see their own traps, but the partner can.
-- Guide and walker: one sees the full map, the other moves through fog.
-- Codes and symbols: one player sees the clue, the other has the lock.
-- Timing: one player sees when platforms or doors will change.
-- Should both players have the same amount of hidden information, or should one be the main
-  "guide"?
+## 4. Split information
+- How much does each player see that the other doesn't? It should stay light for people who
+  don't usually play games.
+- Should both players have the same amount of hidden information, or should one lead?
 
 ## 5. Communication
-- Will players mostly talk by voice (in the same room or on a call)?
-- In-game tools: pings (click a spot to highlight it), emotes, quick messages, text chat?
+- Will players mostly talk by voice (same room or a call)?
+- In-game tools: pings (tap a spot to highlight it), simple gestures, quick messages?
 
 ## 6. Failing and difficulty
 - What happens on a mistake: full level restart, checkpoint, or a gentler penalty?
 - Should each level teach one new idea before combining them?
 - Hints for when players are stuck?
 
-## 7. Scope and platforms
-- How many levels in the first playable version? (Maybe 5–10.)
-- Online only, or also two players on one computer?
-- Desktop browser only, or phones/tablets too?
+## 7. Scope
+- How many of the roughly 50 levels go in the first playable version? (Maybe 5 to 10.)
 - How do players find each other: room code, invite link, or both?
 
-## 8. Technology (decide after the design)
-- Browser game (TypeScript + small Node.js server) *(suggested)*, or a game engine such as
-  Godot or Unity?
-- Where to host the server so friends can join from anywhere?
+## 8. Technology
+- Language and tools around three.js: TypeScript with a small Node.js server *(suggested)*.
+- Where to host the server so friends can join from anywhere? This is needed early, because
+  the game is online from the start.
+- What does the thin online layer send, so it is easy to move to the client's shared
+  multiplayer system later?
+- App-store versions later: nothing to decide yet, but avoid choices that block wrapping
+  the web app.
 
-## Reference: research so far
-Games worth looking at for ideas:
-- **Split information:** Keep Talking and Nobody Explodes, We Were Here
-- **Split abilities:** Fireboy and Watergirl (browser), It Takes Two, Split Fiction, Unravel Two
-- **Both players needed:** Portal 2 co-op, Isoflat (browser)
-
-Design lessons from the research:
-- Deciding who knows what, and when, is the main tool for making players talk.
-- Different roles let players with different skill levels enjoy playing together.
-- Design for exactly two players from the start rather than adding co-op later.
+## Removed from the earlier draft
+Character ideas such as Sun & Moon, fire and water, or a robot and a ghost, and the list of
+other games used as references, were removed because they break the originality rules.
