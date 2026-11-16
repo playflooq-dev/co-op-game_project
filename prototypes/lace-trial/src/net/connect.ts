@@ -1,13 +1,15 @@
 import { createLocalTransport } from './local-transport.ts';
 import { createRoomTransport, type RoomCapability } from './room-transport.ts';
 import type { Transport } from './transport.ts';
+import { createWebSocketTransport, relayUrl } from './websocket-transport.ts';
 
 /**
+ * - `relay`: deployed with our own relay (Cloudflare); the page carries a `lace-relay` meta tag.
  * - `room`: published as a Claude artifact; devices connect through the shared room.
  * - `unavailable`: inside a Claude page that can't reach the room (for example signed out).
  * - `local`: plain page with no Claude host, such as `npm run serve`; tabs of one browser only.
  */
-export type TransportKind = 'room' | 'unavailable' | 'local';
+export type TransportKind = 'relay' | 'room' | 'unavailable' | 'local';
 
 interface ClaudeHost {
   use?: (name: string) => Promise<unknown>;
@@ -16,6 +18,12 @@ interface ClaudeHost {
 let roomCapability: Promise<RoomCapability | null> | null = null;
 
 const claudeHost = (): ClaudeHost | undefined => (globalThis as { claude?: ClaudeHost }).claude;
+
+/** The relay path baked into the page by `npm run build:cloudflare`, or null. */
+function relayBase(): string | null {
+  const meta = globalThis.document?.querySelector('meta[name="lace-relay"]');
+  return meta?.getAttribute('content') || null;
+}
 
 /**
  * Asks the page host for the artifact `room` capability, once. Inside the claude.ai viewer the
@@ -34,6 +42,7 @@ function getRoomCapability(): Promise<RoomCapability | null> {
 
 /** Finds out early how games will connect, so the start screen can say so. */
 export async function detectTransportKind(): Promise<TransportKind> {
+  if (relayBase()) return 'relay';
   if (await getRoomCapability()) return 'room';
   return typeof claudeHost()?.use === 'function' ? 'unavailable' : 'local';
 }
@@ -44,6 +53,8 @@ export async function detectTransportKind(): Promise<TransportKind> {
  */
 export async function openTransport(code: string): Promise<{ transport: Transport; kind: TransportKind }> {
   const gameName = `lace-${code.toLowerCase()}`;
+  const relay = relayBase();
+  if (relay) return { transport: await createWebSocketTransport(relayUrl(relay, gameName)), kind: 'relay' };
   const room = await getRoomCapability();
   if (room) return { transport: await createRoomTransport(room, gameName), kind: 'room' };
   return { transport: createLocalTransport(gameName), kind: await detectTransportKind() };

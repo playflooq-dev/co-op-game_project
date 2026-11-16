@@ -32,6 +32,18 @@ npm run test:e2e   # two phone-sized pages play all three levels, screenshots in
 For two phones, the built page is published as a Claude artifact with the `room`
 capability, which carries the game between phones with no server of our own.
 
+### On Cloudflare (no claude.ai sign-in needed)
+
+```sh
+npm run dev:cloudflare   # the real Worker locally, on http://localhost:8787
+npm run deploy           # builds dist-cloudflare/ and deploys with Wrangler
+```
+
+One Worker (`worker/relay.ts`) serves the page and relays messages between the two
+devices of a game, one Durable Object per game code. The Cloudflare build carries a
+`lace-relay` meta tag, which makes the page connect through `net/websocket-transport.ts`.
+The relay understands nothing about the game; each device's session validates every message.
+
 ## Structure
 
 ```
@@ -48,6 +60,7 @@ src/
   net/         The thin online layer. One small adapter per way of connecting.
     transport.ts       The interface the game needs: send and receive messages
     room-transport.ts  Claude artifact room (used for the phone trial)
+    websocket-transport.ts  Our own relay on Cloudflare (worker/relay.ts)
     local-transport.ts Two tabs of one browser (development)
     connect.ts         Picks the best available transport
   ui/          Screens and drawing. Turns taps into actions, never changes state itself.

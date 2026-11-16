@@ -33,6 +33,7 @@ export function createLobbyScreen(handlers: LobbyHandlers, modeNote: HTMLElement
 
 export const MODE_NOTES = {
   checking: 'Getting ready...',
+  relay: 'Ready to play on two devices: phone or computer.',
   room: 'Ready to play on two devices: phone or computer.',
   unavailable:
     "Shared play isn't available on this page right now, so games only work between tabs of this browser. Make sure you are signed in to claude.ai and opened the shared link, then reload.",

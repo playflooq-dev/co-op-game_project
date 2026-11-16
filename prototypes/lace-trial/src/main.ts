@@ -20,14 +20,14 @@ const CODE_LETTERS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const DISCONNECT_GRACE_MS = 2000;
 
 const FAILURE_TEXT: Readonly<Record<ConnectFailure, string>> = {
-  'no-connection':
-    "Couldn't reach the shared room. Check your internet connection and that you are signed in to claude.ai, then try again.",
+  'no-connection': "Couldn't connect. Check your internet connection, then try again.",
   'not-permitted':
     "This account isn't allowed to play on this page. Ask the person who shared the link to give you access, then try again.",
   'join-failed': "Couldn't join the game. Wait a moment and try again.",
 };
 
 const LINK_TEXT: Readonly<Record<TransportKind, string>> = {
+  relay: 'Connected to the game server.',
   room: 'Connected to the shared room.',
   unavailable: 'Shared play is not available here: this browser only.',
   local: 'Local test mode: tabs of this browser only.',
