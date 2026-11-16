@@ -97,3 +97,19 @@ test('a third phone is told the game is full', async () => {
   assert.equal(guest.snapshot().status, 'playing');
   done(host, guest, extra);
 });
+
+test('a guest that reloads can rejoin once its old self has gone quiet', async () => {
+  const hub = createHub();
+  const host = createHostSession({ transport: hub.connect(), levels: LACE_LEVELS, heartbeatMs: 30, partnerTimeoutMs: 150 });
+  const first = createGuestSession({ transport: hub.connect(), levels: LACE_LEVELS, heartbeatMs: 30 });
+  await until(() => first.snapshot().status === 'playing');
+  host.act({ type: 'place-pin', at: { x: 1, y: 1 } });
+  first.dispose(); // the page reloads
+  const again = createGuestSession({ transport: hub.connect(), levels: LACE_LEVELS, heartbeatMs: 30 });
+  try {
+    await until(() => again.snapshot().status === 'playing');
+    assert.equal(again.snapshot().state?.pins.length, 1, 'the game carries on where it was');
+  } finally {
+    done(host, again);
+  }
+});

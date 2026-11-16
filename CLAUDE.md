@@ -67,10 +67,6 @@ Full records: `DECISIONS.md` and `OPEN_QUESTIONS.md` (pull request #1). Move an 
 - **Pull request #1** (`docs/sync-with-brief`) brings DECISIONS.md and OPEN_QUESTIONS.md in line with the brief. Not merged yet.
 - **Pull request #2** (`trial/lace-world`) has the lace trial in `prototypes/lace-trial/`. See its README for how to play, run and test it, and for the deliberate trial shortcuts.
 - The trial is published as a Claude artifact using the artifact `room` capability, so two phones can play from one link: https://claude.ai/artifact/NLuiwE87U8azScRNSRbRT8
-- **Open problem:** the user could not connect two phones on the published page. The most likely cause is that the page checked for the artifact host only once at start-up and fell back to one-browser mode.
-- **Next step:** a fix was started but not finished, tested or pushed. It waits for the host, shows a clear error instead of the silent fallback, and adds a live connection line on the waiting screens. If it isn't on the branch, redo it:
-  1. Change `net/connect.ts`, `net/room-transport.ts`, `net/transport.ts`, `main.ts` and `ui/lobby-screens.ts`.
-  2. Run `npm run typecheck`, `npm test`, `npm run build` and `npm run test:e2e`.
-  3. Republish `dist/index.html` to the artifact above.
-  4. Ask the user what the lobby and waiting screens say on each phone.
+- **Connection fix (done, 2026-11-16):** devices now wait for the shared room to connect, retry the join, and show a clear error with "Try again" instead of silently falling back to one-browser mode. The waiting screens show a live connection line. A phone that reloads mid-game can rejoin with the same code (after about 7 seconds). Covered by `tests/room-transport.test.ts` and a new session test, and checked in a browser with a laptop-sized and a phone-sized page. Republished as version 3 of the artifact above.
+- **Next step:** the user tests on a real phone plus a laptop, both signed in to claude.ai. A partner on another account needs access to the artifact at Contributor level or above to send moves (event topic `game` is opened to `interact`); a public-link visitor cannot join the room.
 - **After the trial works:** playtest with real non-gamer pairs, then write the lace world's full design and rebuild it properly on the clean architecture with three.js.

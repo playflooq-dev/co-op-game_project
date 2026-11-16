@@ -215,3 +215,8 @@ body {
 .overlay-card p {
   margin: 0 0 6px;
 }
+
+/* Live connection line on the waiting screens */
+.connection-line { margin-top: 4px; }
+.connection-line[data-state='connected'] { color: #3d6b4a; }
+.connection-line[data-state='lost'] { color: #a2452f; }

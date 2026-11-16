@@ -76,7 +76,10 @@ export function createHostSession(options: SessionOptions): Session {
     const message = parseMessage(raw, levels);
     if (!message) return;
     if (message.kind === 'hello') {
-      if (guest !== null && guest !== message.client) {
+      // A second phone is turned away while the current guest is still around. A guest that
+      // has gone quiet (for example it reloaded the page and came back with a new id) is replaced.
+      const guestIsActive = guest !== null && Date.now() - guestSeenAt < partnerTimeoutMs;
+      if (guest !== null && guest !== message.client && guestIsActive) {
         send({ kind: 'full', to: message.client });
         return;
       }
@@ -180,6 +183,7 @@ export function createGuestSession(options: SessionOptions): Session {
     if (!message) return;
     if (message.kind === 'welcome' && message.to === client) {
       welcomed = true;
+      full = false; // the host made room, for example after this phone reloaded
       changes.emit();
     } else if (message.kind === 'full' && message.to === client) {
       full = true;
@@ -202,8 +206,10 @@ export function createGuestSession(options: SessionOptions): Session {
   });
 
   sayHello();
+  // Keep saying hello even when told the game is full: if that seat belonged to this
+  // same phone before a reload, the host frees it once the old page has gone quiet.
   const heartbeat = setInterval(() => {
-    if (!full) sayHello();
+    sayHello();
     refreshPartner();
   }, heartbeatMs);
 

@@ -2,14 +2,28 @@ import { createLocalTransport } from './local-transport.ts';
 import { createRoomTransport, type RoomCapability } from './room-transport.ts';
 import type { Transport } from './transport.ts';
 
-export type TransportKind = 'room' | 'local';
+/**
+ * - `room`: published as a Claude artifact; devices connect through the shared room.
+ * - `unavailable`: inside a Claude page that can't reach the room (for example signed out).
+ * - `local`: plain page with no Claude host, such as `npm run serve`; tabs of one browser only.
+ */
+export type TransportKind = 'room' | 'unavailable' | 'local';
+
+interface ClaudeHost {
+  use?: (name: string) => Promise<unknown>;
+}
 
 let roomCapability: Promise<RoomCapability | null> | null = null;
 
-/** Asks the page host for the artifact `room` capability once. Null outside a published artifact. */
+const claudeHost = (): ClaudeHost | undefined => (globalThis as { claude?: ClaudeHost }).claude;
+
+/**
+ * Asks the page host for the artifact `room` capability, once. Inside the claude.ai viewer the
+ * host is there before any script runs and answers within a few seconds (null after 10 s if not).
+ */
 function getRoomCapability(): Promise<RoomCapability | null> {
   if (!roomCapability) {
-    const host = (globalThis as { claude?: { use?: (name: string) => Promise<unknown> } }).claude;
+    const host = claudeHost();
     roomCapability =
       typeof host?.use === 'function'
         ? host.use('room').then((room) => (room ? (room as RoomCapability) : null)).catch(() => null)
@@ -18,21 +32,19 @@ function getRoomCapability(): Promise<RoomCapability | null> {
   return roomCapability;
 }
 
-/** Finds out early which transport games will use, so the lobby can say so. */
+/** Finds out early how games will connect, so the start screen can say so. */
 export async function detectTransportKind(): Promise<TransportKind> {
-  return (await getRoomCapability()) ? 'room' : 'local';
+  if (await getRoomCapability()) return 'room';
+  return typeof claudeHost()?.use === 'function' ? 'unavailable' : 'local';
 }
 
-/** Opens the best available transport for a game code. */
+/**
+ * Opens the transport for a game code. When the shared room exists it is always used, and a
+ * failure to join throws a ConnectError instead of quietly dropping to one-browser mode.
+ */
 export async function openTransport(code: string): Promise<{ transport: Transport; kind: TransportKind }> {
   const gameName = `lace-${code.toLowerCase()}`;
   const room = await getRoomCapability();
-  if (room) {
-    try {
-      return { transport: await createRoomTransport(room, gameName), kind: 'room' };
-    } catch {
-      // Fall through to the local transport so the page still works in one browser.
-    }
-  }
-  return { transport: createLocalTransport(gameName), kind: 'local' };
+  if (room) return { transport: await createRoomTransport(room, gameName), kind: 'room' };
+  return { transport: createLocalTransport(gameName), kind: await detectTransportKind() };
 }
