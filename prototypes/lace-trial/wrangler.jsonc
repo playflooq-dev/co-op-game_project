@@ -1,0 +1,13 @@
+// Deploys the trial to Cloudflare: the page as static assets, plus the relay Worker.
+// Build first with `npm run build:cloudflare`, then `npm run deploy`.
+{
+  "name": "lace-trial",
+  "main": "worker/relay.ts",
+  "compatibility_date": "2025-10-01",
+  "assets": { "directory": "./dist-cloudflare" },
+  "durable_objects": {
+    "bindings": [{ "name": "ROOMS", "class_name": "GameRoom" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["GameRoom"] }],
+  "observability": { "enabled": true }
+}
