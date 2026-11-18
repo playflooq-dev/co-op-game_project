@@ -1,8 +1,8 @@
-"""Small local server for working on the forest scene.
+"""Small local server for working on the game.
 
-Serves the game folder, and lets tools/export.html save the images it paints into the assets folder.
+Serves the game folder, and lets tools/export.html save the images it paints into each world's assets folder.
 Usage: python tools/dev_server.py [port] [log file]
-It only listens on this computer (127.0.0.1) and only writes inside the assets folder.
+It only listens on this computer (127.0.0.1) and only writes inside worlds/<world>/assets/ and shared/characters/.
 """
 import http.server
 import os
@@ -10,7 +10,6 @@ import sys
 import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSETS = os.path.join(ROOT, 'assets')
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8780
 LOG = sys.argv[2] if len(sys.argv) > 2 else None
 
@@ -36,8 +35,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif url.path == '/save':
             rel = urllib.parse.parse_qs(url.query).get('path', [''])[0]
             dest = os.path.normpath(os.path.join(ROOT, rel))
-            if not dest.startswith(ASSETS + os.sep):
-                self.send_error(403, 'can only save inside assets/')
+            parts = os.path.relpath(dest, ROOT).split(os.sep)
+            ok = (len(parts) >= 4 and parts[0] == 'worlds' and parts[2] == 'assets' and '..' not in parts) or                  (len(parts) == 3 and parts[:2] == ['shared', 'characters'] and parts[2].endswith('.png'))
+            if not ok:
+                self.send_error(403, 'can only save inside worlds/<world>/assets/ or shared/characters/')
                 return
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             with open(dest, 'wb') as f:

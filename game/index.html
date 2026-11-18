@@ -20,13 +20,18 @@ Brother: &larr; / &rarr; walk &middot; &uarr; use, climb up &middot; &darr; go d
 <div class="pad" style="left:16px"><button data-k="KeyW">&#9650;</button><button data-k="KeyS">&#9660;</button><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button></div>
 <div class="pad" style="right:16px"><button data-k="ArrowUp">&#9650;</button><button data-k="ArrowDown">&#9660;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
 <div id="load">Home Alone</div>
-<!-- Level 1. Art: assets/house/ (the house) plus a few pieces from assets/ for the garden outside. Next scene: forest.html -->
-<script src="js/helpers.js"></script>
-<script src="assets/manifest.js"></script>
-<script src="assets/house/manifest.js"></script>
-<script src="assets/characters/shared.js"></script>
-<script src="assets/characters/hooded-traveller.js"></script>
-<script src="assets/characters/lantern-bearer.js"></script>
-<script>const LOAD = { title: 'Home Alone', script: 'js/house.js', sets: [{ assets: ASSETS, only: ['clouds', 'trees', 'bushes', 'grass', 'flowers'] }, { assets: HOUSE_ASSETS }] };</script>
-<script src="js/loader.js"></script>
+<!-- Chapter One. Its art and settings are in worlds/house/; the characters are in shared/characters/. -->
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/house/assets/manifest.js"></script>
+<script src="worlds/house/settings.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script src="shared/stage.js"></script>
+<script>const LOAD = { title: 'Home Alone', script: 'worlds/house/level.js', sets: [
+  { assets: HOUSE_ASSETS, base: 'worlds/house/assets/' },
+  { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'bushes'] }, // borrowed from the forest
+] };</script>
+<script src="shared/loader.js"></script>
 </body></html>

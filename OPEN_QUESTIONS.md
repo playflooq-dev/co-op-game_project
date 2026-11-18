@@ -7,7 +7,32 @@ delete it here. Options marked *(suggested)* are only suggestions and not approv
 The look, the characters (an older sister and a younger brother) and how the story starts are decided
 (see [DECISIONS.md](DECISIONS.md), decisions 6 to 13). Still open:
 - The siblings' names. In the game they are called "Sister" and "Brother" for now.
-- What happens in the city (Level 2), where the hunt goes after it (the map shows a forest, a waterfall and an old oak), and what the treasure is.
+- Where the hunt goes after the city and the forest (the map shows a waterfall and an old oak), and what the treasure is.
+
+## 1b. Chapter Two (the city): waiting for feedback
+Playable in `game/city.html`, aimed at 15 to 20 minutes. In order:
+0. **The torn map**: the wind tears the treasure map. One piece lands high on a shop awning (only the sister reaches),
+   one in a drain (only the brother's fingers fit), one in a planter.
+1. **Maple Street crossing**: press the button, wait for the green man, cross before the cars come back.
+2. **Baker's Alley**: the pavement is closed, so one sibling holds the shutter button for the other; the brother crawls
+   under the courtyard gate and opens it from the other side.
+3. **The market puppy**: a puppy has the last map piece and is faster than both; it only stops when one sibling is
+   close on each side of it.
+4. **The canal ferry**: a button on each side sends the ferry across; nobody can press one from the ferry, so it takes
+   a send, a return and a call to get both over.
+5. **Grand Avenue**: two roads with an island; the button is broken, so they read the lights and cross one road at a time.
+6. **The metro**: the street is closed, so they go underground. The wall map shows the way: Blue line towards Harbour,
+   change at Central, Green line to Old Town. Wrong trains take them to wrong stations, and the end of a line throws
+   everyone off.
+7. **The bus in Old Town**: a route map with tangled lines shows which bus goes to the Old Bridge (shuffled every game).
+8. **The Old Bridge**: the sister switches the power on high up; the brother crawls into the control hut to lower it.
+
+Still open:
+- **Length.** The scripted test plays it in about 5 minutes with instant decisions (and one wrong train and one wrong
+  bus on purpose). First-time players reading, exploring and working out each puzzle should take around three times as
+  long, which is in the 15 to 20 minute range, but this needs a real play test to confirm.
+- Should a car bump stay gentle (back to the kerb), or cost more?
+- Should the siblings meet people in the city (shopkeepers, a crossing warden)?
 
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking

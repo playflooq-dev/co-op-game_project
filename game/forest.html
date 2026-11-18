@@ -18,11 +18,13 @@
 <div class="pad" style="left:16px"><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button><button data-k="KeyW">&#9733;</button></div>
 <div class="pad" style="right:16px"><button data-k="ArrowUp">&#9733;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
 <div id="load">Forest Trail</div>
-<!-- Art lives in the assets folder. manifest.js lists every image; the characters are drawn by their own files. -->
-<script src="js/helpers.js"></script>
-<script src="assets/manifest.js"></script>
-<script src="assets/characters/shared.js"></script>
-<script src="assets/characters/hooded-traveller.js"></script>
-<script src="assets/characters/lantern-bearer.js"></script>
-<script src="js/loader.js"></script>
+<!-- The Forest world: art, settings and code in worlds/forest/; the characters are in shared/characters/. -->
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/forest/settings.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script>const LOAD = { title: 'Forest Trail', script: 'worlds/forest/scene.js', sets: [{ assets: FOREST_ASSETS, base: 'worlds/forest/assets/', depth: FOREST_DEPTH }] };</script>
+<script src="shared/loader.js"></script>
 </body></html>
