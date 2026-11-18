@@ -1,5 +1,5 @@
 'use strict';
-// The hooded traveller: green coat, backpack with bedroll, walking staff. Drawn facing right; the game flips it.
+// The hooded traveller: green coat, backpack with bedroll, empty hands. Drawn facing right; the game flips it.
 // FACE_A holds this character's facial features (eye colours, brows, freckles).
 const FACE_A = { iris: ['#2f4a22', '#6c9a40', '#b9d86c'], lash: '#2a1810', flick: true, brow: '#4a2f20', browW: 2.7, open: 0.92, freckles: true };
 
@@ -69,18 +69,10 @@ function drawHooded(c, p, t) {
   c.restore();
   c.save(); c.translate(15, top + 7); c.rotate(-0.5); c.beginPath(); c.moveTo(0, 5); c.quadraticCurveTo(6, 0, 0, -7); c.quadraticCurveTo(-6, 0, 0, 5); fs(c, '#e2c26a', '#8a6a22', 1.2); c.strokeStyle = '#8a6a22'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 4); c.lineTo(0, -5); c.stroke(); c.restore(); // leaf brooch
   for (const [dx, ln, pw] of [[17, 20, 0], [25, 16, 0.8]]) { const s2 = Math.sin(ph * 2 + pw) * 3 * m - m * 3; c.strokeStyle = '#d8c9a0'; c.lineWidth = 2; c.beginPath(); c.moveTo(dx, top + 10); c.quadraticCurveTo(dx + s2 * 0.4, top + 10 + ln * 0.6, dx + s2, top + 10 + ln); c.stroke(); ell(c, dx + s2, top + 12 + ln, 2.6, 3.4, '#8f7d4c'); }
-  // front arm and walking staff
-  const hx = 44 + sw * 4 + ar * 14, hy = top + 52 - Math.abs(Math.sin(ph)) * 2 * m - ar * 34, sx = 12, sy = top + 14; // cheering lifts the staff
-  const sbx = hx + 5 - sw * 9 - ar * 10, sby = -1 - Math.max(0, -Math.sin(ph)) * 5 * m - ar * 30, stx = hx + (hx - sbx) * 54 / (sby - hy), sty = hy - 54;
-  limb(c, [sx, sy, (sx + hx) / 2 - 4, (sy + hy) / 2 + 6, hx, hy - 4], 17, G2, G0);
-  c.save(); c.translate(hx, hy - 6); c.rotate(Math.atan2(hy - sy, hx - sx) - Math.PI / 2); c.beginPath(); c.moveTo(-9, -6); c.lineTo(9, -6); c.lineTo(12, 5); c.lineTo(-12, 5); c.closePath(); fs(c, G3, G0, 1.8); c.restore();
-  c.beginPath(); c.moveTo(sbx, sby); c.lineTo(stx, sty); c.strokeStyle = '#3b2415'; c.lineWidth = 9; c.stroke(); c.strokeStyle = '#7c5232'; c.lineWidth = 6.2; c.stroke();
-  c.strokeStyle = rgba('#c08f5c', 0.7); c.lineWidth = 1.8; c.beginPath(); c.moveTo(sbx + 1.5, sby - 4); c.lineTo(stx + 1.5, sty + 4); c.stroke();
-  c.beginPath(); c.arc(stx + 9, sty - 2, 9.5, Math.PI - 0.1, Math.PI * 2.4); c.strokeStyle = '#3b2415'; c.lineWidth = 8.5; c.stroke(); c.strokeStyle = '#7c5232'; c.lineWidth = 5.6; c.stroke();
-  c.strokeStyle = '#d8c08c'; c.lineWidth = 2; c.beginPath(); for (const o of [-30, -24, -18]) { c.moveTo(hx - 2, hy + o + 3); c.lineTo(hx + 6, hy + o); } c.stroke();
-  c.save(); c.translate(stx + 16, sty + 6); c.rotate(Math.sin(ph * 2 + 0.5) * 0.35 * m + Math.sin(t * 1.7) * 0.07 - m * 0.3);
-  c.strokeStyle = '#d8c9a0'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, 20); c.stroke(); ell(c, 0, 9, 2.6, 2.6, '#d9534a'); ell(c, 0, 15, 2.2, 2.2, '#5fa3b8');
-  c.translate(0, 19); c.rotate(Math.PI + 0.25); c.fillStyle = '#f3ead2'; leafPath(c, 17, 4.5); c.fill(); c.strokeStyle = '#b9ab85'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -15); c.stroke(); c.restore();
-  c.beginPath(); circ(c, hx + 2, hy, 8); fs(c, '#f6cfa9', '#b9825e', 1.5);
-  c.strokeStyle = '#c99672'; c.lineWidth = 1.4; c.beginPath(); for (const o of [-3, 0.5, 4]) { c.moveTo(hx + 4, hy + o - 1.5); c.quadraticCurveTo(hx + 9, hy + o, hx + 5, hy + o + 2); } c.stroke();
+  // front arm, swinging freely (cheering throws it up in the air)
+  const th = -sw * 0.6 * (1 - ar) + ar * (2.55 + Math.sin(t * 14) * 0.18), sx = 12, sy = top + 14, hx = sx + Math.sin(th) * 46, hy = sy + Math.cos(th) * 46;
+  const bend = 6 * (1 - ar); // a slight bend at the elbow
+  limb(c, [sx, sy, (sx + hx) / 2 + bend, (sy + hy) / 2, hx, hy], 17, G2, G0);
+  { const k = 0.84, cx = sx + (hx - sx) * k, cy = sy + (hy - sy) * k; c.save(); c.translate(cx, cy); c.rotate(Math.atan2(hy - sy, hx - sx) - Math.PI / 2); c.beginPath(); c.moveTo(-9, -5); c.lineTo(9, -5); c.lineTo(11, 5); c.lineTo(-11, 5); c.closePath(); fs(c, G3, G0, 1.8); c.restore(); }
+  c.beginPath(); circ(c, hx, hy + 3, 8); fs(c, '#f6cfa9', '#b9825e', 1.5);
 }

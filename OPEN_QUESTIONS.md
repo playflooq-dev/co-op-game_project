@@ -4,18 +4,21 @@ Things still to decide. When one is agreed, move it to [DECISIONS.md](DECISIONS.
 delete it here. Options marked *(suggested)* are only suggestions and not approved.
 
 ## 1. Theme and characters
-The look and the two characters are decided (see [DECISIONS.md](DECISIONS.md), decisions 6 to 9).
-Still open:
-- Names and personalities for the hooded traveller and the lantern bearer.
-- Is there a story, or just a series of puzzles?
+The look, the characters (an older sister and a younger brother) and how the story starts are decided
+(see [DECISIONS.md](DECISIONS.md), decisions 6 to 13). Still open:
+- The siblings' names. In the game they are called "Sister" and "Brother" for now.
+- What happens in the city (Level 2), where the hunt goes after it (the map shows a forest, a waterfall and an old oak), and what the treasure is.
 
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
   puzzles, and is easy to keep in sync online.
 - **Side view with jumping** (like Fireboy and Watergirl): more action and timing, but harder
   to build and to sync online.
-- The approved art is a 2D side-on scene (decision 6). Whether puzzles are played in that side
-  view, and whether there is jumping, is still to decide.
+- The approved art is a 2D side-on scene (decision 6), and Level 1 is a side view with no jumping
+  (decision 12). Whether later levels keep the same rules is still to decide.
+- Level 1 currently runs with both players on one keyboard and one screen, so each can see the
+  other's clues. True split information (decision 5) needs the online version, where the box code
+  would only appear on the brother's screen.
 
 ## 3. Split abilities: what can each player do?
 - Walk on different surfaces (light/shadow, fire/water)

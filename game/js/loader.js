@@ -24,15 +24,21 @@ function prepare(img, a, fx) {
   if (fx.blur) { const b = document.createElement('canvas'); b.width = s.width; b.height = s.height; const bc = b.getContext('2d'); bc.filter = `blur(${fx.blur * s.width / a.w}px)`; bc.drawImage(s, 0, 0); s = b; }
   return { cv: s, w: a.w, h: a.h, ax: a.ax, ay: a.ay };
 }
+// Which art to load and which scene script to start. A page can set LOAD before this file; without it, the forest scene loads.
+//   LOAD = { title, script, sets: [{ assets: ASSETS, only: ['trees', ...] }, { assets: HOUSE_ASSETS }] }
+const LOADING = typeof LOAD !== 'undefined' ? LOAD : { title: 'Forest Trail', script: 'js/scene.js', sets: [{ assets: ASSETS }] };
 (function loadAssets() {
   const box = document.getElementById('load'), jobs = [], failed = [];
-  for (const group in ASSETS) { SP[group] = []; ASSETS[group].forEach((a, i) => jobs.push({ group, i, a })); }
+  for (const set of LOADING.sets) for (const group in set.assets) {
+    if (set.only && !set.only.includes(group)) continue;
+    SP[group] = []; set.assets[group].forEach((a, i) => jobs.push({ group, i, a }));
+  }
   let done = 0;
   const step = () => {
-    done++; box.textContent = 'Forest Trail · loading art ' + done + ' / ' + jobs.length;
+    done++; box.textContent = LOADING.title + ' · loading art ' + done + ' / ' + jobs.length;
     if (done < jobs.length) return;
-    if (failed.length) { box.textContent = 'Could not load: assets/' + failed.join(', assets/') + '. Check the file name and the entry in assets/manifest.js.'; return; }
-    const s = document.createElement('script'); s.src = 'js/scene.js';
+    if (failed.length) { box.textContent = 'Could not load: assets/' + failed.join(', assets/') + '. Check the file name and the entry in its manifest.js.'; return; }
+    const s = document.createElement('script'); s.src = LOADING.script;
     s.onload = () => { box.style.opacity = 0; setTimeout(() => { box.style.display = 'none'; }, 700); };
     document.body.appendChild(s);
   };

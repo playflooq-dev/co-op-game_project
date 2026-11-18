@@ -1,6 +1,6 @@
 """Small local server for working on the forest scene.
 
-Serves the forest-scene folder, and lets tools/export.html save the images it paints into the assets folder.
+Serves the game folder, and lets tools/export.html save the images it paints into the assets folder.
 Usage: python tools/dev_server.py [port] [log file]
 It only listens on this computer (127.0.0.1) and only writes inside the assets folder.
 """
