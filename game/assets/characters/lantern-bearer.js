@@ -1,5 +1,5 @@
 'use strict';
-// The lantern bearer: blue tunic, red cape and scarf, lantern. Drawn facing right; the game flips it.
+// The lantern bearer: blue tunic, red cape and scarf, cap, empty hands (the file keeps its old name). Drawn facing right; the game flips it.
 // FACE_B holds this character's facial features (eye colours, brows, plaster, tooth gap).
 const FACE_B = { iris: ['#4a2410', '#a5622a', '#eaa94e'], lash: '#2a1810', flick: false, brow: '#3f2416', browW: 3.5, open: 1.06, plaster: true, gap: true };
 
@@ -83,22 +83,9 @@ function drawLantern(c, p, t) {
   c.beginPath(); circ(c, 26, headY - 26, 3); fs(c, '#e9c45c', '#8a6a22', 1.2);
   drawFaceTop(c, p, 7, headY + 5);
   c.restore();
-  // front arm holding the lantern out (and up high when cheering)
-  const sx = 8, sy = top + 12, hx = 37 + sw * 2 + ar * 5, hy = top + 33 + Math.sin(ph * 2) * 1.5 * m - ar * 34, ex = (sx + hx) / 2 + 2, ey = (sy + hy) / 2 + 9;
-  limb(c, [sx, sy, ex, ey, hx - 3, hy - 2], 14.5, B2, B0);
-  limb(c, [ex + (hx - 3 - ex) * 0.25, ey + (hy - 2 - ey) * 0.25, ex + (hx - 3 - ex) * 0.5, ey + (hy - 2 - ey) * 0.5, ex + (hx - 3 - ex) * 0.8, ey + (hy - 2 - ey) * 0.8], 15, '#8a5a34', '#40281a');
-  const fk = 1 + Math.sin(t * 17) * 0.07 + Math.sin(t * 7.3) * 0.06;
-  c.save(); c.translate(hx, hy + 2); c.rotate(-m * 0.2 + Math.sin(ph * 2 - 0.6) * 0.13 * m + Math.sin(t * 1.9) * 0.035);
-  c.beginPath(); circ(c, 0, 7, 5.5); c.strokeStyle = '#2b2622'; c.lineWidth = 2.4; c.stroke();
-  c.beginPath(); c.moveTo(-3, 12); c.lineTo(3, 12); c.lineTo(6, 16); c.lineTo(14, 25); c.lineTo(-14, 25); c.lineTo(-6, 16); c.closePath(); fs(c, lg(c, -14, 0, 14, 0, '#2b2622', '#5a5048'), '#1c1815', 1.5);
-  c.fillStyle = rg(c, 0, 40, 20, '#fffbe0', '#ffe08a', '#f6b64a'); c.fillRect(-11, 25, 22, 30);
-  c.fillStyle = '#ff9d2e'; c.beginPath(); c.moveTo(0, 49); c.bezierCurveTo(-7 * fk, 47, -5, 38, 0, 31 - 3 * fk); c.bezierCurveTo(5, 38, 7 * fk, 47, 0, 49); c.fill();
-  ell(c, 0, 44, 2.6, 4.2 * fk, '#fff8cf');
-  c.strokeStyle = '#2b2622'; c.lineWidth = 2.6; c.strokeRect(-11, 25, 22, 30); c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, 25); c.lineTo(0, 55); c.moveTo(-11, 34); c.lineTo(11, 34); c.stroke();
-  c.beginPath(); c.moveTo(-14, 55); c.lineTo(14, 55); c.lineTo(10, 61); c.lineTo(-10, 61); c.closePath(); fs(c, '#3a332d', '#1c1815', 1.5);
-  c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-7, 29); c.lineTo(-7, 40); c.stroke();
-  const mt = c.getTransform(); p.lanBuf = [mt.e + mt.c * 40, mt.f + mt.d * 40, fk];
-  c.restore();
-  c.beginPath(); circ(c, hx, hy, 7.5); fs(c, '#f6cfa9', '#b9825e', 1.5);
-  c.strokeStyle = '#c99672'; c.lineWidth = 1.3; c.beginPath(); for (const o of [-3, 0.5, 4]) { c.moveTo(hx + 3, hy + o - 1.5); c.quadraticCurveTo(hx + 8, hy + o, hx + 4, hy + o + 2); } c.stroke();
+  // front arm, swinging freely (cheering throws it up in the air)
+  { const th = -sw * 0.65 * (1 - ar) + ar * (2.55 + Math.sin(t * 14 + 1) * 0.18), sx = 8, sy = top + 12, hx = sx + Math.sin(th) * 38, hy = sy + Math.cos(th) * 38, bend = 5 * (1 - ar);
+    limb(c, [sx, sy, (sx + hx) / 2 + bend, (sy + hy) / 2, hx, hy], 14.5, B2, B0);
+    limb(c, [sx + (hx - sx) * 0.62, sy + (hy - sy) * 0.62, sx + (hx - sx) * 0.75, sy + (hy - sy) * 0.75, sx + (hx - sx) * 0.9, sy + (hy - sy) * 0.9], 15, '#8a5a34', '#40281a');
+    c.beginPath(); circ(c, hx, hy + 2, 7.5); fs(c, '#f6cfa9', '#b9825e', 1.5); }
 }
