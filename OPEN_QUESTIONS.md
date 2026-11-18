@@ -4,9 +4,9 @@ Things still to decide. When one is agreed, move it to [DECISIONS.md](DECISIONS.
 delete it here. Options marked *(suggested)* are only suggestions and not approved.
 
 ## 1. Theme and characters
-- Who are the two characters? Ideas: Sun & Moon, a couple, a robot and a ghost, two thieves,
-  an explorer and a guide, fire and water.
-- What mood should it have: cozy and relaxing, funny and chaotic, or tense?
+The look and the two characters are decided (see [DECISIONS.md](DECISIONS.md), decisions 6 to 9).
+Still open:
+- Names and personalities for the hooded traveller and the lantern bearer.
 - Is there a story, or just a series of puzzles?
 
 ## 2. How the game looks and moves
@@ -14,7 +14,8 @@ delete it here. Options marked *(suggested)* are only suggestions and not approv
   puzzles, and is easy to keep in sync online.
 - **Side view with jumping** (like Fireboy and Watergirl): more action and timing, but harder
   to build and to sync online.
-- 2D or 3D? Art style (pixel art, flat shapes, hand-drawn)?
+- The approved art is a 2D side-on scene (decision 6). Whether puzzles are played in that side
+  view, and whether there is jumping, is still to decide.
 
 ## 3. Split abilities: what can each player do?
 - Walk on different surfaces (light/shadow, fire/water)
