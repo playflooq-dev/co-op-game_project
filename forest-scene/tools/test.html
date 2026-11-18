@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><base href="../">
+<title>Forest Trail (test page)</title>
+<!-- The game with two extra test switches: ?walk=1 holds both "walk right" keys, ?fps=1 reports frames per second to the dev server.
+     The game's own switches work too: ?zoom=3 and ?face=worried|close|giggle|sleepy|yawn|cheer. -->
+<style>
+  html,body{margin:0;height:100%;background:#f3e6c4;overflow:hidden}
+  canvas{display:block}
+  #hud{position:fixed;left:18px;bottom:14px;font:600 14px/1.3 Georgia,serif;color:#fff;text-shadow:0 1px 3px #000a}
+  #load{position:fixed;inset:0;display:grid;place-items:center;background:#f3e6c4;color:#6b5a3a;font:italic 22px Georgia,serif}
+</style></head>
+<body>
+<canvas id="c"></canvas><div id="hud"></div><div id="load">Forest Trail</div>
+<script src="js/helpers.js"></script>
+<script src="assets/manifest.js"></script>
+<script src="assets/characters/shared.js"></script>
+<script src="assets/characters/hooded-traveller.js"></script>
+<script src="assets/characters/lantern-bearer.js"></script>
+<script src="js/loader.js"></script>
+<script>
+'use strict';
+{ const q = new URLSearchParams(location.search), report = (t) => fetch('/log', { method: 'POST', body: t });
+  const wait = setInterval(() => {
+    const msg = document.getElementById('load').textContent;
+    if (/^(Error|Could not)/.test(msg)) { clearInterval(wait); report('PAGE ' + msg); return; }
+    if (typeof players === 'undefined') return;
+    clearInterval(wait); report('PAGE READY');
+    if (q.get('walk')) { down.KeyD = true; down.ArrowRight = true; }
+    if (q.get('fps')) {
+      let n = 0, t0 = 0, worst = 0, prev = 0, warm = 0;
+      const tick = (t) => {
+        if (!t0) { if (++warm > 60) { t0 = t; prev = t; } }
+        else { n++; worst = Math.max(worst, t - prev); prev = t; if (t - t0 > 3500) { report('FPS ' + (n / ((t - t0) / 1000)).toFixed(1) + ' worstFrameMs ' + worst.toFixed(1) + ' canvas ' + cv.width + 'x' + cv.height); return; } }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }, 50); }
+</script>
+</body></html>
