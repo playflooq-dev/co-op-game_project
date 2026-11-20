@@ -22,9 +22,9 @@ Ask Claude, or run these in `co-op-game_project`:
 
 | Commit | Date | What changed |
 |---|---|---|
-| (this checkpoint) | 2026-11-20 | Music and sound: recorded CC0 music for each place (house: Apple Cider; city: Quaint Town, Hot Springs Town, Magic Town; forest: Fort Fairy), Kenney CC0 sound effects, footsteps on the stairs, quieter music. |
-| (this checkpoint) | 2026-11-20 | Chapter Two rebuilt: the boost, chain and gate yard, puppy under the stalls, canal boats and ferry, Fountain Square with the bell game, metro piano, Old Town (picture game, ladder on wheels and water jets, parasols, bus tickets), bus request box, bridge picture code and brake; hints on the map, stickers, end card. |
-| (this checkpoint) | 2026-11-20 | Research: how side-scrolling and co-op story games handle puzzles, with notes on Pepelo 2, and the puzzle options report. |
+| `841c738` | 2026-11-20 | Music and sound: recorded CC0 music for each place (house: Apple Cider; city: Quaint Town, Hot Springs Town, Magic Town; forest: Fort Fairy), Kenney CC0 sound effects, footsteps on the stairs, quieter music. |
+| `7e53d40` | 2026-11-20 | Chapter Two rebuilt: the boost, chain and gate yard, puppy under the stalls, canal boats and ferry, Fountain Square with the bell game, metro piano, Old Town (picture game, ladder on wheels and water jets, parasols, bus tickets), bus request box, bridge picture code and brake; hints on the map, stickers, end card. |
+| `61d4661` | 2026-11-20 | Research: how side-scrolling and co-op story games handle puzzles, with notes on Pepelo 2, and the puzzle options report. |
 | `7362aba` | 2026-11-18 | Chapter Two (the city), first draft, and every world split into its own folder. |
 | `952e6db` | 2026-11-18 | Chapter One: the house escape. |
 | `24ea1b4` | 2026-11-18 | Merge of the approved Forest Trail scene into main. |
