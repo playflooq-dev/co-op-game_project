@@ -28,3 +28,5 @@ const FURNITURE = [ // [art, x, y, scale, flip] drawn in this order
   ['railing', 1360, 530, 1], ['floorLamp', 1180, 530, 0.9], ['desk', 1030, 530, 1], ['armchair', 1262, 532, 0.85], ['bookcase', BOOKCASE_X, 530, 1],
 ];
 
+// Music file for the house (see worlds/README.md). CC0: assets/music/CREDITS.txt.
+const MUSIC_FILES = { home: { file: 'worlds/house/assets/music/apple-cider.mp3', vol: 0.65 } }; // "Apple Cider" by Zane Little Music

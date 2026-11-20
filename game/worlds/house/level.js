@@ -127,13 +127,15 @@ const game = {
   code: [], smoke: [], sparks: [], queue: [], bubble: null, bulb: false, bulbT: 0,
 };
 { const pool = [0, 1, 2, 3, 4, 5]; for (let i = 0; i < 3; i++) game.code.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]); }
+const snd = (name, k) => { if (typeof sfx === 'function') sfx(name, k); }; // sounds, from shared/sound.js
+if (typeof SOUND !== 'undefined') { SOUND.wantMusic = true; SOUND.area = 'home'; }
 const players = [makePlayer('sister', 900, FLOOR[0], 1), makePlayer('brother', 1060, FLOOR[0], -1)];
 for (const p of players) p.floor = 0;
 const [sis, bro] = players;
 
 
 // Things the siblings can use. key: which button ('up' or 'down'). Each returns a label for the on-screen hint, or null.
-const flavour = (s, b) => (p) => sayNow(p, p === sis ? s : b);
+const flavour = (s, b) => (p) => { snd('tap'); sayNow(p, p === sis ? s : b); };
 const THINGS = [
   { f: 0, x: 200, r: 95, key: 'up', label: () => 'Read the note', act: (p) => openPanel('note', p, 200) },
   { f: 0, x: 960, r: 110, key: 'up', label: () => 'Look at the map', act: (p) => openPanel('map', p, 960) },
@@ -157,23 +159,23 @@ function nearThing(p, key) {
 
 function openPanel(kind, p, x) {
   if (game.panel && game.panel.kind === kind) { game.panel = null; return; }
-  game.panel = { kind, user: p, x, t: 0 };
+  game.panel = { kind, user: p, x, t: 0 }; snd('paper');
   if (kind === 'map' && !game.sawMap) { game.sawMap = true; say(bro, 'First across the city... then past the falling water, under the old oak. That is where the X is!'); }
   if (kind === 'note' && !game.readNote) { game.readNote = true; say(sis, '"Don\'t touch Dad\'s secret box"... so there IS a secret box!'); say(bro, 'Bet the spare key is in it!'); }
 }
-function startClimb(p, dir) { p.climb = { dir, t: 0 }; game.panel = null; }
+function startClimb(p, dir) { p.climb = { dir, t: 0, step: -1 }; game.panel = null; }
 function enterCupboard(p) {
-  if (p === sis) { sayNow(sis, "It's tiny! I'm way too big to fit in there."); return; }
-  p.inside = true; p.x = CUP_DOOR - 20; p.dir = -1;
+  if (p === sis) { snd('no'); sayNow(sis, "It's tiny! I'm way too big to fit in there."); return; }
+  snd('creak'); snd('hop'); p.inside = true; p.x = CUP_DOOR - 20; p.dir = -1;
   if (!game.cupboardSeen) { game.cupboardSeen = true; sayNow(bro, "It's so dark in here! There must be a light somewhere..."); }
 }
 const nearCord = (p) => p.inside && !game.bulb && Math.abs(p.x - BULB.x) < 42;
-function pullCord(p) { game.bulb = true; game.bulbT = 0; p.cheer = 0.4; sayNow(p, 'Click! Light!'); }
-function leaveCupboard(p) { p.inside = false; p.x = CUP_DOOR; p.dir = 1; }
+function pullCord(p) { game.bulb = true; game.bulbT = 0; p.cheer = 0.4; snd('click'); snd('spark'); sayNow(p, 'Click! Light!'); }
+function leaveCupboard(p) { snd('creak'); p.inside = false; p.x = CUP_DOOR; p.dir = 1; }
 function useBookcase(p) {
   if (game.box !== 'shelf') { flavour("Dad's books. Very serious.", 'So many books. No pictures.')(p); return; }
-  if (p === bro) { sayNow(bro, "There's a box up there, but it's way too high for me!"); return; }
-  game.box = 'held'; p.cheer = 0.5; burst(BOOKCASE_X, BOX_Y + 20, 5);
+  if (p === bro) { snd('no'); sayNow(bro, "There's a box up there, but it's way too high for me!"); return; }
+  game.box = 'held'; p.cheer = 0.5; snd('piece'); burst(BOOKCASE_X, BOX_Y + 20, 5);
   sayNow(sis, "Dad's secret box! It's locked with a picture code.");
   if (game.codeSeen) say(bro, 'I know the code! I saw it in the cupboard!');
   else say(sis, 'The code must be written down somewhere... somewhere hidden.');
@@ -181,25 +183,26 @@ function useBookcase(p) {
 }
 function useDoor(p) {
   const i = players.indexOf(p);
-  if (game.keyHolder === i) { game.keyHolder = -1; game.doorOpening = true; sayNow(p, 'Click! It opened!'); say(bro, 'Treasure hunt, here we come!'); objective('Go outside together.'); burst(DOOR_X, FLOOR[0] - 150, 10); return; }
+  if (game.keyHolder === i) { snd('latch'); snd('door'); snd('great'); game.keyHolder = -1; game.doorOpening = true; sayNow(p, 'Click! It opened!'); say(bro, 'Treasure hunt, here we come!'); objective('Go outside together.'); burst(DOOR_X, FLOOR[0] - 150, 10); return; }
+  snd('rattle');
   if (game.keyHolder >= 0) sayNow(p, 'Locked. ' + players[game.keyHolder].name + ' has the key!');
   else sayNow(p, p === sis ? 'Locked tight. We need the spare key.' : "It won't budge! We need the key.");
 }
 
 // ---------- the code lock on Dad's box
-function openLock(p) { game.lock = { user: p, sel: 1, vals: [0, 0, 0], solved: -1 }; game.panel = null; }
+function openLock(p) { game.lock = { user: p, sel: 1, vals: [0, 0, 0], solved: -1 }; game.panel = null; snd('click'); }
 function lockInput(p, dt) {
   const L = game.lock, k = p.keys;
   if (L.solved >= 0) { L.solved += dt; if (L.solved > 1.6) finishLock(p); return; }
-  if (hit(k.left)) L.sel = Math.max(0, L.sel - 1);
-  if (hit(k.right)) L.sel = Math.min(3, L.sel + 1);
+  if (hit(k.left)) { L.sel = Math.max(0, L.sel - 1); snd('click'); }
+  if (hit(k.right)) { L.sel = Math.min(3, L.sel + 1); snd('click'); }
   if (L.sel === 0) { if (hit(k.up) || hit(k.down)) game.lock = null; return; }
-  if (hit(k.up)) L.vals[L.sel - 1] = (L.vals[L.sel - 1] + 1) % 6;
-  if (hit(k.down)) L.vals[L.sel - 1] = (L.vals[L.sel - 1] + 5) % 6;
-  if (L.vals.every((v, i) => v === game.code[i])) { L.solved = 0; burst(p.x, p.y - 200, 10); }
+  if (hit(k.up)) { L.vals[L.sel - 1] = (L.vals[L.sel - 1] + 1) % 6; snd('dial'); }
+  if (hit(k.down)) { L.vals[L.sel - 1] = (L.vals[L.sel - 1] + 5) % 6; snd('dial'); }
+  if (L.vals.every((v, i) => v === game.code[i])) { L.solved = 0; burst(p.x, p.y - 200, 10); snd('clunk'); snd('good'); }
 }
 function finishLock(p) {
-  game.lock = null; game.box = 'open'; game.keyHolder = players.indexOf(p);
+  game.lock = null; game.box = 'open'; game.keyHolder = players.indexOf(p); snd('piece');
   sayNow(p, 'The spare key! We did it!'); say(p === sis ? bro : sis, "Quick, to the front door!");
   objective('Unlock the front door.');
 }
@@ -215,6 +218,7 @@ function update(dt) {
     else if (p.climb) {
       const c2 = p.climb; c2.t += dt / CLIMB_TIME; const u = Math.min(1, c2.t), s = c2.dir > 0 ? u : 1 - u;
       p.x = STAIRS.x0 + (STAIRS.x1 - STAIRS.x0) * s; p.y = STAIRS.y0 + (STAIRS.y1 - STAIRS.y0) * s; p.dir = c2.dir; moving = true;
+      { const st = Math.min(7, Math.floor(u * 8)); if (st !== c2.step) { c2.step = st; snd('stair'); } } // a footstep on each stair
       if (u >= 1) { p.floor = c2.dir > 0 ? 1 : 0; p.y = FLOOR[p.floor]; p.climb = null; }
     } else if (game.chapter <= 0) {
       const dir = (down[k.right] ? 1 : 0) - (down[k.left] ? 1 : 0);
@@ -228,7 +232,7 @@ function update(dt) {
         else if (p.inside) leaveCupboard(p);
         else if (th) th.act(p);
         else if (game.box === 'held' && p === sis) openLock(p);
-        else if (p.cheer <= 0) { p.cheer = CHEER; burst(p.x, p.y - 220 * HC, 6); }
+        else if (p.cheer <= 0) { p.cheer = CHEER; snd('cheer'); burst(p.x, p.y - 220 * HC, 6); }
       }
       if (hit(k.down) && !p.inside) { const th = nearThing(p, 'down'); if (th) th.act(p); }
     }
@@ -242,7 +246,7 @@ function update(dt) {
   if (bro.inside && !game.codeSeen && game.bulb && game.bulbT > 0.6) {
     game.codeT += dt;
     if (game.codeT > 0.5) {
-      game.codeSeen = true; sayNow(bro, 'Chalk pictures on the wall! Three of them... it must be the box code!');
+      game.codeSeen = true; snd('good'); sayNow(bro, 'Chalk pictures on the wall! Three of them... it must be the box code!');
       objective(game.box === 'held' ? 'Open the box: Brother, tell Sister the three pictures.' : 'Brother knows the code. Sister: get the box from the top of the bookcase.');
     }
   }
@@ -254,8 +258,9 @@ function update(dt) {
     if (at[0] && at[1]) { game.exitT = 0; game.bubble = null; game.queue = []; }
     else if ((at[0] || at[1]) && !game.waitSaid) { game.waitSaid = true; const w = at[0] ? sis : bro; sayNow(w, w === sis ? 'Come on, little bro!' : 'Hurry up, sis!'); }
   }
-  if (game.exitT >= 0) { game.exitT += dt; for (const p of players) { const u = Math.min(1, game.exitT / 1.4); p.alpha = 1 - u; p.scale = 1 - u * 0.18; } if (game.exitT > 1.6) game.done = true; }
+  if (game.exitT >= 0) { game.exitT += dt; for (const p of players) { const u = Math.min(1, game.exitT / 1.4); p.alpha = 1 - u; p.scale = 1 - u * 0.18; } if (game.exitT > 1.6 && !game.done) { game.done = true; snd('fanfare'); } }
   if (game.done) { game.endT += dt; if (game.endT > 1.2 && (hit('KeyW') || hit('ArrowUp') || hit('Enter') || hit('Space'))) location.href = 'city.html'; }
+  if (typeof musicArea === 'function') musicArea('home');
   updateTalk(dt);
   // chimney smoke
   if (Math.random() < dt * 2.2) game.smoke.push({ x: 1450, y: 40, r: 10, life: 1, vx: -8 - Math.random() * 10 });

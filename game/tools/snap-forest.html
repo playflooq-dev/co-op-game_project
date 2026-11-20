@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- Test page: the forest with tools/snap.js, which sends a picture of the scene to the dev server log. -->
+<html lang="en"><head><meta charset="utf-8"><base href="../">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Forest Trail</title>
+<style>
+  html,body{margin:0;height:100%;background:#f3e6c4;overflow:hidden;touch-action:none}
+  canvas{display:block}
+  #hud{position:fixed;left:18px;bottom:14px;font:600 14px/1.3 Georgia,serif;color:#fff;text-shadow:0 1px 3px #000a;pointer-events:none}
+  #hud b{font-size:24px;font-style:italic}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#f3e6c4;color:#6b5a3a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  .pad{position:fixed;bottom:16px;display:none;gap:10px}
+  .pad button{width:64px;height:64px;border-radius:50%;border:0;background:#0003;color:#fff;font-size:26px}
+  @media (pointer:coarse){.pad{display:flex}#hud{bottom:96px}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"><b>Forest Trail</b><br>Sister: A / D walk, W cheer &middot; Brother: &larr; / &rarr; walk, &uarr; cheer</div>
+<div class="pad" style="left:16px"><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button><button data-k="KeyW">&#9733;</button></div>
+<div class="pad" style="right:16px"><button data-k="ArrowUp">&#9733;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
+<div id="load">Forest Trail</div>
+<!-- The Forest world: art, settings and code in worlds/forest/; the characters are in shared/characters/. -->
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/forest/settings.js"></script>
+<script src="shared/sound.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script>const LOAD = { title: 'Forest Trail', script: 'worlds/forest/scene.js', sets: [{ assets: FOREST_ASSETS, base: 'worlds/forest/assets/', depth: FOREST_DEPTH }] };</script>
+<script src="shared/loader.js"></script>
+<script src="tools/snap.js"></script>
+</body></html>

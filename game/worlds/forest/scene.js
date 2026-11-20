@@ -341,4 +341,6 @@ function frame(now) {
   ctx.fillStyle = (() => { const v = ctx.createRadialGradient(VW / 2, VH / 2, VH * 0.45, VW / 2, VH / 2, VH * 1.15); v.addColorStop(0, 'rgba(60,38,18,0)'); v.addColorStop(1, 'rgba(60,38,18,.34)'); return v; })(); ctx.fillRect(0, 0, VW, VH);
   requestAnimationFrame(frame);
 }
+// music: starts after the first key press or tap (browsers allow sound only then); M switches it off and on
+if (typeof SOUND !== 'undefined') { SOUND.wantMusic = true; SOUND.area = 'forest'; setInterval(() => musicArea('forest'), 500); }
 requestAnimationFrame((t) => { last = t; frame(t); });

@@ -32,9 +32,14 @@ const LOADING = LOAD;
     done++; box.textContent = LOADING.title + ' · loading art ' + done + ' / ' + jobs.length;
     if (done < jobs.length) return;
     if (failed.length) { box.textContent = 'Could not load: ' + failed.join(', ') + '. Check the file name and the entry in its manifest.js.'; return; }
-    const s = document.createElement('script'); s.src = LOADING.script;
-    s.onload = () => { box.style.opacity = 0; setTimeout(() => { box.style.display = 'none'; }, 700); };
-    document.body.appendChild(s);
+    // 'script' can be one file or a list of files, which are started one after the other
+    const list = [].concat(LOADING.script);
+    const next = (i) => {
+      const s = document.createElement('script'); s.src = list[i];
+      s.onload = () => { if (i + 1 < list.length) next(i + 1); else { box.style.opacity = 0; setTimeout(() => { box.style.display = 'none'; }, 700); } };
+      document.body.appendChild(s);
+    };
+    next(0);
   };
   for (const j of jobs) {
     const img = new Image();

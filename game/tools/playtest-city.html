@@ -15,8 +15,9 @@
 <body>
 <canvas id="c"></canvas>
 <div id="hud"><b>Chapter Two: Across the City</b><br>
-Sister: A / D walk &middot; W use, hold buttons &middot; S crawl, look in<br>
-Brother: &larr; / &rarr; walk &middot; &uarr; use, hold buttons &middot; &darr; crawl, look in</div>
+Sister: A / D walk &middot; W use, hold &middot; S crawl, look in, read the map<br>
+Brother: &larr; / &rarr; walk &middot; &uarr; use, hold &middot; &darr; crawl, look in, read the map<br>
+Stuck? The map has hints. &middot; M: sound on / off</div>
 <div class="pad" style="left:16px"><button data-k="KeyW">&#9650;</button><button data-k="KeyS">&#9660;</button><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button></div>
 <div class="pad" style="right:16px"><button data-k="ArrowUp">&#9650;</button><button data-k="ArrowDown">&#9660;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
 <div id="load">Across the City</div>
@@ -29,8 +30,9 @@ Brother: &larr; / &rarr; walk &middot; &uarr; use, hold buttons &middot; &darr; 
 <script src="shared/characters/shared.js"></script>
 <script src="shared/characters/sister.js"></script>
 <script src="shared/characters/brother.js"></script>
+<script src="shared/sound.js"></script>
 <script src="shared/stage.js"></script>
-<script>const LOAD = { title: 'Across the City', script: 'worlds/city/level.js', sets: [
+<script>const LOAD = { title: 'Across the City', script: ['worlds/city/play.js', 'worlds/city/level.js'], sets: [
   { assets: CITY_ASSETS, base: 'worlds/city/assets/' },
   { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'trees', 'bigTrees', 'bushes', 'grassTexture', 'pathTexture'] }, // borrowed from the forest
 ] };</script>

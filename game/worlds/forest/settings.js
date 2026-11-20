@@ -10,3 +10,6 @@ const FOREST_DEPTH = {
   fgFerns: { blur: 2.4, tint: ['#10281f', 0.22, 0.5] }, fgLeaves: { blur: 2.4, tint: ['#10281f', 0.22, 0.5] },
   fgPoppies: { blur: 2.2, tint: ['#10281f', 0.1, 0.4] }, fgRocks: { blur: 2.2, tint: ['#10281f', 0.2, 0.45] },
 };
+
+// Music file for the forest (see worlds/README.md). CC0: assets/music/CREDITS.txt.
+const MUSIC_FILES = { forest: { file: 'worlds/forest/assets/music/fort-fairy.mp3', vol: 1 } };
