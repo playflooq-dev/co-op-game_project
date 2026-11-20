@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Music test</title></head>
+<body style="font:16px Georgia,serif;background:#1c120a;color:#e9c98a;padding:20px">
+<h2>Music test</h2>
+<p>Renders each piece from shared/sound.js for ?secs= seconds (default 24) without playing it, checks how loud it is,
+and offers it as a WAV file to listen to. With the dev server running, it also reports to the server log.</p>
+<div id="out"></div>
+<script src="../shared/helpers.js"></script>
+<script src="../shared/sound.js"></script>
+<script>
+(async () => {
+  const secs = +new URLSearchParams(location.search).get('secs') || 24, out = document.getElementById('out');
+  const log = (t) => { out.insertAdjacentHTML('beforeend', '<div>' + t + '</div>'); fetch('/log', { method: 'POST', body: t }).catch(() => {}); };
+  const wav = (buf) => { // 16-bit stereo WAV
+    const n = buf.length, ch = [buf.getChannelData(0), buf.getChannelData(1)], b = new DataView(new ArrayBuffer(44 + n * 4)), s = (o, t) => [...t].forEach((c, i) => b.setUint8(o + i, c.charCodeAt(0)));
+    s(0, 'RIFF'); b.setUint32(4, 36 + n * 4, true); s(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 2, true); b.setUint32(24, buf.sampleRate, true); b.setUint32(28, buf.sampleRate * 4, true); b.setUint16(32, 4, true); b.setUint16(34, 16, true); s(36, 'data'); b.setUint32(40, n * 4, true);
+    for (let i = 0; i < n; i++) for (let c = 0; c < 2; c++) b.setInt16(44 + i * 4 + c * 2, Math.max(-1, Math.min(1, ch[c][i])) * 32767, true);
+    return new Blob([b], { type: 'audio/wav' });
+  };
+  try {
+    for (const name of Object.keys(PIECES_OF_MUSIC)) {
+      const a = new OfflineAudioContext(2, 44100 * secs, 44100), pc = PIECES_OF_MUSIC[name];
+      const outG = a.createGain(); outG.gain.value = SOUND.vol; const squash = a.createDynamicsCompressor(); outG.connect(squash); squash.connect(a.destination);
+      SOUND.out = outG; SOUND.bus = null; const bus = musicBus(a);
+      for (let i = 0, t = 0.1; t < secs - 3; i++, t += pc.step) playStep(a, pc, i, t, bus);
+      const buf = await a.startRendering(), d = buf.getChannelData(0); let peak = 0, sum = 0; for (const v of d) { peak = Math.max(peak, Math.abs(v)); sum += v * v; }
+      const rms = Math.sqrt(sum / d.length), loop = (pc.melody.length * pc.step).toFixed(1);
+      log(`MUSIC ${name}: peak ${peak.toFixed(2)}  rms ${rms.toFixed(3)}  loop ${loop} s  bars ${pc.chords.length}`);
+      const url = URL.createObjectURL(wav(buf)); out.insertAdjacentHTML('beforeend', `<p><a style="color:#fbf0d4" download="${name}.wav" href="${url}">${name}.wav</a> <audio controls src="${url}"></audio></p>`);
+      if (new URLSearchParams(location.search).get('send')) { const r = new FileReader(); await new Promise((ok) => { r.onload = ok; r.readAsDataURL(wav(buf)); }); await fetch('/log', { method: 'POST', body: 'WAV ' + name + ' ' + r.result }); }
+    }
+    log('MUSIC DONE');
+  } catch (e) { log('PLAY FAILED music: ' + e.message); }
+})();
+</script>
+</body></html>

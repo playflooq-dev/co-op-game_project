@@ -1,0 +1,7 @@
+Sound effects from Kenney (www.kenney.nl), CC0 (public domain): free to use in any project, no credit needed.
+Downloaded on 2026-11-19. Packs: Interface Sounds, Impact Sounds, RPG Audio (the footsteps on the stairs come from RPG Audio and Impact Sounds).
+  https://kenney.nl/assets/interface-sounds
+  https://kenney.nl/assets/impact-sounds
+  https://kenney.nl/assets/rpg-audio
+
+Which game sound uses which files, and how loud, is the SAMPLES list in shared/sound.js.
