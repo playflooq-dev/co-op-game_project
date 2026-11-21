@@ -25,6 +25,7 @@ Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is reb
 
 | Commit | Date | What changed |
 |---|---|---|
+| `3fe28fe` | 2026-11-21 | City lab, Phase 5: testing. A second scripted test tries 29 ways one sibling might finish a station alone; it found one (dashing through the mill shutter), now closed. Results for the play-through, small screens and what could not be tested are in `LAB_PLAN.md`. |
 | `5832a3b` | 2026-11-21 | City lab, Phase 4: no reading. A picture bubble for the goal, picture hints (sparkle, arrow, ghost of the right sibling), signs over heads, eight stickers in the new stations, an end card of pictures and numbers. |
 | `4560d60` | 2026-11-21 | City lab, Phase 3: the city rebuilt as eight test stations (Maple Street and the torn map, the flour mill, the market puppy, the see-saw at Fountain Square, the canal, the pulley lift in Old Town, the cafe parasols, the Old Bridge). The first level's code is deleted; the crossing, metro, bus and all codes are cut. `city.html?station=N` starts at a station. The scripted test plays the whole city. |
 | `fcf8dd9` | 2026-11-21 | City lab, Phase 2: the object kit. Small blue and big green plates, gates, levers, the two-switch door, the pulley lift, small boats, a branch, a ferry and a rope ladder, with one of each on the test street. The jump is lower (207 units, was 245) after the first feel test. The scripted test has 87 checks. |
