@@ -20,8 +20,12 @@ Ask Claude, or run these in `co-op-game_project`:
 
 ## Every commit so far
 
+Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is rebuilt as a test level (the plan is in
+`game/worlds/city/LAB_PLAN.md`). The small commits that only add a row to this table are not listed.
+
 | Commit | Date | What changed |
 |---|---|---|
+| `aa38627` | 2026-11-21 | City lab, Phase 1: new movement on one test street. Jumping (the same height every time, coyote time, jump buffer), carrying light boxes and the heavy crate, the lift and the toss, the brother ducking into low gaps by himself, a thin plank, a see-saw, touch buttons. New shared files for physics, movement, objects and icons; the house and the forest are unchanged. Waiting for a feel test before Phase 2. |
 | `841c738` | 2026-11-20 | Music and sound: recorded CC0 music for each place (house: Apple Cider; city: Quaint Town, Hot Springs Town, Magic Town; forest: Fort Fairy), Kenney CC0 sound effects, footsteps on the stairs, quieter music. |
 | `7e53d40` | 2026-11-20 | Chapter Two rebuilt: the boost, chain and gate yard, puppy under the stalls, canal boats and ferry, Fountain Square with the bell game, metro piano, Old Town (picture game, ladder on wheels and water jets, parasols, bus tickets), bus request box, bridge picture code and brake; hints on the map, stickers, end card. |
 | `61d4661` | 2026-11-20 | Research: how side-scrolling and co-op story games handle puzzles, with notes on Pepelo 2, and the puzzle options report. |
