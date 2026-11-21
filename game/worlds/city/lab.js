@@ -4,6 +4,7 @@
 // scenery in street.js. The objects come from shared/kit.js and, for the city's own, things.js.
 // Useful while testing (add to the address of city.html):
 //   ?station=3  starts at station 3 (0 to 7)                ?at=2400   starts both siblings at that place
+//   ?hints=fast the picture hints come ten times sooner
 //   ?debug=1    shows what is solid, which plates and levers are on, the station names and the frame rate
 //   ?tune=1     shows sliders for the numbers in MOVE (shared/movement.js)
 //   ?touch=1    shows the touch buttons on a computer        ?fps=30    draws only that many frames a second
@@ -72,6 +73,7 @@ function update(dt) {
   const back = Math.min(sis.x, bro.x); let n = game.station; while (n + 1 < STATIONS.length && back >= STATIONS[n + 1].x[0]) n++;
   if (n !== game.station) { game.station = n; if (game.entered[n] === null) game.entered[n] = game.time; }
   camX += (cameraTarget() - camX) * Math.min(1, dt * 4);
+  updateHints(dt); game.goalT = (game.goalT || 0) + dt;
   // the end: over the bridge and both at the park gate
   if (KIT_SIG.bridge && !ending && players.every((p) => !p.gone && Math.abs(p.x - PARK_GATE) < 120)) { game.exitT = 0; game.finished = game.time; }
   if (ending) { game.exitT += dt; const u = Math.min(1, game.exitT / 1.6); for (const p of players) { p.x += (PARK_GATE - p.x) * Math.min(1, dt * 1.5); p.alpha = 1 - u; } if (game.exitT > 1.8 && !game.done) { game.done = true; snd('great'); } }
@@ -97,8 +99,80 @@ function drawHints(c, t) { // what the grab key would do, shown as a picture: a 
     if (duo.state === 'on') { if (p === bro && th) drawBadge(c, p.x, headY, 'hand', p.col, t); continue; }
     const box = th ? null : nearBox(p);
     if (th || (box && !(box.heavy && p === bro))) drawBadge(c, p.x, headY, 'hand', p.col, t);
+    else if (!box && p.grounded && MV.hooks.ladder(p)) drawBadge(c, p.x, headY, 'up', p.col, t);                              // a ladder: jump climbs it
     else if (!box && p === bro && canLift() && sis.idle > 0.7 && bro.idle > 0.7) drawBadge(c, p.x, headY, 'hands', p.col, t); // only once they have stood together for a moment
   }
+}
+
+// ---------- hints, without words. Each station is a list of steps: whose job, what to show over the ghost's head,
+// when the step counts as done, where the thing is, and where to stand. While the next step stays undone the thing
+// first sparkles, then gets an arrow, then a faint ghost of that sibling stands in the right place (HINT_TIMES).
+const kitIn = (n, kind, i = 0) => kit.filter((o) => o.station === n && o.def.kind === kind)[i];
+const high = (p) => FEET - p.y;
+const HINTS = (() => {
+  const m = game.map, f = [0, 1, 2].map((i) => kitIn(0, 'find', i)), hoist = kitIn(1, 'lever'), crate = kitIn(1, 'crate').body, plate = kitIn(1, 'plate');
+  const box2 = kitIn(2, 'box').body, pup = kitIn(2, 'puppy'), saw = kitIn(3, 'seesaw'), lad = kitIn(3, 'ladder'), wall3 = kitIn(3, 'block').def;
+  const ferry = kitIn(4, 'ferry'), fl = kitIn(4, 'lever'), boat = kitIn(4, 'boat'), lift = kitIn(5, 'pulley'), boxes5 = [0, 1, 2].map((i) => kitIn(5, 'box', i).body);
+  const shelf6 = kitIn(6, 'ledge').def, crank = kitIn(6, 'lever'), para = kitIn(6, 'parasol'), wall6 = kitIn(6, 'block').def, post = kitIn(7, 'lever', 0), hut = kitIn(7, 'lever', 1), bridge = kitIn(7, 'bridge');
+  const freeBox = () => boxes5.find((b) => b.on !== lift.b && !b.held) || boxes5[0];
+  return [
+    [ { who: sis, icon: 'hand', done: () => !m.landed(2) || m.got[0], x: () => f[0].def.x, y: () => FEET - 262, gx: () => f[0].def.x - 30 },
+      { who: bro, icon: 'hand', done: () => m.got[1], x: () => f[1].def.x, y: () => FEET + 30, gx: () => f[1].def.x - 30 },
+      { who: bro, icon: 'hands', done: () => m.got[2], x: () => f[2].def.x, y: () => FEET - 352, gx: () => f[2].def.x + 60 } ],
+    [ { who: bro, icon: 'hand', done: () => KIT_SIG.hoist, x: () => hoist.def.x, y: () => FEET - 70, gx: () => hoist.def.x - 30 },
+      { who: sis, icon: 'hand', done: () => crate.on === plate.ledge || sis.carry === crate || KIT_SIG.mill, x: () => crate.x, y: () => crate.y - 60, gx: () => crate.x - 90 },
+      { who: sis, icon: 'hand', done: () => KIT_SIG.mill && crate.on === plate.ledge, x: () => plate.def.x, y: () => FEET - 30, gx: () => plate.def.x - 90 } ],
+    [ { who: bro, icon: 'hand', done: () => m.got[3] || Math.abs(box2.x - pup.def.x) < 95, x: () => box2.x, y: () => box2.y - 50, gx: () => pup.def.x - 100 },
+      { who: sis, icon: 'up', done: () => m.got[3] || sis.on === box2 || MV.duo.state, x: () => box2.x, y: () => box2.y - 100, gx: () => box2.x, gy: () => 86 },
+      { who: bro, icon: 'hands', done: () => m.got[3], x: () => pup.def.x, y: () => FEET - pup.def.h, gx: () => box2.x + 78 } ],
+    [ { who: bro, icon: 'up', done: () => bro.on === saw.ledge || high(bro) > 400 || lad.state.going, x: () => saw.def.x + 140, y: () => FEET - 40, gx: () => saw.def.x + 140, gy: () => 20 },
+      { who: sis, icon: 'up', done: () => high(bro) > 400 || lad.state.going, x: () => saw.def.x - 140, y: () => FEET - 110, gx: () => saw.def.x - 250 },
+      { who: bro, icon: 'hand', done: () => lad.state.going, x: () => lad.def.x, y: () => FEET - lad.def.h - 30, gx: () => lad.def.x + 50, gy: () => lad.def.h },
+      { who: sis, icon: 'up', done: () => high(sis) > 500 || sis.x > wall3.x[1], x: () => lad.def.x, y: () => FEET - 150, gx: () => lad.def.x } ],
+    [ { who: bro, icon: 'hand', done: () => KIT_SIG.ferry || sis.x > CANAL[1], x: () => fl.def.x, y: () => FEET - 150, gx: () => boat.def.x, gy: () => -4 },
+      { who: sis, icon: null, done: () => sis.on === ferry.ledge || sis.x > CANAL[1], x: () => ferry.state.x, y: () => FEET - 50, gx: () => ferry.state.x, gy: () => 15 },
+      { who: bro, icon: 'hand', done: () => sis.x > CANAL[1], x: () => fl.def.x, y: () => FEET - 150, gx: () => fl.def.x - 20 } ],
+    [ { who: bro, icon: null, done: () => bro.on === lift.a || high(bro) > 480, x: () => lift.def.a, y: () => lift.a.y - 30, gx: () => lift.def.a, gy: () => FEET - lift.a.y },
+      { who: sis, icon: 'hand', done: () => high(bro) > 480, x: () => lift.def.rope.x, y: () => FEET - lift.def.rope.h, gx: () => lift.def.rope.x - 20 },
+      { who: sis, icon: null, done: () => sis.on === lift.a || high(sis) > 480, x: () => lift.def.a, y: () => lift.a.y - 30, gx: () => lift.def.a, gy: () => FEET - lift.a.y },
+      { who: bro, icon: 'hand', done: () => high(sis) > 480, x: () => freeBox().x, y: () => freeBox().y - 50, gx: () => lift.def.b + 120, gy: () => lift.def.high } ],
+    [ { who: bro, icon: 'hands', done: () => KIT_SIG.crank || high(bro) > 430, x: () => crank.def.x, y: () => FEET - crank.def.h, gx: () => shelf6.x[0] + 20 },
+      { who: bro, icon: 'hand', done: () => KIT_SIG.crank, x: () => crank.def.x, y: () => FEET - crank.def.h, gx: () => crank.def.x - 10, gy: () => shelf6.h },
+      { who: sis, icon: 'up', done: () => sis.x > wall6.x[1] && bro.x > wall6.x[1], x: () => para.def.x, y: () => FEET - para.def.h - 20, gx: () => para.def.x - 40 } ],
+    [ { who: sis, icon: 'hand', done: () => bridge.state.down || sis.holding === post.thing, x: () => post.def.x, y: () => FEET - post.def.h, gx: () => post.def.x - 20 },
+      { who: bro, icon: 'hand', done: () => bridge.state.down, x: () => hut.def.x, y: () => FEET - hut.def.h, gx: () => hut.def.x - 20 } ],
+  ];
+})();
+const hint = { key: '', t: 0, step: null, fast: QS.get('hints') === 'fast' ? 10 : 1 };
+function updateHints(dt) {
+  const steps = HINTS[game.station] || [], i = steps.findIndex((s) => !s.done()), key = game.station + ':' + i;
+  if (key !== hint.key) { hint.key = key; hint.t = 0; }
+  hint.step = i < 0 || game.exitT >= 0 || (game.station === 0 && !game.map.landed(2)) ? null : steps[i];
+  if (hint.step) hint.t += dt * hint.fast;
+}
+function drawGhost(c, p, x, y, icon, t) { // a faint copy of a sibling, washed in their colour, with the sign for what to press
+  const g = Object.assign(Object.create(p), { x, y, alpha: 0, m: 0, phase: 0, cheer: 0, giggle: 0, sqx: 1, sqy: 1, tilt: 0, scale: 1, dir: 1, carry: null,
+    ex: Object.assign({}, p.ex, { arm: icon === 'hand' ? 1 : 0, happy: 0, sweat: 0, blinkF: 1 }),
+    pose: Object.assign({}, p.pose, { air: 0, rise: 0, carry: 0, hold: 0, ride: 0, toss: 0, strain: 0, crawl: 0, climb: 0, t }) });
+  drawChar(g, t); // fills the character buffer without showing it; then the buffer is washed and shown faintly
+  const b = buf.c; b.setTransform(1, 0, 0, 1, 0, 0); b.globalCompositeOperation = 'source-atop'; b.globalAlpha = 0.6; b.fillStyle = p.col; b.fillRect(0, 0, buf.cv.width, buf.cv.height); b.globalAlpha = 1; b.globalCompositeOperation = 'source-over';
+  c.save(); c.globalAlpha = 0.42 + Math.sin(t * 3) * 0.1; c.drawImage(buf.cv, x - BAX, y - BAY, BW, BH); c.restore();
+  if (icon) drawBadge(c, x, y - p.standH - 40, icon, p.col, t);
+}
+function drawHintMarks(c, t) {
+  const s = hint.step; if (!s) return;
+  const x = s.x(), y = s.y(), col = s.who.col;
+  if (hint.t >= HINT_TIMES[0]) for (let k = 0; k < 4; k++) { const a = t * 1.8 + k * TAU / 4, r = 46 + Math.sin(t * 3 + k) * 8; star(c, x + Math.cos(a) * r, y + Math.sin(a) * r * 0.7, 11 + Math.sin(t * 6 + k * 2) * 5, t * 2 + k, 0.9); }
+  if (hint.t >= HINT_TIMES[1]) { const ay = y - 96 + Math.sin(t * 5) * 10; c.save(); c.translate(x, ay); c.rotate(Math.PI); drawIcon(c, 'up', 0, 0, 1.7, col); c.restore(); }
+  if (hint.t >= HINT_TIMES[2]) drawGhost(c, s.who, s.gx(), FEET - (s.gy ? s.gy() : 0), s.icon, t);
+}
+function drawGoalBubble(c, t) { // the picture bubble: what this station is about. It shows on arriving, and again whenever both stand still for a while.
+  const icon = KIT_SIG.bridge ? 'tree' : STATIONS[game.station].goal; if (!icon || (game.station === 0 && !game.map.landed(2))) return;
+  game.goalT = game.goalKey === icon ? game.goalT : 0; game.goalKey = icon;
+  const a = game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 6 && bro.idle > 6 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 6) * 2) : 0; if (a <= 0) return;
+  const x = clamp(sis.x, camX + 90, camX + VW - 90), y = sis.y - sis.standH - 118 + Math.sin(t * 2) * 3;
+  c.save(); c.globalAlpha = a; ell(c, x - 14, y + 62, 7, 7, '#fffbf0', a); ell(c, x - 4, y + 46, 10, 10, '#fffbf0', a); c.globalAlpha = a;
+  c.beginPath(); c.ellipse(x, y, 54, 42, 0, 0, TAU); fs(c, '#fffbf0', '#8a6a3a', 3); drawIcon(c, icon, x, y, 1.9); c.restore();
 }
 function drawFlyingPieces(c, t) { // the torn pieces on the wind, and a piece hopping up to the corner of the screen when it is found
   const m = game.map; if (!m.gust) return;
@@ -109,7 +183,7 @@ function drawFlyingPieces(c, t) { // the torn pieces on the wind, and a piece ho
 function drawHud(c, top) { // pictures only: the map pieces found, and the stars
   const x = camX + 22, m = game.map;
   c.save(); rrect(c, x, top + 20, 26 + starsAll * 42, 52, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
-  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = o.star.got ? 1 : 0.22; const pop = o.star.got ? 1 + Math.max(0, 0.5 - o.star.t) * 0.9 : 1; drawIcon(c, 'star', x + 34 + i * 42, top + 47, 1.05 * pop); });
+  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = o.star.got ? 1 : 0.2; const pop = o.star.got ? 1 + Math.max(0, 0.5 - o.star.t) * 0.9 : 1; drawIcon(c, o.star.icon, x + 34 + i * 42, top + 47, 1.05 * pop); });
   c.globalAlpha = 1;
   if (m.gust && m.t > 1) { // four places for the pieces of the map
     rrect(c, x, top + 82, 204, 56, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
@@ -119,12 +193,13 @@ function drawHud(c, top) { // pictures only: the map pieces found, and the stars
 }
 function drawEnd(c, t, top) { // the end card: pictures and numbers only
   const a = Math.min(1, game.endT); c.fillStyle = `rgba(28,18,10,${a * 0.8})`; c.fillRect(camX - 10, 0, VW + 20, VH + top + 40);
-  c.save(); c.globalAlpha = a; const w = 620, h = 330, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40; parchment(c, x, y, w, h);
+  c.save(); c.globalAlpha = a; const w = 620, h = 370, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40; parchment(c, x, y, w, h);
   game.map.got.forEach((g, i) => drawPiece(c, x + w / 2 - 99 + i * 66, y + 78, 0.12 * (i - 1.5), MAP.pictures[i], 1.7));
   const secs = Math.floor(game.finished || game.time), time = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
-  c.fillStyle = INK; c.font = '700 44px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
-  drawIcon(c, 'star', x + 120, y + 190, 2.2); c.fillText(starsGot() + ' / ' + starsAll, x + 166, y + 192);
-  c.beginPath(); circ(c, x + 370, y + 190, 30); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 370, y + 172); c.lineTo(x + 370, y + 190); c.lineTo(x + 383, y + 198); c.stroke(); c.fillText(time, x + 414, y + 192);
+  c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
+  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = a * (o.star.got ? 1 : 0.2); drawIcon(c, o.star.icon, x + w / 2 - (starsAll - 1) * 27 + i * 54, y + 158, 1.5); }); c.globalAlpha = a;
+  drawIcon(c, 'star', x + 120, y + 238, 1.7); c.fillText(starsGot() + ' / ' + starsAll, x + 160, y + 240);
+  c.beginPath(); circ(c, x + 370, y + 238, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 370, y + 222); c.lineTo(x + 370, y + 238); c.lineTo(x + 382, y + 245); c.stroke(); c.fillStyle = INK; c.fillText(time, x + 410, y + 240);
   if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', x + w / 2, y + h - 48, 1.5, '#6d9b45'); } // "press jump to go on"
   c.restore(); c.textBaseline = 'alphabetic';
 }
@@ -171,10 +246,10 @@ function frame(now) {
     c.fillStyle = lg(c, 0, FEET + 26, 0, VH + top, 'rgba(111,154,176,.55)', 'rgba(63,106,130,.96)'); c.fillRect(a + 16, FEET + 26, b - a - 32, VH + top - FEET);
     c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2.5; for (let i = 0; i < 7; i++) { const xx = a + 30 + ((i * 139 + t * 26) % (b - a - 100)), yy = FEET + 34 + (i % 3) * 22; c.beginPath(); c.moveTo(xx, yy); c.quadraticCurveTo(xx + 18, yy - 5, xx + 36, yy); c.stroke(); }
   }
-  drawFlyingPieces(c, t);
+  drawFlyingPieces(c, t); if (!game.done && game.exitT < 0) drawHintMarks(c, t);
   drawLampGlow(c); drawLeaves(c, t); drawMoveFx(c); drawSparks(c);
   drawStreetGlow(c);
-  if (ZOOM <= 1) { if (!game.done) { drawHints(c, t); drawHud(c, top); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
+  if (ZOOM <= 1) { if (!game.done) { drawHints(c, t); drawGoalBubble(c, t); drawHud(c, top); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
   requestAnimationFrame(frame);
 }
 

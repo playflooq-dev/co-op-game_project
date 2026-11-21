@@ -237,19 +237,24 @@ KIT.bell = (world, d, ground) => {
 };
 
 // ---------- a star to collect: stand next to it (jumping past does not count)
+// icon: which picture it is (a star if none). ride: true means the brother can also take it from her shoulders, so
+// it can hang where neither reaches alone. when: 'name' has no place at all: it is given when the world sets
+// KIT_SIG['name'] (for petting the puppy, ringing the bell...).
 KIT.star = (world, d, ground) => {
-  const x = d.x, y = ground - d.h, st = { got: false, t: 0 };
+  const x = d.x || 0, y = ground - (d.h || 0), icon = d.icon || 'star', st = { got: false, t: 0, icon, x, y };
   return { star: st,
     after(dt) {
       if (st.got) { st.t += dt; return; }
-      for (const p of [MV.sis, MV.bro]) if (!p.gone && !p.held && p.grounded && Math.abs(p.x - x) < p.w / 2 + 30 && y > p.y - p.h - 20 && y < p.y + 10) { st.got = true; p.cheer = 0.7; snd('star'); burst(x, y, 12); break; }
+      if (d.when) { if (KIT_SIG[d.when]) { st.got = true; st.x = KIT_SIG[d.when][0] || MV.sis.x; st.y = KIT_SIG[d.when][1] || MV.sis.y - 260; snd('star'); burst(st.x, st.y, 12); } return; }
+      for (const p of [MV.sis, MV.bro]) if (!p.gone && (p.held ? d.ride && p === MV.bro && MV.duo.state === 'on' : p.grounded) && Math.abs(p.x - x) < p.w / 2 + 30 && y > p.y - p.h - 20 && y < p.y + 10) { st.got = true; p.cheer = 0.7; snd('star'); burst(x, y, 12); break; }
     },
     draw(c, t) {
-      if (st.got) return; const bob = Math.sin(t * 2.4 + x) * 6;
-      soft(c, x, y + bob, 48, 48, '#fff3b8', 0.5); c.save(); c.translate(x, y + bob); c.rotate(Math.sin(t * 1.7 + x) * 0.16); drawIcon(c, 'star', 0, 0, 1.7); c.restore();
-      star(c, x + 18, y + bob - 18, 9 + Math.sin(t * 5 + x) * 3, t * 2, 0.8);
+      if (st.got || d.when) return; const bob = Math.sin(t * 2.4 + x) * 6;
+      soft(c, x, y + bob, 48, 48, '#fff3b8', 0.5); c.save(); c.translate(x, y + bob); c.rotate(Math.sin(t * 1.7 + x) * 0.16); c.beginPath(); circ(c, 0, 0, 27); fs(c, '#fffbf0', '#8a6a3a', 2.5); drawIcon(c, icon, 0, 0, 1.25); c.restore();
+      star(c, x + 20, y + bob - 20, 9 + Math.sin(t * 5 + x) * 3, t * 2, 0.8);
     } };
 };
+KIT.sticker = KIT.star;
 
 // ---------- pressure plates. Small and blue: anybody, or any box. Big and green: only the sister or a heavy crate.
 KIT.plate = (world, d, ground) => {

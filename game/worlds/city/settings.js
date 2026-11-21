@@ -65,19 +65,25 @@ const MAP = {
   pictures: ['star', 'fish', 'moon', 'apple'], // the picture on each piece
 };
 
+// Hints, as pictures: when a station's next step stays undone this many seconds, first the right thing sparkles,
+// then an arrow points at it, then a faint ghost of the sibling whose job it is shows where to stand.
+// (city.html?hints=fast makes them come ten times sooner, for checking.)
+const HINT_TIMES = [20, 40, 60];
+
 // ---------- THE STATIONS, left to right. Each tries one idea, fits on one screen, and needs both siblings.
 // `things` places objects: kinds from shared/kit.js (block, ledge, box, crate, plate, gate, lever, seesaw, pulley,
-// boat, ferry, ladder, branch, plank, tunnel, bar, trap, star) and the city's own from things.js (find, puppy,
+// boat, ferry, ladder, branch, plank, tunnel, bar, trap, sticker) and the city's own from things.js (find, puppy,
 // fountain, striker, jet, parasol, bridge). x is the place along the street ([from, to] for long things), h the
-// height above the pavement. `view` is the stretch the camera holds still on while both are inside it.
+// height above the pavement. `view` is the stretch the camera holds still on while both are inside it; `goal` is
+// the picture shown in the thought bubble. Stickers are extras: none is needed to go on.
 // city.html?station=3 starts at station 3.
 const STATIONS = [
-  { name: '0 Maple Street: jump, carry, and the torn map', x: [150, 3700], start: [380, 540], view: [2400, 3720], things: [
+  { name: '0 Maple Street: jump, carry, and the torn map', goal: 'piece', x: [150, 3700], start: [380, 540], view: [2400, 3720], things: [
     // learn to jump: small steps and a low wall
     { kind: 'block', x: [640, 740], h: 62 }, { kind: 'block', x: [740, 920], h: 124 }, { kind: 'block', x: [920, 1020], h: 62 },
     { kind: 'block', look: 'wall', x: [1210, 1250], h: 150 },
     // learn to carry: a light box, and a shelf that is too high to jump to without it
-    { kind: 'box', x: 1420 }, { kind: 'ledge', look: 'shelf', x: [1560, 1760], h: 255 }, { kind: 'star', x: 1660, h: 325 },
+    { kind: 'box', x: 1420 }, { kind: 'ledge', look: 'shelf', x: [1560, 1760], h: 255 }, { kind: 'sticker', icon: 'key', x: 1660, h: 325 },
     { kind: 'bar', x: 1850 },
     // the torn map: one piece on a shop sign (she reaches it), one in a drain (only his hand fits),
     // one in a window box (too high for both: she lifts him up). The gate opens when all three are found.
@@ -85,35 +91,41 @@ const STATIONS = [
     { kind: 'find', piece: 1, look: 'drain', x: 3020, h: 6, who: 'bro' },
     { kind: 'find', piece: 2, look: 'windowbox', x: 3360, h: 352 },
     { kind: 'gate', x: 3650, by: ['map3'] },
+    { kind: 'sticker', icon: 'bird', x: 2540, h: 330, ride: true }, // high on a lamp: only from her shoulders
   ] },
-  { name: '1 The flour mill: plate and gate', x: [3700, 4900], start: [3760, 3840], view: [3720, 4900], things: [
+  { name: '1 The flour mill: plate and gate', goal: 'crate', x: [3700, 4900], start: [3760, 3840], view: [3720, 4900], things: [
     // the shutter needs the big green plate held down. The heavy crate would do it, but it is up on the hoist:
     // only his small hand fits the release in the low hatch. Down it comes; she carries it onto the plate.
     { kind: 'lever', id: 'hoist', x: 3930, h: 70, who: 'bro', once: true },
     { kind: 'trap', x: [4020, 4190], h: 262, by: 'hoist' }, { kind: 'crate', x: 4105, h: 262 },
     { kind: 'plate', id: 'mill', big: true, x: 4480 }, { kind: 'gate', x: 4700, by: ['mill'] },
   ] },
-  { name: '2 The market: a box as a step', x: [4900, 6760], start: [4960, 5040], view: [5080, 6480], things: [
+  { name: '2 The market: a box as a step', goal: 'paw', x: [4900, 6760], start: [4960, 5040], view: [5080, 6480], things: [
     // the puppy sits on a high awning with the last map piece. Too high even from her shoulders:
     // bring the light box, both step onto it, and then she lifts him.
     { kind: 'box', x: 5230 }, { kind: 'puppy', x: 5880, h: 432 },
     { kind: 'gate', x: 6640, by: ['map4'] }, { kind: 'bar', x: 6560 },
+    { kind: 'ledge', look: 'shelf', x: [6240, 6420], h: 255 }, { kind: 'sticker', icon: 'sock', x: 6330, h: 325 }, // over the fish stall: the box is a step
+    { kind: 'sticker', icon: 'paw', when: 'petted' },                                                              // pet the puppy once it is down
   ] },
-  { name: '3 Fountain Square: the see-saw', x: [6760, 9120], start: [6840, 6920], view: [7800, 9000], things: [
+  { name: '3 Fountain Square: the see-saw', goal: 'ladder', x: [6760, 9120], start: [6840, 6920], view: [7800, 9000], things: [
     // nothing has to be done at the fountain or the bell game: they are there to play with
     { kind: 'fountain', x: 7230 }, { kind: 'striker', x: 7580 },
     // a wall with a balcony over it. She jumps onto the green end of the see-saw and he flies up to the balcony;
     // up there he lets the rope ladder down for her. They walk over the wall and hop down on the far side.
     { kind: 'seesaw', x: 8090, half: 170 },
     { kind: 'block', look: 'wall', x: [8560, 8640], h: 520 }, { kind: 'ledge', look: 'balcony', x: [8180, 8800], h: 520 },
-    { kind: 'ladder', x: 8470, h: 520 }, { kind: 'star', x: 8700, h: 590 },
+    { kind: 'ladder', x: 8470, h: 520 },
+    { kind: 'sticker', icon: 'drop', x: 7230, h: 345, ride: true }, // on top of the fountain: only from her shoulders
+    { kind: 'sticker', icon: 'bell', when: 'rang' },                // ring the bell in the bell game
   ] },
-  { name: '4 The canal: light feet only', x: [9120, 10440], start: [9160, 9230], view: [9130, 10420], things: [
+  { name: '4 The canal: light feet only', goal: 'boat', x: [9120, 10440], start: [9160, 9230], view: [9130, 10420], things: [
     // the small blue boats hold him and sink under her. He crosses, and his lever on the far bank sends the ferry for her.
     { kind: 'boat', x: 9417 }, { kind: 'boat', x: 9639 }, { kind: 'boat', x: 9861 }, { kind: 'boat', x: 10083 },
     { kind: 'ferry', x: [9409, 10091], by: 'ferry', home: 1 }, { kind: 'lever', id: 'ferry', x: 10280, h: 150 },
+    { kind: 'sticker', icon: 'boat', x: 9861, h: 66 }, // in the third boat: only he can stand there
   ] },
-  { name: '5 Old Town: the pulley lift', x: [10440, 12420], start: [10500, 10570], view: [10520, 11720], things: [
+  { name: '5 Old Town: the pulley lift', goal: 'lift', x: [10440, 12420], start: [10500, 10570], view: [10520, 11720], things: [
     // the street goes on up on the terrace. He stands on the lift; she hauls on the rope and up he goes. On the high
     // ledge are boxes: two of them on the other platform are enough (it has a block and tackle) to lift her.
     { kind: 'pulley', a: 11290, b: 10760, w: 160, high: 520, bias: [0.5, 0], gear: 2, catch: true, rope: { x: 10640, h: 170 } },
@@ -125,14 +137,14 @@ const STATIONS = [
     { kind: 'block', x: [12050, 12140], h: 390 }, { kind: 'block', x: [12140, 12230], h: 260 }, { kind: 'block', x: [12230, 12320], h: 130 },
     { kind: 'bar', x: 12380 },
   ] },
-  { name: '6 The cafe: boost and toss', x: [12420, 14000], start: [12480, 12560], view: [12560, 13900], things: [
+  { name: '6 The cafe: boost and toss', goal: 'parasol', x: [12420, 14000], start: [12480, 12560], view: [12560, 13900], things: [
     // a wall in the way, and three closed parasols. The crank is on a high shelf: she tosses him up, he winds it,
     // and the parasols open into steps over the wall.
     { kind: 'ledge', look: 'shelf', x: [12700, 12860], h: 440 }, { kind: 'lever', id: 'crank', x: 12770, h: 560, base: 440, once: true },
     { kind: 'parasol', x: 13050, h: 160, by: 'crank' }, { kind: 'parasol', x: 13260, h: 310, by: 'crank', late: 0.35 }, { kind: 'parasol', x: 13470, h: 460, by: 'crank', late: 0.7 },
-    { kind: 'block', look: 'wall', x: [13600, 13690], h: 520 }, { kind: 'star', x: 13645, h: 590 },
+    { kind: 'block', look: 'wall', x: [13600, 13690], h: 520 }, { kind: 'sticker', icon: 'note', x: 13645, h: 590 },
   ] },
-  { name: '7 The Old Bridge: two levers at once', x: [14000, 16480], start: [14080, 14160], view: [14250, 15850], things: [
+  { name: '7 The Old Bridge: two levers at once', goal: 'bridge', x: [14000, 16480], start: [14080, 14160], view: [14250, 15850], things: [
     // the bridge comes down only while both levers are held: hers high on the post, his low in the little hut door
     { kind: 'bridge', x: RIVER, by: ['post', 'hut'], time: 2.6 },
     { kind: 'lever', id: 'post', hold: true, x: 14380, h: 250 }, { kind: 'lever', id: 'hut', hold: true, x: 14800, h: 80, who: 'bro' },

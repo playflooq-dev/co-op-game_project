@@ -58,7 +58,7 @@
     check('he carries the light box to the shelf', await carry(bro, box0, shelf.x[0] - 60, 1), `box at ${box0.x.toFixed(0)}`);
     await go(bro, box0.x); await hop(bro); check('he hops onto the box', bro.on === box0);
     await leap(bro, bro.x - 5); check('and from the box onto the shelf', near(up(bro), shelf.h, 3), `height ${up(bro).toFixed(0)}`);
-    await go(bro, 1660); check('star on the shelf', of('star')[0].star.got);
+    await go(bro, 1660); check('the sticker on the shelf', of('sticker')[0].star.got);
     await go(sis, 2380); await go(bro, 2330);
     check('the bar lets them through', sis.x > 1900 && bro.x > 1900);
     const gate0 = inStation(0, 'gate')[0], finds = of('find');

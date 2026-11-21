@@ -76,8 +76,9 @@ function drawPup(c, x, y, dir, t, run, sit, piece) {
 }
 KIT.puppy = (world, d, ground) => {
   const x = d.x, top = ground - d.h, st = { mode: 'sit', t: 0, x, y: top, dir: -1, bark: 0, hop: 0 };
-  const thing = { x, y: top + 8, canUse: (p) => st.mode === 'sit' && (p.grounded || p.held) && Math.abs(p.x - x) <= 95 && sibReachY(p) <= top + 14,
-    use(p) { st.mode = 'jump'; st.t = 0; st.to = x + (p.x < x ? 150 : -150); takePiece(3, p, x, top - 20); snd('bark'); } };
+  const thing = { get x() { return st.mode === 'sit' ? x : st.x; }, y: top + 8, // up on the awning it gives up the map piece; down on the ground it likes to be petted (once, for a sticker)
+    canUse: (p) => (st.mode === 'sit' ? (p.grounded || p.held) && Math.abs(p.x - x) <= 95 && sibReachY(p) <= top + 14 : st.mode === 'follow' && !KIT_SIG.petted && p.grounded && Math.abs(p.x - st.x) < 100 && Math.abs(p.y - st.y) < 30),
+    use(p) { if (st.mode === 'sit') { st.mode = 'jump'; st.t = 0; st.to = x + (p.x < x ? 150 : -150); takePiece(3, p, x, top - 20); } else { st.hop = 0.35; st.bark = 1.6; p.reachT = 0.3; burst(st.x, st.y - 70, 8); KIT_SIG.petted = [st.x, st.y - 90]; } snd('bark'); } };
   return { state: st, thing,
     after(dt) {
       st.t += dt; st.bark = Math.max(0, st.bark - dt); st.hop = Math.max(0, st.hop - dt);
@@ -140,7 +141,7 @@ KIT.striker = (world, d, ground) => { // the bell game: grab starts the light ru
       if (k.phase === 'idle') return; k.t += dt;
       if (k.phase === 'aim') { const u = (k.t / period) % 2; k.pos = u < 1 ? u : 2 - u; if (k.t > 9 || Math.abs(k.who.x - x) > 220) k.phase = 'idle'; return; }
       const up = 0.4; k.puck = k.t < up ? k.power * Math.sin(k.t / up * Math.PI / 2) : k.power * Math.max(0, 1 - Math.pow((k.t - up) / 0.7, 2));
-      if (!k.rang && k.t >= up) { k.rang = true; const p = k.who, score = Math.round(k.power * 100); k.best[p.who] = Math.max(k.best[p.who] || 0, score); if (k.power >= ring) { snd('ding'); burst(x, g - H0 - 40, 14); p.cheer = CHEER; k.bell = true; } }
+      if (!k.rang && k.t >= up) { k.rang = true; const p = k.who, score = Math.round(k.power * 100); k.best[p.who] = Math.max(k.best[p.who] || 0, score); if (k.power >= ring) { snd('ding'); burst(x, g - H0 - 40, 14); p.cheer = CHEER; KIT_SIG.rang = [x, g - H0 - 60]; } }
       if (k.t > up + 0.75) k.phase = 'idle';
     },
     draw(c, t) {

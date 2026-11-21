@@ -97,3 +97,16 @@ first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bel
   on to help with a later station.
 - Cut, as the brief says: the crossing, the metro (not kept as a ride), the bus, every code. Also cut: the ladder
   on wheels. Kept for fun: the water jets (on the terrace), the fountain, the pigeons and the bell game.
+
+**Phase 4 is done (2026-11-21).** Nothing in the city needs reading now.
+- The goal is a picture in a thought bubble over the sister (each station has one in `settings.js`); it shows on
+  arriving and again when both stand still for a while.
+- Hints are pictures too. Each station is a list of steps in `lab.js` (`HINTS`): whose job, where, what to press.
+  When the next step stays undone for 20 s the right thing sparkles, after 40 s an arrow in that sibling's colour
+  points at it, after 60 s a faint ghost of that sibling stands in the right place with the sign for the key.
+  `city.html?hints=fast` makes them come ten times sooner.
+- Signs over heads: a hand (grab or use), two hands (the lift), an arrow (climb).
+- Eight stickers, none needed: a key (box as a step), a bird and a drop (only from her shoulders), a sock (box as a
+  step), a paw (pet the puppy), a bell (ring the bell game), a boat (only he can stand there), a note (over the
+  parasols). The end card shows the map, the stickers, a count and the time.
+- Words that remain: the shop names painted on the building art, the loading line, the debug and tuning views.
