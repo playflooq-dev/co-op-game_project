@@ -260,7 +260,10 @@ function comeBack(p) {
   // next to the partner, unless that would be a short cut (the partner is somewhere this one could not have walked to)
   const join = !o.gone && !o.held && o.grounded && o.on && o.on.isSolid && (!hooks.canJoin || hooks.canJoin(p, o));
   let x = p.safe.x, y = p.safe.y;
-  if (join) { const side = o.x - o.dir * 80; x = world.fits(p, side, o.y, p.standH) && world.below(p, side, o.y - 20).y <= o.y + 20 ? side : o.x; y = o.y; }
+  if (join) { // behind the partner if that is firm ground, else in front, else on the same spot
+    const firm = (sx) => { const fl = world.below(p, sx, o.y - 20); return world.fits(p, sx, o.y, p.standH) && fl.y <= o.y + 20 && fl.on.isSolid && sx > fl.on.x0 + 24 && sx < fl.on.x1 - 24; };
+    x = firm(o.x - o.dir * 80) ? o.x - o.dir * 80 : firm(o.x + o.dir * 80) ? o.x + o.dir * 80 : o.x; y = o.y;
+  }
   Object.assign(p, { x, y: y - 2, h: p.standH, crawl: false, vx: 0, vy: -300, held: false, grounded: false, on: null, gone: null, alpha: 1, flying: false, tossed: false, sqv: 6 });
   snd('pop'); puff(x, y - p.h / 2, 12, '#fff6dc', 1.4); burst(x, y - p.h - 10, 5);
 }

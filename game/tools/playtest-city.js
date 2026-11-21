@@ -3,7 +3,8 @@
 // Run python tools/dev_server.py 8780 log.txt, open http://127.0.0.1:8780/tools/playtest-city.html and read log.txt:
 // the last line says PLAY PASSED or PLAY FAILED. (It always starts at station 0; ?fps=30 runs it like a slow device.)
 // It presses the same keys a player would and never moves anybody by magic, so if it gets through, the level can be
-// finished. tools/playtest-city.html?solo=1 runs the other test instead: that one sibling alone cannot finish a station.
+// finished. tools/playtest-city.html?solo=1 runs the other test instead (further down): that one sibling alone cannot
+// finish a station.
 (async () => {
   let sent = Promise.resolve(); // one line at a time: two reports arriving together can overwrite each other in the log file
   const log = (t) => (sent = sent.then(() => fetch('/log', { method: 'POST', body: t }).catch(() => {})));
@@ -46,7 +47,88 @@
 
   let fails = 0;
   const check = (name, ok, info = '') => { if (!ok) fails++; log(`${ok ? 'ok  ' : 'FAIL'} ${name}${info ? '   [' + info + ']' : ''}`); return ok; };
-  if (QS.get('solo')) { window.TEST = { log, wait, frame, frames, key, tap, until, up, near, go, face, hop, leap, carry, liftUp, of, inStation, check, fails: () => fails, JUMP, GRAB }; return; } // the solo test takes over (playtest-city-solo.js)
+  // ---------- the solo test (?solo=1): one sibling works alone while the other stands still at the start of the
+  // station, and every short cut I could think of is tried. Each check passes when the short cut does NOT work.
+  // (It puts the siblings and boxes where a try starts; the tries themselves use the keys.)
+  if (QS.get('solo')) {
+    const KEYS = ['KeyA', 'KeyD', 'KeyW', 'KeyS', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    const put = (b, x, h = 0) => Object.assign(b, { x, y: FEET - h - 1, vx: 0, vy: 0, grounded: false, on: null, held: false, carrier: null });
+    const set = async (xs, xb, hs = 0, hb = 0) => { for (const c of KEYS) key(c, false); if (MV.duo.state) endRide(); MV.pending = null; for (const p of players) { if (p.carry) putDown(p); Object.assign(p, { crawl: false, h: p.standH, holding: null, climb: null, gravity: 1 }); } put(sis, xs, hs); put(bro, xb, hb); camX = cameraTarget(); await until(() => sis.grounded && bro.grounded, 3000); await frames(4); };
+    const jumpGrab = async (p) => { key(JUMP[p.who], true); await frames(2); key(JUMP[p.who], false); await until(() => p.vy > -80, 1500); await tap(GRAB[p.who]); await until(() => p.grounded, 2500); await frames(3); }; // grab at the top of a jump
+    const highest = async (p, doIt) => { let top = 0; const w = setInterval(() => { top = Math.max(top, up(p)); }, 10); await doIt(); clearInterval(w); return top; };
+    try {
+      const m = game.map; m.gust = true; m.t = 99; // the map is already torn
+      // ---- station 0: the three map pieces
+      const [f0, f1, f2] = of('find').map((o) => o.def), gate0 = inStation(0, 'gate')[0], box0 = inStation(0, 'box')[0].body, bar0 = inStation(0, 'bar')[0].def;
+      await set(f1.x - 15, 2460); await tap('KeyS'); check('0: her hand does not fit the drain', !m.got[1]);
+      await set(f2.x - 20, 2460); await tap('KeyS'); await jumpGrab(sis); check('0: she cannot reach the window box, even jumping', !m.got[2]);
+      await set(2460, f0.x - 20); await tap('ArrowDown'); await jumpGrab(bro); check('0: he cannot reach the shop sign, even jumping', !m.got[0]);
+      await set(2460, f2.x - 20); await jumpGrab(bro); check('0: he cannot reach the window box alone', !m.got[2]);
+      put(box0, bar0.x - 260); await set(bar0.x - 500, bar0.x - 345); await tap('ArrowDown'); await until(() => box0.liftT >= 1, 2000); await go(bro, bar0.x + 200);
+      check('0: the bar stops him carrying the box on to the sign', !bro.carry && box0.x < bar0.x && bro.x > bar0.x, `box at ${box0.x.toFixed(0)}`);
+      put(box0, bar0.x - 260); await set(bar0.x - 345, bar0.x - 500); await tap('KeyS'); await until(() => box0.liftT >= 1, 2000); await go(sis, bar0.x + 200);
+      check('0: and stops her too', !sis.carry && box0.x < bar0.x && sis.x > bar0.x, `box at ${box0.x.toFixed(0)}`);
+      check('0: the gate is still shut', gate0.state.open === 0 && !KIT_SIG.map3);
+      // ---- station 1: the hoist, the crate, the green plate
+      const crate = inStation(1, 'crate')[0].body, plate1 = inStation(1, 'plate')[0], gate1 = inStation(1, 'gate')[0], hoist = inStation(1, 'lever')[0];
+      await set(hoist.def.x - 15, 3760); await tap('KeyS'); check('1: her hand does not fit the hatch', !KIT_SIG.hoist);
+      await set(crate.x, 3760); await jumpGrab(sis); check('1: she cannot jump up and take the crate off the hoist', !sis.carry && up(crate) > 200);
+      await set(plate1.def.x, 3760); await until(() => gate1.state.open >= 1, 2500); await go(sis, gate1.def.x + 120, 4000);
+      check('1: standing on the plate herself does not get her through', sis.x < gate1.def.x, `she is at ${sis.x.toFixed(0)}`);
+      await set(3760, hoist.def.x - 15); await tap('ArrowDown'); await until(() => crate.grounded && up(crate) < 3, 3000);
+      await go(bro, crate.x - 84); await tap('ArrowDown'); await frames(8); check('1: he cannot lift the crate', !bro.carry);
+      await go(bro, plate1.def.x); await wait(800); check('1: he is too light for the green plate', gate1.state.open === 0);
+      // ---- station 2: the puppy on the awning
+      const box2 = inStation(2, 'box')[0].body, pup = inStation(2, 'puppy')[0];
+      put(box2, pup.def.x - 20); await set(pup.def.x - 20, 4960, 200); await tap('KeyS'); await jumpGrab(sis);
+      check('2: from the box she cannot reach the puppy, even jumping', !m.got[3] && pup.state.mode === 'sit');
+      await set(4960, pup.def.x - 20, 0, 200); await tap('ArrowDown'); await jumpGrab(bro);
+      check('2: from the box he cannot reach it either', !m.got[3] && pup.state.mode === 'sit');
+      // ---- station 3: the see-saw and the balcony
+      const saw = of('seesaw')[0], balcony = inStation(3, 'ledge')[0].def, ladder = of('ladder')[0];
+      await set(6840, saw.def.x + 130, 0, 60);
+      const b3 = await highest(bro, async () => { await hop(bro); await go(bro, saw.def.x - 330); await leap(bro, saw.def.x - 250); await hop(bro); });
+      check('3: he cannot launch himself', b3 < balcony.h - 150, `highest ${b3.toFixed(0)}`);
+      await set(saw.def.x - 330, 6840);
+      const s3 = await highest(sis, async () => { await leap(sis, saw.def.x - 255); await go(sis, ladder.def.x); key('KeyW', true); await wait(1500); key('KeyW', false); await until(() => sis.grounded, 2000); });
+      check('3: she cannot get up to the balcony alone', s3 < balcony.h - 150 && ladder.state.out === 0, `highest ${s3.toFixed(0)}`);
+      // ---- station 4: the canal
+      await set(9160, 9230); key('KeyD', true); await until(() => sis.gone, 6000); key('KeyD', false); await until(() => !sis.gone && sis.grounded, 3000);
+      check('4: she cannot cross on the boats', sis.x < CANAL[0], `she is at ${sis.x.toFixed(0)}`);
+      await set(9160, 9230); for (let i = 0; i < 4; i++) { key('KeyD', true); await tap('KeyW'); await wait(500); } key('KeyD', false); await wait(1600); await until(() => !sis.gone && sis.grounded && sis.on && sis.on.isSolid, 5000); // run and jump at the boats a few times, then see where she ends up
+      check('4: not by jumping either', sis.x < CANAL[0], `she is at ${sis.x.toFixed(0)}`);
+      // ---- station 5: the lift
+      const lift = of('pulley')[0];
+      await set(10500, lift.def.rope.x - 20); key('ArrowDown', true); await wait(1500); key('ArrowDown', false);
+      check('5: the lift does not go up empty', lift.state.u === 0);
+      await set(10500, lift.def.a); await wait(1200); const b5 = await highest(bro, async () => { await hop(bro); });
+      check('5: he cannot get up alone', lift.state.u === 0 && b5 < 300, `highest ${b5.toFixed(0)}`);
+      await set(lift.def.rope.x - 20, 10500); key('KeyS', true); await wait(1500); key('KeyS', false); await go(sis, lift.def.a); await wait(1200); const s5 = await highest(sis, async () => { await hop(sis); });
+      check('5: she cannot get up alone', lift.state.u === 0 && s5 < 300, `highest ${s5.toFixed(0)}`);
+      // ---- station 6: the crank and the parasols
+      const shelf6 = inStation(6, 'ledge')[0].def, wall6 = inStation(6, 'block')[0].def;
+      for (const p of [sis, bro]) {
+        await set(p === sis ? shelf6.x[0] + 60 : 12480, p === bro ? shelf6.x[0] + 60 : 12480);
+        const top = await highest(p, async () => { await hop(p); await go(p, wall6.x[0] + 300, 5000); });
+        check(`6: ${p.who} cannot reach the crank or pass the wall alone`, top < shelf6.h - 100 && p.x < wall6.x[0] && !KIT_SIG.crank, `highest ${top.toFixed(0)}, at ${p.x.toFixed(0)}`);
+      }
+      // ---- station 7: the bridge
+      const bridge = of('bridge')[0], [post, hut] = inStation(7, 'lever');
+      await set(post.def.x - 15, 14160); key('KeyS', true); await wait(3200); const held = sis.holding === post.thing; key('KeyS', false);
+      check('7: her lever alone does not move the bridge', held && bridge.state.prog === 0);
+      await set(hut.def.x - 15, 14160); key('KeyS', true); await wait(600); check('7: her hand does not fit the hut lever', !sis.holding); key('KeyS', false);
+      await set(14080, hut.def.x - 15); key('ArrowDown', true); await wait(3200); const held2 = bro.holding === hut.thing; key('ArrowDown', false);
+      check('7: his lever alone does not move the bridge', held2 && bridge.state.prog === 0);
+      await set(14080, post.def.x - 15); key('ArrowDown', true); await wait(500); const reach = !!bro.holding; key('ArrowDown', false); await jumpGrab(bro);
+      check('7: he cannot reach her lever, even jumping', !reach && !bro.holding && bridge.state.prog === 0);
+      const box5 = inStation(5, 'box')[0].body, bar5 = inStation(5, 'bar')[0].def;
+      put(box5, bar5.x - 260); await set(bar5.x - 600, bar5.x - 345); await tap('ArrowDown'); await until(() => box5.liftT >= 1, 2000); await go(bro, bar5.x + 200);
+      check('7: and no box gets past the bar at the end of Old Town to stand on', !bro.carry && box5.x < bar5.x, `box at ${box5.x.toFixed(0)}`);
+      check('nobody was needed twice: the map, the gates and the bridge are as they were', !m.got.some(Boolean) && !bridge.state.down && gate0.state.open === 0);
+      log(fails ? `PLAY FAILED ${fails} short cut${fails > 1 ? 's' : ''} worked` : 'PLAY PASSED');
+    } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }
+    return;
+  }
   try {
     const H = MOVE.jumpHeight * broHeight();
     if (FROM <= 0) { // ================= station 0: jump, carry, the torn map

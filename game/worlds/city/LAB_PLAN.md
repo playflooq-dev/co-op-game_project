@@ -110,3 +110,18 @@ first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bel
   step), a paw (pet the puppy), a bell (ring the bell game), a boat (only he can stand there), a note (over the
   parasols). The end card shows the map, the stickers, a count and the time.
 - Words that remain: the shop names painted on the building art, the loading line, the debug and tuning views.
+
+**Phase 5 is done (2026-11-21).** Two scripted tests, both in `tools/playtest-city.js`:
+- `tools/playtest-city.html` plays the whole city with real key presses, both siblings, 56 checks. It passes at full
+  speed, at a forced 20 frames a second and at tablet size. The script, which never hesitates, takes about 150
+  seconds: station 0 30 s, 1 10 s, 2 16 s, 3 20 s, 4 13 s, 5 30 s, 6 15 s, 7 18 s. Children will take several times that.
+- `tools/playtest-city.html?solo=1` tries 29 short cuts, one sibling at a time while the other stands still:
+  jumping and grabbing at things out of reach, carrying a box past a height bar, dashing through a gate, hauling
+  an empty lift, holding one bridge lever. It found one that worked: at the flour mill she could stand on the green
+  plate herself and dash through the shutter before it came down. The plate now stands further from the shutter.
+- Small screens: at 1024 x 768 and 844 x 390 the touch buttons sit over the road, the pavement and everything on it
+  stay clear, and the tallest station (the lift) still fits. Held upright (390 x 844) the game asks to be turned.
+
+**Not tested:** a real tablet or phone (only those screen sizes on this computer, where it draws 110 to 220 frames a
+second; `city.html?fps=30` and `?fps=20` show it stays playable when slow); real fingers on the buttons; the sounds
+by ear; and above all real children. A script only finds the short cuts somebody thought of.

@@ -98,7 +98,7 @@ const STATIONS = [
     // only his small hand fits the release in the low hatch. Down it comes; she carries it onto the plate.
     { kind: 'lever', id: 'hoist', x: 3930, h: 70, who: 'bro', once: true },
     { kind: 'trap', x: [4020, 4190], h: 262, by: 'hoist' }, { kind: 'crate', x: 4105, h: 262 },
-    { kind: 'plate', id: 'mill', big: true, x: 4480 }, { kind: 'gate', x: 4700, by: ['mill'] },
+    { kind: 'plate', id: 'mill', big: true, x: 4350 }, { kind: 'gate', x: 4700, by: ['mill'] }, // the plate is far enough from the shutter that nobody can step off it and dash through
   ] },
   { name: '2 The market: a box as a step', goal: 'paw', x: [4900, 6760], start: [4960, 5040], view: [5080, 6480], things: [
     // the puppy sits on a high awning with the last map piece. Too high even from her shoulders:
