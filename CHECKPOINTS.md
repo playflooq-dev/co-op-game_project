@@ -26,6 +26,7 @@ Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is reb
 
 | Commit | Date | What changed |
 |---|---|---|
+| `fc106c7` | 2026-11-21 | City lab, Phase 6: the documents (README files, the city lab's open questions, the proposals in DECISIONS.md). The checkpoint `checkpoint-2026-11-lab-city-v2` is on the commit after this one. |
 | `3fe28fe` | 2026-11-21 | City lab, Phase 5: testing. A second scripted test tries 29 ways one sibling might finish a station alone; it found one (dashing through the mill shutter), now closed. Results for the play-through, small screens and what could not be tested are in `LAB_PLAN.md`. |
 | `5832a3b` | 2026-11-21 | City lab, Phase 4: no reading. A picture bubble for the goal, picture hints (sparkle, arrow, ghost of the right sibling), signs over heads, eight stickers in the new stations, an end card of pictures and numbers. |
 | `4560d60` | 2026-11-21 | City lab, Phase 3: the city rebuilt as eight test stations (Maple Street and the torn map, the flour mill, the market puppy, the see-saw at Fountain Square, the canal, the pulley lift in Old Town, the cafe parasols, the Old Bridge). The first level's code is deleted; the crossing, metro, bus and all codes are cut. `city.html?station=N` starts at a station. The scripted test plays the whole city. |
