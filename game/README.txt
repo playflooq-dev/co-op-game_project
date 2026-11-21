@@ -31,6 +31,18 @@ test street with five stars to collect, one for each new ability:
   stands on the blue end and she jumps onto the green end.
   On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
 
+  Past the tunnel the street goes on with one of each new object (the "kit"), to try before the
+  stations are built (city.html?at=4500 starts there):
+  - Plates and gates. The big green plate needs her or the heavy crate; the small blue one anybody or a
+    box. A gate is open only while its plate is pressed, so leave something on the plate.
+  - The canal. The small blue boats hold him and sink under her. On the far bank his lever sends the
+    ferry over for her, and brings it back.
+  - The pulley lift. She holds grab on the rope ring and he rides up. Up there are three boxes: he puts
+    them on the other platform and steps on as well, and that lifts her.
+  - The rope ladder. Toss him onto the balcony, he presses grab at the bundle, and she climbs by holding
+    jump. The branch beside it holds only him.
+  - The two-switch door. Both levers must be held (keep grab down) at the same moment.
+
   Add to the address to help with testing:
   city.html?tune=1    sliders for how the jump and the running feel (the numbers are MOVE in shared/movement.js)
   city.html?debug=1   shows what is solid and the frame rate        city.html?at=3300   starts further along

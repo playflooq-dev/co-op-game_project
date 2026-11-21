@@ -5,7 +5,8 @@
 // where a check starts, then presses the same keys a player would. (The first city level's play-through test is in
 // the git history, at the tag checkpoint-2026-11-20-city-music.)
 (async () => {
-  const log = (t) => fetch('/log', { method: 'POST', body: t });
+  let sent = Promise.resolve(); // one line at a time: two reports arriving together can overwrite each other in the log file
+  const log = (t) => (sent = sent.then(() => fetch('/log', { method: 'POST', body: t }).catch(() => {})));
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const tick = () => new Promise((r) => requestAnimationFrame(r));
   const frame = async () => { const t = game.time; do { await tick(); } while (game.time === t); }; // one frame of the game (it may draw fewer than the screen does: ?fps=30)
@@ -55,7 +56,7 @@
     // ---- jumping
     await both(400, 560);
     const js = await jumpTop(sis), jb = await jumpTop(bro);
-    check('jump height is 1.3 brother-heights for both', near(js, H, H * 0.03) && near(jb, H, H * 0.03), `wanted ${H.toFixed(0)}, sister ${js.toFixed(0)}, brother ${jb.toFixed(0)}`);
+    check(`jump height is ${MOVE.jumpHeight} brother-heights for both`, near(js, H, H * 0.03) && near(jb, H, H * 0.03), `wanted ${H.toFixed(0)}, sister ${js.toFixed(0)}, brother ${jb.toFixed(0)}`);
     const jl = await jumpTop(sis, 40);
     check('holding the key does not change the height', near(jl, js, 3), `tap ${js.toFixed(0)}, held ${jl.toFixed(0)}`);
     // coyote time: a jump pressed just after walking off an edge still works; pressed much later it does not
@@ -177,7 +178,79 @@
     check('a sibling who falls out is back beside the partner within a second', back && took < 1.05 && Math.abs(sis.x - bro.x) < 140, `${took.toFixed(2)} s, ${Math.abs(sis.x - bro.x).toFixed(0)} away`);
     drop(boxes[1], 3000); boxes[1].y = VH + 900; await wait(600); check('a box that falls out goes back to where it started', near(boxes[1].x, 2560, 2) && boxes[1].y <= FEET + 1);
 
-    check('all five stars', stars.every((o) => o.star.got));
+    check('all five stars of the movement street', stars.slice(0, 5).every((o) => o.star.got));
+
+    // ================= Phase 2: the object kit
+    const of = (kind) => kit.filter((o) => o.def.kind === kind);
+    const [gateA, gateB, door] = of('gate'), [green, blue] = of('plate'), crate2 = of('crate')[1].body, box3 = boxes[2];
+    const boats = of('boat'), ferry = of('ferry')[0], [fLever, lLever, rLever] = of('lever'), lift = of('pulley')[0], ladder = of('ladder')[0], branch = of('branch')[0], [, , , liftLedge, ladderLedge] = ledges;
+    const faceRight = async (p) => { key(p.keys.right, true); await frames(2); key(p.keys.right, false); await frames(3); };
+    // ---- plates and gates
+    drop(crate2, 4480); drop(box3, 4915); await both(4400, green.def.x); await wait(600);
+    check('the brother is too light for the big green plate', !green.state.on && gateA.state.open === 0);
+    await both(green.def.x, 4400);
+    check('the sister presses it and the gate opens', (await until(() => gateA.state.open >= 1, 2500)) && green.state.on);
+    await go(sis, 4420); check('the gate shuts again when she steps off', await until(() => gateA.state.open === 0, 3000));
+    await both(4480 - 96, 4560); await tap('KeyS'); await until(() => crate2.liftT >= 1, 2000); await go(sis, green.def.x - 92); await faceRight(sis); await tap('KeyS'); await until(() => crate2.grounded, 2000); await go(sis, 4420);
+    check('the heavy crate holds the green plate down', crate2.on === green.ledge && (await until(() => gateA.state.open >= 1, 2500)), `crate at ${crate2.x.toFixed(0)}`);
+    check('both walk through the gate', (await go(sis, 4905)) && (await go(bro, 4960)) && sis.x > gateA.def.x && bro.x > gateA.def.x);
+    await both(4400, gateA.def.x); drop(crate2, 4330 + 60, 181); await until(() => gateA.state.open === 0, 3000); await frames(5);
+    check('a closing gate nudges him aside, it never traps him', world.fits(bro) && Math.abs(bro.x - gateA.def.x) > 40 && !bro.gone, `he is at ${bro.x.toFixed(0)}`);
+    drop(crate2, green.def.x, 20); await both(4900, blue.def.x);
+    check('the small blue plate works for the brother', (await until(() => gateB.state.open >= 1, 2500)) && blue.state.on);
+    await go(bro, 4890); check('and lets go when he steps off', await until(() => gateB.state.open === 0, 3000));
+    await both(4900, box3.x - 84); await tap('ArrowDown'); await until(() => box3.liftT >= 1, 2000); await go(bro, blue.def.x - 82); await faceRight(bro); await tap('ArrowDown'); await until(() => box3.grounded, 2000);
+    check('a light box holds the blue plate down', box3.on === blue.ledge && (await until(() => gateB.state.open >= 1, 2500)), `box at ${box3.x.toFixed(0)}`);
+    check('both walk through the second gate', (await go(sis, 5190)) && (await go(bro, 5215)) && sis.x > gateB.def.x && bro.x > gateB.def.x);
+    // ---- the canal: small boats for him, the ferry for her
+    let wet = false; const w3 = setInterval(() => { wet = wet || !!bro.gone; }, 10);
+    const over = await go(bro, 6200, 14000); clearInterval(w3);
+    check('the small boats carry the brother across', over && !wet && bro.x > 6140, `he is at ${bro.x.toFixed(0)}`);
+    key('KeyD', true); const sank = await until(() => sis.gone, 5000); key('KeyD', false);
+    check('a boat sinks under the sister', sank && boats[0].state.sink > 0);
+    check('she comes back on her own bank, not his', (await until(() => !sis.gone && sis.grounded, 3000)) && sis.x < 5240, `she is at ${sis.x.toFixed(0)}`);
+    check('the boat comes back up', await until(() => boats[0].state.sink === 0, 6000));
+    await go(bro, fLever.def.x - 12); await tap('ArrowDown');
+    check('his lever brings the ferry over', await until(() => ferry.state.x <= ferry.def.x[0] + 1, 6000));
+    await go(sis, ferry.def.x[0]); check('she steps onto the ferry', sis.on === ferry.ledge, `she is at ${sis.x.toFixed(0)}`);
+    await tap('ArrowDown'); check('and it carries her across', (await until(() => ferry.state.x >= ferry.def.x[1] - 1, 6000)) && sis.on === ferry.ledge && !sis.gone);
+    check('star on the far bank', (await go(sis, 6290)) && stars[5].star.got);
+    // ---- the pulley lift
+    await both(lift.def.rope.x - 20, lift.def.a); await frames(6);
+    check('he stands on the lift', bro.on === lift.a);
+    key('KeyS', true);
+    check('she hauls on the rope and he rides up', (await until(() => lift.state.u >= 1, 6000)) && near(up(bro), lift.def.high, 3), `height ${up(bro).toFixed(0)}`);
+    check('star on the high ledge', (await go(bro, 6600)) && stars[6].star.got); key('KeyS', false);
+    check('let go, and the lift comes back down', await until(() => lift.state.u === 0, 6000));
+    await both(lift.def.a, lift.def.rope.x - 20); await frames(6); key('ArrowDown', true); await wait(1200); key('ArrowDown', false);
+    check('he is too light to haul her up', lift.state.u === 0 && sis.on === lift.a);
+    for (const [i, x] of [[3, 6960], [4, 7020], [5, 6990]]) drop(boxes[i], x, i === 5 ? 470 : 381);
+    reset(); drop(bro, 6860, 381); await until(() => bro.grounded, 3000); await wait(900); // she stays where she is, on the lift
+    check('three boxes on the other platform are not quite enough', lift.state.u === 0 && near(world.loadOn(lift.b), 3, 0.01), `load ${world.loadOn(lift.b)}`);
+    await go(bro, lift.def.b);
+    check('with him on top as well, she rides up', (await until(() => lift.state.u >= 1, 6000)) && near(up(sis), lift.def.high, 3), `she is at ${up(sis).toFixed(0)}`);
+    // ---- the rope ladder and the branch
+    await both(ladderLedge.x[0] + 60, ladderLedge.x[0] + 130); await tap('ArrowDown'); await until(() => MV.duo.state === 'on', 2000); await frames(6);
+    key('KeyD', true); await frames(2); await tap('KeyS'); key('KeyD', false);
+    check('tossed up to the ladder balcony', (await until(() => bro.grounded, 3000)) && near(up(bro), ladderLedge.h, 3), `height ${up(bro).toFixed(0)}`);
+    await go(bro, ladder.def.x + 40); await tap('ArrowDown');
+    check('he lets the rope ladder down', await until(() => ladder.state.out >= 1, 2500));
+    await go(sis, ladder.def.x); key('KeyW', true);
+    check('she climbs it', (await until(() => sis.grounded && near(up(sis), ladderLedge.h, 3), 6000)), `height ${up(sis).toFixed(0)}`); key('KeyW', false);
+    check('the branch holds the brother', (await go(bro, 7600)) && near(up(bro), branch.def.h, 3) && stars[7].star.got, `height ${up(bro).toFixed(0)}`);
+    await go(bro, 7300); key('KeyD', true); const snapped = await until(() => up(sis) < 120, 5000); key('KeyD', false);
+    check('and snaps under the sister', snapped && branch.state.gone > 0);
+    // ---- the two-switch door
+    await both(lLever.def.x, rLever.def.x - 10); key('KeyS', true); await wait(900);
+    check('one lever is not enough', sis.holding === lLever.thing && door.state.open === 0);
+    key('ArrowDown', true);
+    check('both held together: the door opens', await until(() => door.state.latched, 3000));
+    key('KeyS', false); key('ArrowDown', false); await wait(1200);
+    check('and stays open when they let go', door.state.open >= 1);
+    check('star behind the door', (await go(bro, 7945)) && (await go(sis, 7930)) && stars[8].star.got);
+    await both(rLever.def.x + 60, lLever.def.x); await tap('ArrowDown'); await frames(4);
+    check('the high lever is out of his reach', !bro.holding);
+    check('every star', stars.every((o) => o.star.got), `${stars.filter((o) => o.star.got).length} of ${stars.length}`);
     log(`frame rate: ${game.fps.toFixed(0)} a second, slowest frame ${game.slow.toFixed(0)} ms, canvas ${cv.width}x${cv.height}`);
     log(fails ? `PLAY FAILED ${fails} check${fails > 1 ? 's' : ''}` : 'PLAY PASSED');
   } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }

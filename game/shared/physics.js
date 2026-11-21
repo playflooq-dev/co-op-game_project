@@ -15,6 +15,7 @@
 //                                 impact (how fast it landed this frame, else 0), bumped (it hit its head),
 //                                 hitSide (-1 or 1 when a wall stopped it).
 //   world.load(body), world.loadOn(surface)   weight, counting everything stacked on top
+//   world.heavyOn(surface, limit)             true when one single thing in the pile weighs at least limit
 // A solid or ledge with off: true is ignored; skip: (body) => true lets some bodies through.
 
 // ---------- small maths helpers, used by every file built on this one
@@ -63,6 +64,8 @@ function makeWorld(o) {
   world.riders = (surface) => world.bodies.filter((b) => !b.held && b.on === surface);
   world.load = (b) => world.riders(b).reduce((w, r) => w + world.load(r), b.weight + (b.extra || 0));
   world.loadOn = (surface) => world.riders(surface).reduce((w, r) => w + world.load(r), 0);
+  // is one single heavy thing on it (anywhere in the pile)? A pile of light things never counts as heavy.
+  world.heavyOn = (surface, limit) => world.riders(surface).some((r) => r.weight + (r.extra || 0) >= limit || world.heavyOn(r, limit));
 
   function move(b, dt) {
     const hw = b.w / 2, stood = b.grounded;

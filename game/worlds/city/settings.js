@@ -274,10 +274,10 @@ const CHATTER = [
 //
 // Phase 1 is one test street for trying the new movement. Every line in `things` places one object from the kit
 // (shared/kit.js): x is the place along the street ([from, to] for long things), h the height above the pavement.
-// For scale: a jump rises about 245, the brother is about 180 tall and the sister about 220.
+// For scale: a jump rises about 207, the brother is about 180 tall and the sister about 220.
 const LAB = {
-  street: [150, 4470],   // how far the siblings can walk
-  plain: [150, 4600],    // along here the street is kept empty: of the usual street things only lamps and trees are drawn
+  street: [150, 8000],   // how far the siblings can walk
+  plain: [150, 8300],    // along here the street is kept empty: of the usual street things only lamps are drawn
   start: [380, 540],     // where the sister and the brother begin
   things: [
     // jump: steps up, a thin blue plank that only holds light feet, steps down again
@@ -288,15 +288,36 @@ const LAB = {
     { kind: 'block', look: 'wall', x: [1765, 1805], h: 150 },
     // carry: two light boxes and a heavy crate; a shelf too high to jump to without a box; a bell only she can reach from the ground
     { kind: 'box', x: 2440 }, { kind: 'box', x: 2560 }, { kind: 'crate', x: 2700 },
-    { kind: 'ledge', look: 'shelf', x: [2800, 3000], h: 300 }, { kind: 'star', x: 2900, h: 370 },
+    { kind: 'ledge', look: 'shelf', x: [2800, 3000], h: 255 }, { kind: 'star', x: 2900, h: 325 },
     { kind: 'bell', x: 3110, h: 262 },
     // together: a balcony for the lift and toss, then a see-saw with a higher balcony over his end
     { kind: 'ledge', look: 'balcony', x: [3250, 3500], h: 440 }, { kind: 'star', x: 3375, h: 510 },
     { kind: 'seesaw', x: 3780, half: 170 },
     { kind: 'ledge', look: 'balcony', x: [3870, 4090], h: 520 }, { kind: 'star', x: 3990, h: 590 },
-    // small: a low tunnel only he fits through, and the end of the test street
-    { kind: 'tunnel', x: [4180, 4330], h: 300, gap: 124 }, { kind: 'star', x: 4400, h: 70 },
-    { kind: 'block', look: 'boards', x: [4470, 4530], h: 400 },
+    // small: a low tunnel. He ducks through (the star is inside); she hops over the top.
+    { kind: 'tunnel', x: [4180, 4330], h: 180, gap: 124 }, { kind: 'star', x: 4255, h: 60 },
+
+    // ---- Phase 2: the object kit, one of each, to try before the stations are built.
+    // plates and gates: the big green plate needs her or the heavy crate, the small blue one anybody or a box.
+    // A gate is open only while its plate is pressed, so leave something on the plate to get both of you through.
+    { kind: 'crate', x: 4480 }, { kind: 'plate', id: 'green', big: true, x: 4660 }, { kind: 'gate', x: 4840, by: ['green'] },
+    { kind: 'box', x: 4915 }, { kind: 'plate', id: 'blue', x: 5010 }, { kind: 'gate', x: 5130, by: ['blue'] },
+    // light-only on the water (the canal runs from 5240 to 6140): four small boats hold him and sink under her.
+    // On the far bank a lever sends the ferry over and brings it back.
+    { kind: 'boat', x: 5357 }, { kind: 'boat', x: 5579 }, { kind: 'boat', x: 5801 }, { kind: 'boat', x: 6023 },
+    { kind: 'ferry', x: [5349, 6031], by: 'ferry', home: 1 }, { kind: 'lever', id: 'ferry', x: 6215, h: 150 }, { kind: 'star', x: 6290, h: 70 },
+    // the pulley lift: she hauls on the rope and he rides up. Up there are three boxes: he loads them on the
+    // other platform and steps on himself, and that is heavy enough to lift her.
+    { kind: 'pulley', a: 6470, b: 6990, high: 380, bias: [0.5, 0], rope: { x: 7110, h: 170 } },
+    { kind: 'ledge', look: 'balcony', x: [6560, 6900], h: 380 }, { kind: 'star', x: 6600, h: 450 },
+    { kind: 'box', x: 6690, h: 380 }, { kind: 'box', x: 6775, h: 380 }, { kind: 'box', x: 6850, h: 380 },
+    // the rope ladder: toss him up, he lets it down for her. Past it a branch that only holds him.
+    { kind: 'ledge', look: 'balcony', x: [7230, 7480], h: 440 }, { kind: 'ladder', x: 7262, h: 440 },
+    { kind: 'branch', x: [7480, 7640], h: 440, from: 'left' }, { kind: 'star', x: 7600, h: 510 },
+    // the two-switch door: both levers have to be held at the same moment (one high, for her; one low). Then it stays open.
+    { kind: 'lever', id: 'left', hold: true, x: 7700, h: 250 }, { kind: 'lever', id: 'right', hold: true, x: 7800, h: 120 },
+    { kind: 'gate', x: 7880, by: ['left', 'right'], latch: true }, { kind: 'star', x: 7945, h: 70 },
+    { kind: 'block', look: 'boards', x: [8000, 8060], h: 400 },
   ],
 };
 

@@ -69,3 +69,16 @@ the approved character drawing and the "double-click the HTML file" rule, for a 
 - The see-saw settles with the blue end down when nobody is on it, so his end is always the low one.
 - Things are used, and stars collected, only while standing (or riding on her shoulders), never in mid-jump:
   otherwise a jump is a way round "too high for him".
+
+**Feel test, 2026-11-21:** "jump height is a bit too high", the rest feels good. The jump went from 1.3 to 1.1
+brother-heights (245 to 207 units), with a slightly shorter jump time so it does not turn floaty.
+
+**Phase 2 is done (2026-11-21).** The kit (`shared/kit.js`) now also has: small blue and big green plates, gates,
+levers (held or flipped), the two-switch door (a gate that listens to two levers), the pulley lift with a rope to
+haul on, small boats, a branch, a ferry and a rope ladder. One of each stands on the test street after the tunnel.
+- "Heavy" means one single heavy thing (her, or the crate). A pile of light boxes never presses a green plate or
+  breaks a plank, so piling boxes is not a way round her job.
+- A gate coming down nudges aside whatever is in the doorway. Nothing is trapped, and nobody can prop it open.
+- Holding the rope pulls with the holder's own weight, so she can haul him up and he cannot haul her.
+- The ferry was not in the brief's list, but the canal station needs one, and the test street needed a way across.
+- Ladders are climbed with the jump key held; there is still no "down" key, people just hop off.

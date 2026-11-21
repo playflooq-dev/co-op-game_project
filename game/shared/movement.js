@@ -10,7 +10,9 @@
 //   updateMoveFx(dt), drawMoveFx(c)        the dust puffs
 //   makeTouchPads(force)                   the on-screen buttons for touch screens
 // hooks (all optional):
-//   thing(p)       the nearest thing this sibling could use right now ({ use(p) }), or null
+//   thing(p)       the nearest thing this sibling could use right now ({ use(p), canUse(p) }), or null.
+//                  A thing with hold: true works only while the grab key stays down (a lever, a rope).
+//   ladder(p)      a ladder this sibling is standing at ({ x, top }), or null: the jump key climbs it
 //   lost(p)        true when the sibling has fallen somewhere they must come back from (into water, say)
 //   canJoin(p, o)  false when coming back next to the partner would be a short cut
 //   highFive()     called when they high-five
@@ -19,8 +21,8 @@
 // ---------- every number that shapes how moving feels. Change one, refresh, and try it. (city.html?tune=1 has sliders.)
 const MOVE = {
   // ---- jumping
-  jumpHeight: 1.3,   // how high a jump goes, in brother-heights (1.3 is about 245 units)
-  jumpTime: 0.36,    // seconds from leaving the ground to the top of the jump: smaller feels snappier
+  jumpHeight: 1.1,   // how high a jump goes, in brother-heights (1.1 is about 207 units). It was 1.3 until the first feel test: "a bit too high".
+  jumpTime: 0.33,    // seconds from leaving the ground to the top of the jump: smaller feels snappier
   fallFaster: 1.4,   // coming down is this many times quicker than going up (1 = floaty)
   maxFall: 1500,     // the fastest anything falls, in units a second
   coyote: 0.10,      // seconds after walking off an edge in which a jump still works
@@ -52,6 +54,7 @@ const MOVE = {
   tossRise: 1.75,    // how far a toss sends him up from her shoulders, in brother-heights
   tossForward: 230,  // and how fast forwards
   hopOff: 430,       // the little hop when he gets down by himself (take-off speed)
+  climbSpeed: 230,   // up a ladder, units a second (hold the jump key)
   // ---- after a fall
   returnTime: 0.7,   // seconds until a sibling who fell out of the picture is back
   // ---- the objects (shared/kit.js)
@@ -109,9 +112,9 @@ function setupMovement(world, players, hooks) {
     const who = p === MV.sis ? 'sister' : 'brother', bd = MOVE.body[who];
     Object.assign(p, { isBody: true, who, kind: who === 'sister' ? 'sis' : 'bro', w: bd.w, h: bd.h, standH: bd.h, weight: bd.weight, extra: 0, gravity: 1,
       vx: 0, vy: 0, grounded: true, wasGrounded: true, on: null, impact: 0, bumped: false, hitSide: 0, held: false, platform: false, px: p.x, py: p.y,
-      coyote: 0, jbuf: 0, want: 0, carry: null, crawl: false, flying: false, tossed: false, gone: null, strain: 0, threw: 0, reachT: 0, airT: 0,
+      coyote: 0, jbuf: 0, want: 0, carry: null, crawl: false, flying: false, tossed: false, gone: null, strain: 0, threw: 0, reachT: 0, airT: 0, holding: null, climb: null,
       sq: 0, sqv: 0, sqx: 1, sqy: 1, tilt: 0, noShadow: true, safe: { x: p.x, y: p.y },
-      pose: { air: 0, rise: 0, carry: 0, hold: 0, ride: 0, toss: 0, strain: 0, crawl: 0, stride: MOVE.stride, t: 0 } });
+      pose: { air: 0, rise: 0, carry: 0, hold: 0, ride: 0, toss: 0, strain: 0, crawl: 0, climb: 0, step: 0, stride: MOVE.stride, t: 0 } });
     world.add(p);
   }
 }
@@ -126,15 +129,28 @@ function moveSiblings(dt, frozen) {
     const dir = busy ? 0 : (down[k.right] ? 1 : 0) - (down[k.left] ? 1 : 0), jump = !busy && tapped(k.up), grab = !busy && tapped(k.down);
     p.strain = Math.max(0, p.strain - dt); p.threw = Math.max(0, p.threw - dt); p.want = dir;
     if (p.gone) continue;
+    if (p.holding && (!down[k.down] || !p.holding.canUse(p))) p.holding = null; // a lever or a rope works only while the grab key stays down
     if (p === bro && duo.state) { // on her shoulders: he can look round, hop down, use something up high, or be tossed
       if (dir) p.dir = dir;
       if (duo.state === 'on') { if (jump) hopOff(); else if (grab) grabAction(p); }
       continue;
     }
     const lifting = p === sis && duo.state, heavy = p.carry && p.carry.heavy;
+    // a ladder: the jump key climbs it, a step sideways lets go
+    if (p.climb) {
+      const lad = p.climb;
+      if (dir && !down[k.up]) { p.climb = null; p.gravity = 1; }
+      else {
+        p.gravity = 0; p.vx = (lad.x - p.x) * 10; p.vy = down[k.up] ? -MOVE.climbSpeed : 0; p.grounded = false; p.on = null; p.coyote = 0; p.jbuf = 0;
+        if (p.y <= lad.top + 4) { p.y = lad.top; p.vx = 0; p.vy = 0; p.climb = null; p.gravity = 1; } // at the top: onto the ledge
+        continue;
+      }
+    } else if (!p.carry && !lifting && !p.crawl && !p.holding && MV.hooks.ladder && (jump || (down[k.up] && !p.grounded))) {
+      const lad = MV.hooks.ladder(p); if (lad && p.y > lad.top + 6) { p.climb = lad; p.jbuf = 0; snd('step'); continue; }
+    }
     p.coyote = p.grounded ? MOVE.coyote : p.coyote - dt;
-    p.jbuf = jump ? MOVE.buffer : p.jbuf - dt;
-    const top = duo.state === 'up' || p.strain > 0 ? 0 : MOVE.speed[p.who] * (p.crawl ? MOVE.crawlSpeed : 1) * (heavy ? MOVE.crateSpeed : 1) * (lifting ? MOVE.liftWalk : 1);
+    p.jbuf = jump && !p.holding ? MOVE.buffer : p.jbuf - dt;
+    const top = duo.state === 'up' || p.strain > 0 || p.holding ? 0 : MOVE.speed[p.who] * (p.crawl ? MOVE.crawlSpeed : 1) * (heavy ? MOVE.crateSpeed : 1) * (lifting ? MOVE.liftWalk : 1);
     const rate = p.grounded ? (dir ? MOVE.accel : MOVE.brake) : dir ? MOVE.airAccel : p.flying ? 0 : MOVE.airBrake;
     p.vx += clamp(dir * top - p.vx, -rate * dt, rate * dt);
     if (dir) p.dir = dir;
@@ -155,10 +171,10 @@ function moveSiblings(dt, frozen) {
 function grabAction(p) {
   const { sis, bro, duo, hooks } = MV;
   if (p.carry) { putDown(p); return; }
-  if (duo.state === 'on') { const up = p === bro && hooks.thing ? hooks.thing(p) : null; if (up) up.use(p); else toss(); return; }
+  if (duo.state === 'on') { const up = p === bro && hooks.thing ? hooks.thing(p) : null; if (up) { up.use(p); if (up.hold) p.holding = up; } else toss(); return; }
   if (duo.state) return;
   const th = hooks.thing ? hooks.thing(p) : null;
-  if (th) { th.use(p); return; }
+  if (th) { th.use(p); if (th.hold) p.holding = th; return; }
   const box = nearBox(p);
   if (box) { if (box.heavy && p === bro) tooHeavy(p, box); else pickUp(p, box); return; }
   if (canLift()) { // wait a moment: if the other one presses too, they wanted a high five
@@ -237,7 +253,7 @@ function lose(p) {
   const { sis, bro, duo } = MV; if (p.gone) return;
   if (p.carry) { const b = p.carry; p.carry = null; p.extra = 0; b.held = false; b.carrier = null; b.lost = true; }
   if (duo.state) endRide();
-  p.gone = { t: 0 }; p.held = true; p.vx = p.vy = 0; p.alpha = 0; p.on = null; p.grounded = false; snd('whoops');
+  p.gone = { t: 0 }; p.held = true; p.vx = p.vy = 0; p.alpha = 0; p.on = null; p.grounded = false; p.holding = null; p.climb = null; p.gravity = 1; snd('whoops');
 }
 function comeBack(p) {
   const { world, hooks } = MV, o = partner(p);
@@ -273,12 +289,14 @@ function settleSiblings(dt) {
       p.flying = false; p.tossed = false;
     }
     p.wasGrounded = p.grounded; p.airT = p.grounded || riding ? 0 : p.airT + dt;
-    if (p.grounded && p.on && p.on.isSolid) p.safe = { x: p.x, y: p.y }; // somewhere to come back to
+    if (p.grounded && p.on && p.on.isSolid && p.x > p.on.x0 + 24 && p.x < p.on.x1 - 24) p.safe = { x: p.x, y: p.y }; // somewhere to come back to: firm ground, not the very edge
     if (!p.held && (p.y - p.h > MV.bottom || (hooks.lost && hooks.lost(p)))) { lose(p); continue; }
     // squash and stretch: a little spring
     p.sqv += (-320 * p.sq - 24 * p.sqv) * dt; p.sq = clamp(p.sq + p.sqv * dt, -0.3, 0.2);
-    const airborne = !p.grounded && !riding;
+    const airborne = !p.grounded && !riding && !p.climb;
     const set = (key, target, rate) => { q[key] += (target - q[key]) * Math.min(1, dt * rate); };
+    set('climb', p.climb ? 1 : 0, 14); if (p.climb && p.vy < 0) q.step += dt * 10;
+    if (p.holding) p.reachT = 0.15;
     set('air', airborne ? 1 : 0, 16); set('rise', p.vy < -60 ? 1 : 0, 12); set('carry', p.carry ? 1 : 0, 16);
     set('hold', p === sis && (duo.state || p.threw > 0) ? 1 : 0, 14); set('ride', riding ? 1 : 0, 12);
     set('toss', p.tossed && airborne ? 1 : 0, 14); set('strain', p.strain > 0 ? 1 : 0, 18); set('crawl', p.crawl ? 1 : 0, 16);

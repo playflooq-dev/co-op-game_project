@@ -8,7 +8,20 @@
 // Colour language: green means "the sister's job" (heavy, high), blue means "the brother's job" (light, small),
 // plain wood is for either of them.
 //
-// Phase 1 kinds:
+// Things that switch other things say so by name. A plate or a lever has an id; a gate or a ferry lists the ids it
+// listens to in `by`. A gate with two ids opens only while both are on: that is the two-switch door.
+//
+// The kinds:
+//   plate   { x, id, big }            a pad in the pavement. Small and blue: anybody or any box presses it.
+//                                     big: true is big and green: only the sister or a heavy crate presses it.
+//   gate    { x, h, by: [ids], latch } a shutter that is open only while everything in `by` is on (latch: stays open once up)
+//   lever   { x, h, id, hold, who }   hold: true is on only while the grab key is held; otherwise each use flips it
+//   pulley  { a, b, high, bias: [a, b], rope: { x, h } }   two platforms on one rope: the heavier goes down. Holding
+//                                     the rope pulls on b's side with the holder's own weight.
+//   boat    { x, w }                  small and blue, floating: sinks gently under anything heavy, comes back up
+//   branch  { x: [from, to], h, from: 'left' | 'right' }   like the thin plank, growing out of one side
+//   ferry   { x: [dock, dock], by, home }   a raft that crosses while its id is on, and goes home when it is off
+//   ladder  { x, h }                  rolled up on a ledge: used from up there it drops, and then the jump key climbs it
 //   block   { x: [from, to], h, look: 'stone' | 'wall' | 'boards' }   solid: steps, walls
 //   tunnel  { x: [from, to], h, gap }                                  solid with a low way through that only he fits
 //   ledge   { x: [from, to], h, look: 'shelf' | 'balcony' }            can be stood on and jumped up through
@@ -20,6 +33,8 @@
 const KIT = {}, KIT_GREEN = '#6d9b45', KIT_BLUE = '#4b86b8', KIT_EDGE = '#4a2f1a', KIT_STONE = '#5a5046';
 function kitMake(world, def, ground) { const f = KIT[def.kind]; if (!f) throw new Error('kit: no such kind "' + def.kind + '"'); return Object.assign({ def }, f(world, def, ground)); }
 const KIT_TOP = 9; // how much of a top face shows: the street is seen a little from above
+const KIT_SIG = {}, KIT_AT = {}; // which ids are on right now, and where each id's plate or lever stands (for drawing the cable to its gate)
+const kitOn = (ids) => [].concat(ids).every((id) => KIT_SIG[id]);
 
 // ---------- stone and boards
 function kitStone(c, x0, x1, top, base, seed, cap) {
@@ -88,12 +103,23 @@ KIT.plank = (world, d, ground) => {
     after(dt) {
       st.age += dt;
       if (st.gone > 0) { st.gone -= dt; if (st.gone <= 0) { l.off = false; st.age = 0; snd('pop'); puff((x0 + x1) / 2, y, 6, '#dcecf6', 3); } return; }
-      const heavy = world.riders(l).some((r) => world.load(r) >= MOVE.heavy);
+      const heavy = world.heavyOn(l, MOVE.heavy);
       if (heavy && !st.creaked) snd('creak'); st.creaked = heavy;
       st.stress = heavy ? st.stress + dt / MOVE.plankHold : Math.max(0, st.stress - dt * 3);
       if (st.stress >= 1) { l.off = true; st.gone = MOVE.plankBack; st.stress = 0; st.broke = 0; snd('crack'); puff((x0 + x1) / 2, y, 8, '#dcecf6', 4); }
     },
     draw(c, t) {
+      if (d.kind === 'branch') { // a branch growing out of one side: it bends, snaps off at the root, and grows back
+        const root = d.from === 'right' ? x1 : x0, s = d.from === 'right' ? -1 : 1, len = x1 - x0, u = st.gone > 0 ? MOVE.plankBack - st.gone : -1;
+        if (u > 0.9) return;
+        c.save(); c.translate(root, y); c.scale(s, 1); c.globalAlpha = u >= 0 ? 1 - clamp01((u - 0.5) / 0.4) : clamp01(st.age / 0.25);
+        c.rotate(u >= 0 ? ease(Math.min(1, u / 0.45)) * 1.3 : st.stress * 0.07 + (st.stress > 0 ? Math.sin(t * 60) * 0.008 : 0));
+        c.beginPath(); c.moveTo(-6, -11); c.quadraticCurveTo(len * 0.5, -9, len + 6, -4); c.lineTo(len + 6, 5); c.quadraticCurveTo(len * 0.5, 15, -6, 20); c.closePath(); fs(c, lg(c, 0, -10, 0, 18, '#9a7448', '#6b4e30'), KIT_EDGE, 2.2);
+        c.strokeStyle = 'rgba(40,25,15,.3)'; c.lineWidth = 1.4; c.beginPath(); for (let x = 30; x < len - 10; x += 46) { c.moveTo(x, -4); c.quadraticCurveTo(x + 14, 2, x + 26, -2); } c.stroke();
+        for (const [lx, ly, r] of [[len * 0.35, 20, 0.5], [len * 0.62, 16, 0.2], [len * 0.9, -12, -0.9], [len + 4, 2, -0.2], [len * 0.75, -13, -1.1]]) { c.save(); c.translate(lx, ly); c.rotate(r + 1.57 + Math.sin(t * 2 + lx) * 0.08); leafPath(c, 26, 9); fs(c, '#7fa8c9', '#2f506e', 1.6); c.restore(); } // blue leaves: light feet only
+        c.fillStyle = KIT_BLUE; c.fillRect(len * 0.18, -11, 12, 30); c.strokeStyle = '#2f506e'; c.lineWidth = 1.6; c.strokeRect(len * 0.18, -11, 12, 30);
+        c.restore(); return;
+      }
       const mid = (x0 + x1) / 2, a = x0 - 12, b = x1 + 12;
       const half = (from, to, hinge, drop, alpha) => { // one half of the board, sagging or swinging down from its end
         c.save(); c.globalAlpha = alpha; c.translate(hinge, y); c.rotate(drop * (hinge < mid ? 1 : -1));
@@ -108,6 +134,8 @@ KIT.plank = (world, d, ground) => {
       for (const rx of [x0 + 2, x1 - 2]) { c.strokeStyle = '#8a6f44'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); for (const dx of [-7, 0, 7]) { c.moveTo(rx + dx, y - 7); c.lineTo(rx + dx, y + 13); } c.stroke(); } // rope lashings
     } };
 };
+
+KIT.branch = KIT.plank;
 
 // ---------- boxes: the light box (plain wood, either of them) and the heavy crate (green bands, only her)
 KIT.box = (world, d, ground) => {
@@ -132,7 +160,7 @@ KIT.box = (world, d, ground) => {
     after(dt) {
       b.wobble = Math.max(0, b.wobble - dt); const k = Math.max(0, 1 - dt * 20); b.ox *= k; b.oy *= k;
       if (!b.held && b.impact > 150) { snd(heavy ? 'heavy' : 'put'); puff(b.x, b.y, heavy ? 7 : 3); if (heavy && typeof game !== 'undefined') game.shake = Math.max(game.shake || 0, 0.35); }
-      if (b.lost || (!b.held && b.y - b.h > MV.bottom)) { b.lost = false; Object.assign(b, { x: home.x, y: home.y - 3, vx: 0, vy: 0, ox: 0, oy: 0, grounded: false, on: null }); snd('pop'); puff(home.x, home.y - s / 2, 8, '#fff6dc', 1.3); } // fell out of the picture: back where it started
+      if (b.lost || (!b.held && (b.y - b.h > MV.bottom || (MV.hooks.lost && MV.hooks.lost(b))))) { b.lost = false; Object.assign(b, { x: home.x, y: home.y - 3, vx: 0, vy: 0, ox: 0, oy: 0, grounded: false, on: null }); snd('pop'); puff(home.x, home.y - s / 2, 8, '#fff6dc', 1.3); } // fell out of the picture: back where it started
     } };
 };
 KIT.crate = KIT.box;
@@ -215,5 +243,194 @@ KIT.star = (world, d, ground) => {
       if (st.got) return; const bob = Math.sin(t * 2.4 + x) * 6;
       soft(c, x, y + bob, 48, 48, '#fff3b8', 0.5); c.save(); c.translate(x, y + bob); c.rotate(Math.sin(t * 1.7 + x) * 0.16); drawIcon(c, 'star', 0, 0, 1.7); c.restore();
       star(c, x + 18, y + bob - 18, 9 + Math.sin(t * 5 + x) * 3, t * 2, 0.8);
+    } };
+};
+
+// ---------- pressure plates. Small and blue: anybody, or any box. Big and green: only the sister or a heavy crate.
+KIT.plate = (world, d, ground) => {
+  const big = !!d.big, w = d.w || (big ? 170 : 96), x0 = d.x - w / 2, x1 = d.x + w / 2, rise = 9, col = big ? KIT_GREEN : KIT_BLUE;
+  const l = world.ledge(x0, x1, ground - rise), st = { on: false, down: 0 };
+  KIT_AT[d.id] = { x: d.x, col };
+  return { state: st, ledge: l,
+    after(dt) {
+      const any = world.riders(l).length > 0, on = big ? world.heavyOn(l, MOVE.heavy) : any;
+      if (on !== st.on) snd(on ? 'click' : 'tap'); st.on = on; KIT_SIG[d.id] = on;
+      st.down += ((on ? 1 : any ? 0.15 : 0) - st.down) * Math.min(1, dt * 16); l.y = ground - rise + st.down * 6; // too light for a green plate: it barely gives
+    },
+    draw(c) {
+      const y = l.y;
+      rrect(c, x0 - 9, ground - 3, w + 18, 17, 5); fs(c, '#4a4650', '#1c1a20', 2);
+      rrect(c, x0, y + KIT_TOP * 0.5, w, ground + 9 - y - KIT_TOP * 0.5, 4); fs(c, shade(col, -0.32), '#1c1a20', 2);
+      rrect(c, x0, y - KIT_TOP * 0.7, w, KIT_TOP * 1.5, 4); fs(c, st.on ? shade(col, 0.3) : col, '#1c1a20', 2);
+      c.fillStyle = 'rgba(255,255,255,.35)'; for (let x = x0 + 14; x < x1 - 8; x += 22) c.fillRect(x, y - 2.5, 10, 3);
+      if (st.on) soft(c, d.x, y, w * 0.62, 22, '#fff3b8', 0.55);
+    } };
+};
+
+// ---------- gates: a roll-up shutter that is open only while every id in `by` is on. Coming down it nudges aside
+// whatever is in the doorway; nothing is ever trapped or squashed. Two ids make the two-switch door.
+KIT.gate = (world, d, ground) => {
+  const w = d.w || 44, x0 = d.x - w / 2, x1 = d.x + w / 2, h = d.h || 440, top = ground - h, head = 46, by = [].concat(d.by);
+  const s = world.solid(x0, top, x1, ground), st = { open: 0, latched: false, moving: false };
+  return { state: st, solid: s,
+    update(dt) {
+      const want = st.latched || kitOn(by), before = st.open;
+      st.open = clamp(st.open + (want ? dt / (d.opens || 0.6) : -dt / (d.closes || 1)), 0, 1);
+      if (d.latch && st.open >= 1 && !st.latched) { st.latched = true; snd('good'); burst(d.x, top + 60, 10); }
+      const moving = st.open !== before; if (moving && !st.moving) snd('rattle'); if (!moving && st.moving && st.open === 0) snd('clunk'); st.moving = moving;
+      s.y1 = lerp(ground, top + head, ease(st.open));
+      if (st.open < before) for (const b of world.bodies) {
+        if (b.held || b.x + b.w / 2 <= x0 || b.x - b.w / 2 >= x1 || b.y - b.h >= s.y1 || b.y <= s.y0) continue;
+        const left = x0 - b.w / 2 - 1, right = x1 + b.w / 2 + 1, near = b.x < d.x ? left : right;
+        b.x = world.fits(b, near) ? near : near === left ? right : left; puff(b.x, b.y - b.h, 2);
+      }
+    },
+    draw(c) {
+      const bottom = s.y1;
+      by.forEach((id, i) => { // a cable along the pavement from each plate or lever, lit while it is on
+        const src = KIT_AT[id]; if (!src) return; const yy = ground + 26 + i * 8;
+        c.strokeStyle = 'rgba(40,30,20,.35)'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(src.x, yy); c.lineTo(d.x, yy); c.stroke();
+        c.strokeStyle = KIT_SIG[id] ? '#ffe27a' : src.col; c.lineWidth = 3; c.setLineDash([12, 9]); c.beginPath(); c.moveTo(src.x, yy); c.lineTo(d.x, yy); c.stroke(); c.setLineDash([]);
+      });
+      c.fillStyle = '#3c3a40'; c.fillRect(x0 - 10, top + 10, 8, h + 2); c.fillRect(x1 + 2, top + 10, 8, h + 2);
+      const sy = top + head - 6;
+      c.fillStyle = lg(c, x0, 0, x1, 0, '#8a949e', '#b6bec8', '#7f8a96'); c.fillRect(x0, sy, w, bottom - sy);
+      c.strokeStyle = 'rgba(40,45,55,.45)'; c.lineWidth = 2; for (let y = bottom - 14; y > sy; y -= 14) { c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); }
+      c.strokeStyle = '#2c2c34'; c.lineWidth = 2.2; c.strokeRect(x0, sy, w, bottom - sy); c.fillStyle = '#5a646e'; c.fillRect(x0 - 3, bottom - 10, w + 6, 10); c.strokeRect(x0 - 3, bottom - 10, w + 6, 10);
+      rrect(c, x0 - 18, top - 8, w + 36, head + 8, 9); fs(c, lg(c, 0, top - 8, 0, top + head, '#74747c', '#4a4a52'), '#1c1a20', 2.5);
+      by.forEach((id, i) => { // one lamp for each thing that has to be on
+        const on = st.latched || !!KIT_SIG[id], src = KIT_AT[id], lx = d.x + (i - (by.length - 1) / 2) * 26, ly = top + 18;
+        ell(c, lx, ly, 10, 10, '#1c1a20'); ell(c, lx, ly, 7.5, 7.5, on ? '#ffe27a' : shade(src ? src.col : '#888888', -0.25)); if (on) soft(c, lx, ly, 26, 26, '#ffe27a', 0.6);
+      });
+    } };
+};
+
+// ---------- a lever. hold: true is on only while somebody keeps the grab key down at it; otherwise each use flips it.
+// High up (above 230) it is the sister's, with a green band; who: 'bro' makes it one only his small hand works, in blue.
+KIT.lever = (world, d, ground) => {
+  const x = d.x, y = ground - d.h, st = { on: !!d.on, tilt: d.on ? 1 : 0 }, col = d.who === 'bro' ? KIT_BLUE : d.h > 230 ? KIT_GREEN : '#d9a94e';
+  KIT_AT[d.id] = { x, col };
+  const thing = { x, y, hold: !!d.hold,
+    canUse: (p) => (p.grounded || p.held) && Math.abs(p.x - x) <= MOVE.arm && sibReachY(p) <= y + 8 && p.y > y - 6 && (!d.who || p.kind === d.who),
+    use(p) { p.reachT = 0.3; p.dir = Math.sign(x - p.x) || p.dir; if (!d.hold) st.on = !st.on; snd('latch'); } };
+  return { state: st, thing,
+    after(dt) {
+      if (d.hold) st.on = [MV.sis, MV.bro].some((p) => p.holding === thing);
+      KIT_SIG[d.id] = st.on; st.tilt += ((st.on ? 1 : 0) - st.tilt) * Math.min(1, dt * 14);
+    },
+    draw(c) {
+      const px = x + 26, ptop = y - 46;
+      soft(c, px, ground + 8, 30, 6, '#2a1a0e', 0.28);
+      c.fillStyle = lg(c, px - 7, 0, px + 7, 0, '#8a6844', '#6b4e30', '#4f3820'); rrect(c, px - 7, ptop, 14, ground + 12 - ptop, 4); c.fill(); c.strokeStyle = KIT_EDGE; c.lineWidth = 2; c.stroke();
+      rrect(c, x - 20, y - 26, 52, 52, 8); fs(c, lg(c, 0, y - 26, 0, y + 26, '#8a8a92', '#62626a'), '#1c1a20', 2.2);
+      rrect(c, x - 20, y - 26, 52, 11, 5); fs(c, col, '#1c1a20', 1.6);
+      rrect(c, x - 4, y - 8, 8, 26, 4); fs(c, '#2c2c34');
+      c.save(); c.translate(x, y + 12); c.rotate(lerp(-0.85, 0.85, st.tilt)); c.strokeStyle = '#2c2c34'; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -38); c.stroke();
+      ell(c, 0, -40, 10, 10, '#1c1a20'); ell(c, 0, -40, 8, 8, st.on ? '#ffe27a' : '#c9402f'); c.restore();
+      if (st.on) soft(c, x, y - 20, 34, 34, '#ffe27a', 0.45);
+    } };
+};
+
+// ---------- the pulley lift: two platforms on one rope, a (the one to ride) and b (the counterweight). The heavier
+// side goes down; even, they stay. bias adds weight that is always there (a is a little heavier, so it rests at the
+// bottom). Holding the rope pulls on b's side with the holder's own weight: she can haul him up, he cannot haul her.
+KIT.pulley = (world, d, ground) => {
+  const w = d.w || 150, low = d.low || 12, high = d.high, bias = d.bias || [0.5, 0], st = { u: 0, moving: false, pull: 0 };
+  const la = world.ledge(d.a - w / 2, d.a + w / 2, ground - low), lb = world.ledge(d.b - w / 2, d.b + w / 2, ground - high);
+  const rope = d.rope ? { x: d.rope.x, y: ground - d.rope.h, hold: true,
+    canUse: (p) => p.grounded && Math.abs(p.x - d.rope.x) <= MOVE.arm && sibReachY(p) <= ground - d.rope.h + 8 && p.y > ground - d.rope.h,
+    use(p) { p.reachT = 0.3; p.dir = Math.sign(d.rope.x - p.x) || p.dir; snd('creak'); } } : null;
+  return { state: st, a: la, b: lb, thing: rope,
+    update(dt) {
+      st.pull = rope ? [MV.sis, MV.bro].reduce((f, p) => f + (p.holding === rope ? p.weight : 0), 0) : 0;
+      const wa = world.loadOn(la) + bias[0], wb = world.loadOn(lb) + bias[1] + st.pull, dir = wb > wa ? 1 : wa > wb ? -1 : 0, before = st.u;
+      st.u = clamp(st.u + dir * (d.speed || 150) * dt / (high - low), 0, 1);
+      const moving = st.u !== before; if (moving && !st.moving) snd('creak'); if (!moving && st.moving) snd('clunk'); st.moving = moving;
+      la.y = ground - lerp(low, high, st.u); lb.y = ground - lerp(high, low, st.u);
+    },
+    draw(c) {
+      const beam = ground - high - 230, xs = [d.a, d.b].concat(rope ? [rope.x] : []), xl = Math.min(...xs) - w / 2 - 34, xr = Math.max(...xs) + (rope ? 40 : w / 2 + 34);
+      for (const px of [xl, xr]) { soft(c, px, ground + 8, 34, 7, '#2a1a0e', 0.28); c.fillStyle = lg(c, px - 9, 0, px + 9, 0, '#8a6844', '#6b4e30', '#4f3820'); c.fillRect(px - 9, beam, 18, ground + 12 - beam); c.strokeStyle = KIT_EDGE; c.lineWidth = 2; c.strokeRect(px - 9, beam, 18, ground + 12 - beam); }
+      rrect(c, xl - 16, beam - 14, xr - xl + 32, 24, 5); fs(c, lg(c, 0, beam - 14, 0, beam + 10, '#b88d5a', '#8a643a'), KIT_EDGE, 2.2);
+      c.strokeStyle = '#8a6f44'; c.lineWidth = 3.5; c.lineCap = 'round';
+      for (const [x, l, basket] of [[d.a, la, false], [d.b, lb, true]]) {
+        const y = l.y, wy = beam + 34;
+        c.strokeStyle = '#8a6f44'; c.lineWidth = 3.5; c.beginPath(); c.moveTo(x, wy); c.lineTo(x, y - 96); c.lineTo(x - w / 2 + 10, y - 4); c.moveTo(x, y - 96); c.lineTo(x + w / 2 - 10, y - 4); c.stroke();
+        c.strokeStyle = '#2c2c34'; c.lineWidth = 5; c.beginPath(); c.moveTo(x, beam + 8); c.lineTo(x, wy); c.stroke();
+        c.beginPath(); circ(c, x, wy, 18); fs(c, '#5a5a62', '#1c1a20', 2.5); c.save(); c.translate(x, wy); c.rotate(st.u * 9 * (basket ? -1 : 1)); c.strokeStyle = '#b9b9c2'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-12, 0); c.lineTo(12, 0); c.moveTo(0, -12); c.lineTo(0, 12); c.stroke(); c.restore();
+        if (basket) { rrect(c, x - w / 2 + 6, y - 34, w - 12, 34, 4); fs(c, '#a8824a', KIT_EDGE, 2); c.strokeStyle = 'rgba(74,47,26,.4)'; c.lineWidth = 1.5; c.beginPath(); for (let bx = x - w / 2 + 30; bx < x + w / 2 - 12; bx += 26) { c.moveTo(bx, y - 32); c.lineTo(bx, y - 2); } c.stroke(); } // the back of the basket
+        rrect(c, x - w / 2, y + KIT_TOP * 0.6, w, 14, 3); fs(c, lg(c, 0, y, 0, y + 22, '#b88d5a', '#96703f'), KIT_EDGE, 2.2);
+        rrect(c, x - w / 2 - 2, y - KIT_TOP * 0.8, w + 4, KIT_TOP * 1.6, 3); fs(c, '#dcbb85', KIT_EDGE, 2.2);
+      }
+      if (rope) { // the rope to haul on, with a ring for a handle
+        const hy = rope.y + (st.pull ? 34 : 0) + 6;
+        c.strokeStyle = '#2c2c34'; c.lineWidth = 5; c.beginPath(); c.moveTo(rope.x, beam + 8); c.lineTo(rope.x, beam + 30); c.stroke(); c.beginPath(); circ(c, rope.x, beam + 34, 12); fs(c, '#5a5a62', '#1c1a20', 2.2);
+        c.strokeStyle = '#8a6f44'; c.lineWidth = 4; c.beginPath(); c.moveTo(rope.x, beam + 44); c.lineTo(rope.x, hy - 16); c.stroke();
+        c.beginPath(); circ(c, rope.x, hy, 15); c.strokeStyle = '#3a2618'; c.lineWidth = 9; c.stroke(); c.strokeStyle = st.pull ? '#ffe27a' : '#d9a94e'; c.lineWidth = 5.5; c.stroke();
+      }
+    } };
+};
+
+// ---------- a small boat: blue, for light feet. It bobs; under anything heavy it sinks gently and comes back up.
+KIT.boat = (world, d, ground) => {
+  const w = d.w || 190, x0 = d.x - w / 2, x1 = d.x + w / 2, base = ground + 4, l = world.ledge(x0, x1, base), st = { sink: 0, load: 0, wait: 0, t: d.x * 0.013 };
+  return { state: st, ledge: l,
+    update(dt) {
+      st.t += dt; st.load = world.heavyOn(l, MOVE.heavy) ? st.load + dt : 0;
+      if (st.load > 0.12) { if (!st.sink) snd('splash'); st.sink = Math.min(180, st.sink + 240 * dt); st.wait = 2.2; }
+      else if (st.wait > 0) st.wait -= dt; else st.sink = Math.max(0, st.sink - 120 * dt);
+      l.y = base + st.sink + (st.sink > 0 ? 0 : Math.sin(st.t * 1.7) * 2.5);
+    },
+    draw(c) {
+      c.save(); c.translate(d.x, l.y); c.rotate(Math.sin(st.t * 1.3) * 0.018 + st.sink * 0.0012); c.globalAlpha = 1 - clamp01((st.sink - 70) / 80);
+      c.beginPath(); c.moveTo(-w / 2 - 8, -13); c.quadraticCurveTo(0, -5, w / 2 + 8, -13); c.quadraticCurveTo(w / 2 - 2, 24, w / 2 - 36, 31); c.lineTo(-w / 2 + 36, 31); c.quadraticCurveTo(-w / 2 + 2, 24, -w / 2 - 8, -13); c.closePath();
+      fs(c, lg(c, 0, -13, 0, 31, '#7fb0d6', '#44709a'), '#1f3a55', 2.5);
+      c.strokeStyle = 'rgba(255,250,235,.85)'; c.lineWidth = 5; c.beginPath(); c.moveTo(-w / 2 - 4, -8); c.quadraticCurveTo(0, 0, w / 2 + 4, -8); c.stroke();
+      rrect(c, -w / 2 + 16, -7, w - 32, 11, 3); fs(c, '#b9d6ea', '#1f3a55', 1.6);
+      c.restore();
+    } };
+};
+
+// ---------- the ferry: a raft on a cable. While its id is on it crosses to the other dock; off, it goes home.
+KIT.ferry = (world, d, ground) => {
+  const [xa, xb] = d.x, w = d.w || 210, home = d.home === 0 ? xa : xb, away = d.home === 0 ? xb : xa, y = ground - 15, st = { x: home, moving: false };
+  const l = world.ledge(home - w / 2, home + w / 2, y);
+  return { state: st, ledge: l,
+    update(dt) {
+      const target = KIT_SIG[d.by] ? away : home, step = (d.speed || 230) * dt, dx = clamp(target - st.x, -step, step);
+      st.x += dx; l.x0 = st.x - w / 2; l.x1 = st.x + w / 2; l.dx = dx;
+      if (dx && !st.moving) snd('creak'); if (!dx && st.moving) snd('clunk'); st.moving = !!dx;
+    },
+    draw(c, t) {
+      const x = st.x, cable = y - 250, lo = Math.min(xa, xb) - w / 2 - 26, hi = Math.max(xa, xb) + w / 2 + 26;
+      for (const px of [lo, hi]) { c.fillStyle = lg(c, px - 7, 0, px + 7, 0, '#8a6844', '#4f3820'); c.fillRect(px - 7, cable - 14, 14, ground + 12 - cable + 14); c.strokeStyle = KIT_EDGE; c.lineWidth = 2; c.strokeRect(px - 7, cable - 14, 14, ground + 12 - cable + 14); }
+      c.strokeStyle = '#3c3a40'; c.lineWidth = 3; c.beginPath(); c.moveTo(lo, cable); c.quadraticCurveTo((lo + hi) / 2, cable + 26, hi, cable); c.stroke();
+      const cy = cable + 26 * (1 - Math.pow((x - (lo + hi) / 2) / ((hi - lo) / 2), 2)), bob = Math.sin(t * 1.6) * 1.5;
+      c.strokeStyle = '#6b4e30'; c.lineWidth = 6; c.beginPath(); c.moveTo(x, y + bob - 4); c.lineTo(x, cy + 8); c.stroke(); c.beginPath(); circ(c, x, cy + 2, 9); fs(c, '#5a5a62', '#1c1a20', 2);
+      c.strokeStyle = '#6b4e30'; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); for (const px of [x - w / 2 + 12, x + w / 2 - 12]) { c.moveTo(px, y + bob); c.lineTo(px, y + bob - 58); } c.moveTo(x - w / 2 + 12, y + bob - 54); c.lineTo(x + w / 2 - 12, y + bob - 54); c.stroke();
+      rrect(c, x - w / 2 + 10, y + bob + 8, w - 20, 30, 8); fs(c, lg(c, 0, y, 0, y + 40, '#8a5a34', '#5e3b22'), KIT_EDGE, 2.2);
+      rrect(c, x - w / 2, y + bob - KIT_TOP * 0.8, w, KIT_TOP * 2, 4); fs(c, '#dcbb85', KIT_EDGE, 2.2);
+      c.strokeStyle = 'rgba(74,47,26,.3)'; c.lineWidth = 1.4; c.beginPath(); for (let px = x - w / 2 + 30; px < x + w / 2 - 10; px += 30) { c.moveTo(px, y + bob - 6); c.lineTo(px, y + bob + 10); } c.stroke();
+    } };
+};
+
+// ---------- a rope ladder, rolled up at the edge of a ledge. Used from up there it drops; then the jump key climbs it.
+KIT.ladder = (world, d, ground) => {
+  const x = d.x, top = ground - d.h, foot = ground - (d.to || 0), st = { out: d.out ? 1 : 0, going: !!d.out }, lad = { x, top };
+  const thing = { x, y: top - 30, canUse: (p) => !st.going && p.grounded && Math.abs(p.y - top) < 8 && Math.abs(p.x - x) <= 90, use(p) { st.going = true; p.reachT = 0.3; p.dir = Math.sign(x - p.x) || p.dir; snd('rattle'); } };
+  return { state: st, thing, ladder: (p) => (st.out >= 1 && Math.abs(p.x - x) < 48 && p.y > top + 6 && p.y <= foot + 4 ? lad : null),
+    after(dt) { if (st.going && st.out < 1) { st.out = Math.min(1, st.out + dt / 0.6); if (st.out >= 1) snd('clunk'); } },
+    draw(c, t) {
+      const len = (foot - top - 8) * ease(st.out);
+      if (len > 2) {
+        c.strokeStyle = '#8a6f44'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); for (const dx of [-17, 17]) { c.moveTo(x + dx, top + 6); c.lineTo(x + dx + Math.sin(t * 1.5) * 1.5, top + 6 + len); } c.stroke();
+        for (let y = top + 28; y < top + len; y += 30) { rrect(c, x - 21, y - 4, 42, 8, 3); fs(c, '#c9a36a', KIT_EDGE, 1.6); }
+      }
+      c.strokeStyle = '#2c2c34'; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); for (const dx of [-17, 17]) { c.moveTo(x + dx, top + 10); c.lineTo(x + dx, top - 12); c.lineTo(x + dx + 10, top - 12); } c.stroke(); // the hooks over the edge
+      if (st.out < 1) { // still rolled up: a bundle with a blue ribbon, for whoever gets up there
+        const k = 1 - st.out; c.save(); c.translate(x, top - 24); c.scale(k, k);
+        c.beginPath(); circ(c, 0, 0, 24); fs(c, '#c9a36a', KIT_EDGE, 2.2); c.strokeStyle = '#8a6f44'; c.lineWidth = 3; c.beginPath(); for (let a = 0; a < 13; a += 0.4) { const r = 2 + a * 1.5; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.stroke();
+        c.fillStyle = KIT_BLUE; c.fillRect(-26, -5, 52, 10); c.strokeStyle = '#1f3a55'; c.lineWidth = 1.6; c.strokeRect(-26, -5, 52, 10); c.restore();
+      }
     } };
 };

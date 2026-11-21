@@ -17,13 +17,17 @@ const world = makeWorld();
 const AT = +QS.get('at') || 0;
 const players = [makePlayer('sister', AT ? AT - 70 : LAB.start[0], FEET, 1), makePlayer('brother', AT ? AT + 70 : LAB.start[1], FEET, -1)];
 const [sis, bro] = players;
-world.solid(-5000, FEET, CITY.length + 5000, FEET + 900);
+const WATER = GAPS.filter((g) => g[2] === 'water' && g[0] < LAB.street[1]); // the canal: there is no pavement over it
+{ let x = -5000; for (const [a, b] of WATER) { world.solid(x, FEET, a, FEET + 900); x = b; } world.solid(x, FEET, CITY.length + 5000, FEET + 900); }
 world.solid(-5000, -5000, LAB.street[0], FEET); world.solid(LAB.street[1], -5000, CITY.length + 5000, FEET);
 const kit = LAB.things.map((d) => kitMake(world, d, FEET));
-const WATER = GAPS.filter((g) => g[2] === 'water');
+const overWater = (x) => WATER.some(([a, b]) => x > a && x < b);
 setupMovement(world, players, {
   // the nearest thing this sibling could use right now
   thing: (p) => { let best = null, bd = 1e9; for (const o of kit) if (o.thing && o.thing.canUse(p)) { const d = Math.abs(o.thing.x - p.x); if (d < bd) { bd = d; best = o.thing; } } return best; },
+  ladder: (p) => { for (const o of kit) if (o.ladder) { const l = o.ladder(p); if (l) return l; } return null; },
+  // in the water: a splash, and back they come (siblings beside the partner or to their last safe spot, boxes to where they started)
+  lost: (b) => { if (b.y < FEET + 78 || !overWater(b.x)) return false; snd('splash'); puff(b.x, FEET + 30, 12, '#d6ecf6', 2.2); return true; },
   // after a fall, a sibling comes back next to the partner only if the partner is on the same level and the same bank
   canJoin: (p, o) => Math.abs(o.y - p.safe.y) < 60 && !WATER.some(([a, b]) => (p.safe.x < (a + b) / 2) !== (o.x < (a + b) / 2)),
 });
@@ -115,6 +119,10 @@ function frame(now) {
   for (const o of kit) if (o.body && !o.body.held) o.body.draw(c, t);
   for (const p of players) { if (p.gone) continue; drawChar(p, t); if (p.carry) p.carry.draw(c, t); }
   for (const o of kit) if (o.drawFront) o.drawFront(c, t);
+  for (const [a, b] of WATER) if (inView(a, b)) { // the near water, in front of whatever is sinking into it
+    c.fillStyle = lg(c, 0, FEET + 26, 0, VH + top, 'rgba(111,154,176,.55)', 'rgba(63,106,130,.96)'); c.fillRect(a + 16, FEET + 26, b - a - 32, VH + top - FEET);
+    c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2.5; for (let i = 0; i < 7; i++) { const xx = a + 30 + ((i * 139 + t * 26) % (b - a - 100)), yy = FEET + 34 + (i % 3) * 22; c.beginPath(); c.moveTo(xx, yy); c.quadraticCurveTo(xx + 18, yy - 5, xx + 36, yy); c.stroke(); }
+  }
   drawLampGlow(c); drawLeaves(c, t); drawMoveFx(c); drawSparks(c);
   drawStreetGlow(c);
   if (ZOOM <= 1) { drawHints(c, t); drawStars(c, top); if (DEBUG) drawDebug(c, t, top); }

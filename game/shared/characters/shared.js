@@ -37,6 +37,7 @@ function drawLeg(c, hx, hy, pose, L, k) {
 //   hold    the sister holding her brother up on her shoulders
 //   ride    the brother balancing up there          toss    flying after a toss or a see-saw launch
 //   strain  heaving at something too heavy          stride  longer steps for running (1 = the walking step)
+//   climb   going up a ladder (step counts the rungs)
 function poseStride(p) { return (p.pose && p.pose.stride) || 1; }
 function poseFlow(p, m) { const q = p.pose; return q ? Math.max(m, q.air * 0.8, q.toss) : m; } // how far capes and scarves stream out
 function poseLift(p) { const q = p.pose; return q ? q.air * (1 - q.rise) * 44 : 0; }            // a cape flies up on the way down
@@ -48,6 +49,7 @@ function poseLeg(p, front, walk) {
   to(front ? -6 : -16, front ? 5 : 14, 0.6, q.toss);   // tossed: legs trailing
   to(front ? 5 : -5, 0, 0, q.ride);                    // on her shoulders: feet together
   to(front ? 13 : -13, 0, 0, q.strain);                // heaving: feet planted wide
+  if (q.climb) to(4, 9 + Math.sin((q.step || 0) + (front ? 0 : Math.PI)) * 9, 0, q.climb); // up a ladder: one foot, then the other
   return out;
 }
 function poseArm(p, front, th) { // th is the arm's angle: 0 hangs down, a quarter turn points ahead, a half turn points straight up
@@ -59,6 +61,7 @@ function poseArm(p, front, th) { // th is the arm's angle: 0 hangs down, a quart
   to(front ? 2.6 : 3.62, q.hold);
   to(front ? 2.48 : 3.72, q.carry);                                                  // one hand in front of the load, one behind: the face stays clear
   to(front ? 0.8 : 0.55, q.strain);
+  if (q.climb) to(2.35 + Math.sin((q.step || 0) + (front ? Math.PI : 0)) * 0.45, q.climb); // hand over hand
   return th;
 }
 
