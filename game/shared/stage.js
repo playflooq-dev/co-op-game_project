@@ -112,6 +112,10 @@ function drawChar(p, t) {
   p.t = t;
   c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.clearRect(0, 0, buf.cv.width, buf.cv.height);
   c.setTransform(CS * k * p.dir, 0, 0, CS * k, BAX * CS, BAY * CS); c.lineCap = 'round'; c.lineJoin = 'round';
+  if (p.pose) { // only in worlds with jumping (see shared/movement.js): squash and stretch from the feet, and a lean about the middle
+    c.scale(p.sqx || 1, p.sqy || 1);
+    if (p.tilt) { c.translate(0, -120); c.rotate(p.tilt); c.translate(0, 120); }
+  }
   p.draw(c, p, t);
   lightChar();
   ctx.globalAlpha = p.alpha;

@@ -79,6 +79,12 @@ picks between pictures of a group, it will start using it.
 
 ## The city (`city/`)
 
+**Since 2026-11-21 the city is being rebuilt as a test level ("the lab").** `city.html` now runs `city/lab.js` over
+the scenery in `city/street.js`, with the new movement in `shared/movement.js`, the physics in `shared/physics.js` and
+the objects in `shared/kit.js`; what stands where is the `LAB` block in `city/settings.js`. The plan is in
+[city/LAB_PLAN.md](city/LAB_PLAN.md). The rest of this section describes the first city level (`level.js` and `play.js`,
+which are no longer loaded) and will be rewritten when the lab is finished. The art folders are unchanged.
+
 | Folder | What it holds |
 |---|---|
 | `assets/background/` | The far skyline, in two layers that move at different speeds. |

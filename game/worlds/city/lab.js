@@ -1,0 +1,142 @@
+'use strict';
+// The city lab: the test level that runs the city now (see LAB_PLAN.md). It builds the street from the LAB block in
+// settings.js, lets the siblings move with shared/movement.js on the physics in shared/physics.js, and draws it all
+// over the scenery in street.js.
+// Useful while testing (add to the address of city.html):
+//   ?debug=1   shows what is solid, what each sibling stands on, and the frame rate
+//   ?tune=1    shows sliders for the numbers in MOVE (shared/movement.js)
+//   ?touch=1   shows the touch buttons on a computer        ?at=2400   starts both siblings at that place
+//   ?zoom=3    looks closer (?look=bro follows the brother)     ?fps=30    draws only that many frames a second
+const DEBUG = QS.get('debug'), TUNE = QS.get('tune'), SLOW = +QS.get('fps') || 0;
+let last = performance.now();
+const game = { time: 0, chapter: 0, queue: [], bubble: null, sparks: [], objective: '', objT: 0, done: false, lift: 0, shake: 0, fps: 60, slow: 0 };
+if (typeof SOUND !== 'undefined') SOUND.wantMusic = true;
+
+// ---------- the world: the pavement, the two ends of the street, and everything the settings place on it
+const world = makeWorld();
+const AT = +QS.get('at') || 0;
+const players = [makePlayer('sister', AT ? AT - 70 : LAB.start[0], FEET, 1), makePlayer('brother', AT ? AT + 70 : LAB.start[1], FEET, -1)];
+const [sis, bro] = players;
+world.solid(-5000, FEET, CITY.length + 5000, FEET + 900);
+world.solid(-5000, -5000, LAB.street[0], FEET); world.solid(LAB.street[1], -5000, CITY.length + 5000, FEET);
+const kit = LAB.things.map((d) => kitMake(world, d, FEET));
+const WATER = GAPS.filter((g) => g[2] === 'water');
+setupMovement(world, players, {
+  // the nearest thing this sibling could use right now
+  thing: (p) => { let best = null, bd = 1e9; for (const o of kit) if (o.thing && o.thing.canUse(p)) { const d = Math.abs(o.thing.x - p.x); if (d < bd) { bd = d; best = o.thing; } } return best; },
+  // after a fall, a sibling comes back next to the partner only if the partner is on the same level and the same bank
+  canJoin: (p, o) => Math.abs(o.y - p.safe.y) < 60 && !WATER.some(([a, b]) => (p.safe.x < (a + b) / 2) !== (o.x < (a + b) / 2)),
+});
+MV.bottom = VH + 260;
+const pads = makeTouchPads(QS.get('touch'));
+const starsGot = () => kit.filter((o) => o.star && o.star.got).length, starsAll = kit.filter((o) => o.star).length;
+
+function fitScreen() { // on touch screens the street is drawn higher, so the buttons sit over the road
+  resizeScreen();
+  game.lift = pads ? clamp(pads.height() * DPR / S - 84, 0, 300) : 0;
+}
+
+// ---------- every frame
+function update(dt) {
+  game.time += dt;
+  moveSiblings(dt, false);
+  for (const o of kit) if (o.update) o.update(dt);
+  world.step(dt);
+  for (const o of kit) if (o.after) o.after(dt);
+  settleSiblings(dt);
+  updatePigeons(dt, players.filter((p) => !p.gone && p.grounded));
+  updateMoveFx(dt); updateTalk(dt);
+  game.shake = Math.max(0, game.shake - dt * 2.5);
+  const mid = (sis.x + bro.x) / 2, target = clamp(mid - VW / 2, 0, Math.max(0, LAB.street[1] + 240 - VW));
+  camX += (target - camX) * Math.min(1, dt * 4);
+  if (typeof musicArea === 'function') musicArea('street');
+  endInput();
+}
+
+function drawShadow(c, b) { // on whatever is below: smaller and fainter the higher they are
+  const fl = world.below(b); if (fl.y === Infinity) return;
+  const k = clamp01(1 - (fl.y - b.y) / 560), r = (b.kind === 'box' ? b.w * 0.62 : 46) * (0.55 + 0.45 * k);
+  soft(c, b.x - (b.kind === 'box' ? 0 : 3 * b.dir), fl.y + 3, r, 8 * (0.55 + 0.45 * k), '#2a1a0e', 0.1 + 0.3 * k);
+}
+function drawBadge(c, x, y, icon, col, t) { // a little sign over a head, in place of words
+  c.save(); c.translate(x, y + Math.sin(t * 5) * 2.5); c.globalAlpha = 0.95;
+  c.beginPath(); circ(c, 0, 0, 23); fs(c, col, '#fff6dc', 3); drawIcon(c, icon, 0, icon === 'hands' ? 0 : 1, icon === 'hands' ? 1.05 : 0.95); c.restore();
+}
+function drawHints(c, t) { // what the grab key would do, shown as a picture: a hand to pick up or use, two hands for the lift
+  const duo = MV.duo;
+  for (const p of players) {
+    if (p.gone || p.carry || duo.state === 'up' || !(p.grounded || p.held)) continue;
+    const hooks = MV.hooks, th = hooks.thing(p), headY = p.y - p.h - 34;
+    if (duo.state === 'on') { if (p === bro && th) drawBadge(c, p.x, headY, 'hand', p.col, t); continue; }
+    const box = th ? null : nearBox(p);
+    if (th || (box && !(box.heavy && p === bro))) drawBadge(c, p.x, headY, 'hand', p.col, t);
+    else if (!box && p === bro && canLift() && sis.idle > 0.7 && bro.idle > 0.7) drawBadge(c, p.x, headY, 'hands', p.col, t); // only once they have stood together for a moment
+  }
+}
+function drawStars(c, top) { // the stars found so far, as pictures
+  const x = camX + 22, y = top + 20, w = 26 + starsAll * 42;
+  c.save(); rrect(c, x, y, w, 52, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
+  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = o.star.got ? 1 : 0.22; const pop = o.star.got ? 1 + Math.max(0, 0.5 - o.star.t) * 0.9 : 1; drawIcon(c, 'star', x + 34 + i * 42, y + 27, 1.05 * pop); });
+  c.restore();
+}
+function drawDebug(c, t, top) {
+  c.save(); c.lineWidth = 2;
+  c.strokeStyle = 'rgba(255,60,40,.9)'; for (const s of world.solids) if (!s.off && s.x1 > camX - 50 && s.x0 < camX + VW + 50) c.strokeRect(Math.max(s.x0, camX - 40), Math.max(s.y0, -40), Math.min(s.x1, camX + VW + 40) - Math.max(s.x0, camX - 40), Math.min(s.y1, VH + 40) - Math.max(s.y0, -40));
+  for (const l of world.ledges) { c.strokeStyle = l.off ? 'rgba(255,220,60,.3)' : 'rgba(255,220,60,.95)'; c.beginPath(); c.moveTo(l.x0, l.y); c.lineTo(l.x1, l.y1 === undefined ? l.y : l.y1); c.stroke(); }
+  for (const b of world.bodies) { c.strokeStyle = b.held ? 'rgba(120,255,255,.5)' : b.grounded ? 'rgba(80,255,120,.95)' : 'rgba(255,255,255,.95)'; c.strokeRect(b.x - b.w / 2, b.y - b.h, b.w, b.h); }
+  for (const o of kit) if (o.thing) { c.strokeStyle = 'rgba(255,120,255,.9)'; c.beginPath(); circ(c, o.thing.x, o.thing.y, 10); c.stroke(); }
+  for (const p of players) { c.strokeStyle = p.col; c.setLineDash([6, 6]); c.beginPath(); c.moveTo(p.x - 40, sibReachY(p)); c.lineTo(p.x + 40, sibReachY(p)); c.stroke(); c.setLineDash([]); }
+  c.font = '600 20px monospace'; c.textAlign = 'left'; c.textBaseline = 'top';
+  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   stars ${starsGot()}/${starsAll}`,
+    ...players.map((p) => `${p.who.padEnd(7)} x ${p.x.toFixed(0).padStart(5)}  y ${(FEET - p.y).toFixed(0).padStart(4)} up  vx ${p.vx.toFixed(0).padStart(5)} vy ${p.vy.toFixed(0).padStart(5)}  ${p.gone ? 'gone' : p.held ? 'held' : p.grounded ? 'ground' : 'air'}${p.crawl ? ' crawl' : ''}${p.carry ? ' carry' : ''}  on ${p.on ? (p.on.isBody ? 'box' : p.on.isLedge ? 'ledge' : 'solid') : '-'}  load ${world.load(p)}`),
+    `duo ${MV.duo.state || '-'}   jump ${(MOVE.jumpHeight * broHeight()).toFixed(0)} units in ${MOVE.jumpTime}s   gravity ${moveGravity().toFixed(0)}`];
+  lines.forEach((s, i) => { c.fillStyle = 'rgba(20,12,6,.75)'; c.fillRect(camX + 20, top + 86 + i * 26, c.measureText(s).width + 16, 25); c.fillStyle = '#fff6dc'; c.fillText(s, camX + 28, top + 89 + i * 26); });
+  c.restore();
+}
+
+function frame(now) {
+  if (SLOW && now - last < 1000 / SLOW - 3) { requestAnimationFrame(frame); return; } // ?fps=30: draw fewer frames, to feel a slow device
+  const ms = now - last, dt = Math.min(0.05, ms / 1000); last = now; const t = now / 1000;
+  if (ms > 0 && ms < 1000) { game.fps += (1000 / ms - game.fps) * 0.05; game.slow = Math.max(game.slow * 0.995, ms); }
+  update(dt);
+  const c = ctx, top = game.lift;
+  c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.textAlign = 'left';
+  if (ZOOM > 1) { // a closer look, for checking the drawing
+    const k = S * ZOOM, f = QS.get('look') === 'bro' ? bro : sis, zx = f.x - VW / (2 * ZOOM), zy = clamp(f.y - 130 - VH / (2 * ZOOM), 0, VH - VH / ZOOM);
+    c.setTransform(k, 0, 0, k, -zx * k, -zy * k); VIEW = [zx, zx + VW / ZOOM]; drawSky(c, t); paintStill(c);
+  } else {
+    c.setTransform(S, 0, 0, S, -camX * S, ((game.shake > 0 ? Math.sin(t * 95) * 6 * game.shake : 0) - top) * S);
+    if (top > 0) { c.fillStyle = textureFast(c, W('road')); c.fillRect(camX - 10, VH - 2, VW + 20, top + 30); }
+    drawStreet(c, t);
+  }
+  liveWater(c, t); drawPigeons(c, t);
+  for (const o of kit) if (o.draw) o.draw(c, t);
+  for (const b of world.bodies) if (!b.held && !b.gone) drawShadow(c, b);
+  for (const o of kit) if (o.body && !o.body.held) o.body.draw(c, t);
+  for (const p of players) { if (p.gone) continue; drawChar(p, t); if (p.carry) p.carry.draw(c, t); }
+  for (const o of kit) if (o.drawFront) o.drawFront(c, t);
+  drawLampGlow(c); drawLeaves(c, t); drawMoveFx(c); drawSparks(c);
+  drawStreetGlow(c);
+  if (ZOOM <= 1) { drawHints(c, t); drawStars(c, top); if (DEBUG) drawDebug(c, t, top); }
+  requestAnimationFrame(frame);
+}
+
+// ---------- sliders for the feel (?tune=1): a developer's tool, so it uses words
+function tunePanel() {
+  const rows = [['jumpHeight', 0.8, 2.2, 0.05], ['jumpTime', 0.2, 0.6, 0.01], ['fallFaster', 1, 2.5, 0.05], ['coyote', 0, 0.3, 0.01], ['buffer', 0, 0.3, 0.01],
+    ['speed.sister', 150, 450, 5], ['speed.brother', 150, 450, 5], ['accel', 800, 5000, 100], ['brake', 800, 6000, 100], ['airAccel', 400, 4000, 100], ['airBrake', 0, 3000, 20],
+    ['liftWalk', 0.2, 1, 0.05], ['tossRise', 1, 3, 0.05], ['tossForward', 0, 450, 10], ['seesawRise', 1.5, 4, 0.05], ['crateJump', 0, 1, 0.05], ['stride', 1, 2, 0.05]];
+  const get = (k) => k.split('.').reduce((o, part) => o[part], MOVE), put = (k, v) => { const parts = k.split('.'), last2 = parts.pop(); parts.reduce((o, part) => o[part], MOVE)[last2] = v; };
+  const box = document.createElement('div');
+  box.style.cssText = 'position:fixed;right:10px;top:10px;z-index:8;background:#1c120ae6;color:#fff6dc;font:12px/1.5 monospace;padding:10px 12px;border-radius:10px;max-height:94vh;overflow:auto';
+  box.innerHTML = '<b>MOVE</b> (shared/movement.js)<br>' + rows.map(([k, lo, hi, st]) => `<label style="display:grid;grid-template-columns:104px 150px 44px;align-items:center;gap:6px">${k}<input type="range" data-k="${k}" min="${lo}" max="${hi}" step="${st}" value="${get(k)}"><span>${get(k)}</span></label>`).join('') + '<button style="margin-top:6px">copy the numbers</button> <span id="tuned"></span>';
+  box.addEventListener('input', (e) => { const k = e.target.dataset.k; if (!k) return; put(k, +e.target.value); e.target.nextElementSibling.textContent = e.target.value; });
+  box.addEventListener('keydown', (e) => e.stopPropagation());
+  box.querySelector('button').addEventListener('click', () => { const text = rows.map(([k]) => k + ': ' + get(k)).join(', '); if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {}); box.querySelector('#tuned').textContent = 'copied'; console.log(text); });
+  document.body.appendChild(box);
+}
+
+addEventListener('resize', fitScreen); fitScreen();
+if (TUNE) tunePanel();
+camX = clamp((sis.x + bro.x) / 2 - VW / 2, 0, Math.max(0, LAB.street[1] + 240 - VW));
+requestAnimationFrame((tm) => { last = tm; frame(tm); });

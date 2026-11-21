@@ -1,27 +1,16 @@
 <!doctype html>
+<!-- Test page: the city (the same scripts as city.html) with tools/playtest-city.js, which plays it with simulated keys. -->
 <html lang="en"><head><meta charset="utf-8"><base href="../">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Across the City</title>
 <style>
   html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
   canvas{display:block}
-  #hud{position:fixed;left:18px;bottom:14px;font:600 14px/1.4 Georgia,serif;color:#fff;text-shadow:0 1px 3px #000c;pointer-events:none}
-  #hud b{font-size:22px;font-style:italic}
   #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
-  .pad{position:fixed;bottom:16px;display:none;gap:8px;flex-wrap:wrap;width:150px}
-  .pad button{width:66px;height:56px;border-radius:16px;border:0;background:#0004;color:#fff;font-size:22px}
-  @media (pointer:coarse){.pad{display:flex}#hud{display:none}}
 </style></head>
 <body>
 <canvas id="c"></canvas>
-<div id="hud"><b>Chapter Two: Across the City</b><br>
-Sister: A / D walk &middot; W use, hold &middot; S crawl, look in, read the map<br>
-Brother: &larr; / &rarr; walk &middot; &uarr; use, hold &middot; &darr; crawl, look in, read the map<br>
-Stuck? The map has hints. &middot; M: sound on / off</div>
-<div class="pad" style="left:16px"><button data-k="KeyW">&#9650;</button><button data-k="KeyS">&#9660;</button><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button></div>
-<div class="pad" style="right:16px"><button data-k="ArrowUp">&#9650;</button><button data-k="ArrowDown">&#9660;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
 <div id="load">Across the City</div>
-<!-- Chapter Two. Its art and settings are in worlds/city/; it borrows a few pieces of forest art; the characters are in shared/characters/. -->
 <script>addEventListener('error', (e) => fetch('/log', { method: 'POST', body: 'PLAY FAILED error: ' + e.message + ' (' + String(e.filename).split('/').pop() + ' line ' + e.lineno + ')' }));</script>
 <script src="shared/helpers.js"></script>
 <script src="worlds/forest/assets/manifest.js"></script>
@@ -32,9 +21,14 @@ Stuck? The map has hints. &middot; M: sound on / off</div>
 <script src="shared/characters/brother.js"></script>
 <script src="shared/sound.js"></script>
 <script src="shared/stage.js"></script>
-<script>const LOAD = { title: 'Across the City', script: ['worlds/city/play.js', 'worlds/city/level.js'], sets: [
+<script src="shared/physics.js"></script>
+<script src="shared/icons.js"></script>
+<script src="shared/movement.js"></script>
+<script src="shared/kit.js"></script>
+<script>const LOAD = { title: 'Across the City', script: ['worlds/city/street.js', 'worlds/city/lab.js'], sets: [
   { assets: CITY_ASSETS, base: 'worlds/city/assets/' },
   { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'trees', 'bigTrees', 'bushes', 'grassTexture', 'pathTexture'] }, // borrowed from the forest
 ] };</script>
 <script src="shared/loader.js"></script>
-<script src="tools/playtest-city.js"></script></body></html>
+<script src="tools/playtest-city.js"></script>
+</body></html>

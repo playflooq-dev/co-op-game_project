@@ -11,20 +11,21 @@ function drawBrother(c, p, t) {
   const legA = { pants: '#45507a', edge: '#262d4a', boot: '#7a4d31', bootEdge: '#40261a', cuff: '#96694a', sole: '#2e1c14' };
   const legB = { pants: '#373f63', edge: '#20263f', boot: '#633e28', bootEdge: '#352016', cuff: '#7a553b', sole: '#24160f' };
   // cape
-  const fl = 16 + m * 28, outer = [-24 - fl, hipY + 32 - fl * 0.4], inner = [-10, hipY + 30], edge = [];
-  for (let i = 0; i <= 5; i++) { const k = i / 5; edge.push([outer[0] + (inner[0] - outer[0]) * k, outer[1] + (inner[1] - outer[1]) * k + Math.sin(t * 6.5 - i * 1.1) * (1.5 + m * 4) + Math.sin(k * Math.PI * 3) * 2.5]); }
+  const fm = poseFlow(p, m), fl = 16 + fm * 28, outer = [-24 - fl, hipY + 32 - fl * 0.4 - poseLift(p)], inner = [-10, hipY + 30], edge = [];
+  for (let i = 0; i <= 5; i++) { const k = i / 5; edge.push([outer[0] + (inner[0] - outer[0]) * k, outer[1] + (inner[1] - outer[1]) * k + Math.sin(t * 6.5 - i * 1.1) * (1.5 + fm * 4) + Math.sin(k * Math.PI * 3) * 2.5]); }
   c.beginPath(); c.moveTo(6, top + 3); c.quadraticCurveTo(-22 - fl * 0.55, top + 22, edge[0][0], edge[0][1]); for (const e of edge) c.lineTo(e[0], e[1]); c.quadraticCurveTo(-4, hipY - 6, 8, top + 5); c.closePath();
   fs(c, lg(c, outer[0], 0, 10, 0, RD1, RD2), RD0, 2.2);
   c.lineWidth = 2; for (const [i, a] of [[1, 0.4], [2, 0.3], [4, 0.35]]) { c.strokeStyle = rgba(RD0, a); c.beginPath(); c.moveTo(0, top + 10); c.quadraticCurveTo(edge[i][0] * 0.6 - 4, top + 40, edge[i][0], edge[i][1] - 2); c.stroke(); }
   c.strokeStyle = rgba(RD3, 0.6); c.lineWidth = 2.5; c.beginPath(); c.moveTo(-2, top + 8); c.quadraticCurveTo(-20 - fl * 0.5, top + 26, edge[0][0] + 4, edge[0][1] - 8); c.stroke();
   c.beginPath(); edge.forEach((e, i) => (i ? c.lineTo(e[0], e[1] - 2) : c.moveTo(e[0], e[1] - 2))); c.strokeStyle = '#e9c45c'; c.lineWidth = 3; c.stroke();
   // far arm
-  { const th = sw * 0.65 * (1 - ar) - ar * (2.2 + Math.sin(t * 14) * 0.3), sx = -5, sy = top + 12, hx = sx + Math.sin(th) * 38, hy = sy + Math.cos(th) * 38; // cheering waves this arm
+  { const th = poseArm(p, 0, sw * 0.65 * (1 - ar) - ar * (2.2 + Math.sin(t * 14) * 0.3)), sx = -5, sy = top + 12, hx = sx + Math.sin(th) * 38, hy = sy + Math.cos(th) * 38; // cheering waves this arm
     limb(c, [sx, sy, (sx + hx) / 2 - 4, (sy + hy) / 2, hx, hy], 14, B1, B0);
     limb(c, [sx + (hx - sx) * 0.62, sy + (hy - sy) * 0.62, sx + (hx - sx) * 0.75, sy + (hy - sy) * 0.75, sx + (hx - sx) * 0.9, sy + (hy - sy) * 0.9], 14.5, '#6e4830', '#40281a');
     c.beginPath(); circ(c, hx, hy + 2, 6.5); fs(c, '#e0ae88', '#b07a58', 1.5); }
-  drawLeg(c, -5, hipY, legPose(ph + Math.PI, m, 18, 8, -5), 22, legB);
-  drawLeg(c, 5, hipY, legPose(ph, m, 18, 8, 4), 22, legA);
+  const st = poseStride(p);
+  drawLeg(c, -5, hipY, poseLeg(p, 0, legPose(ph + Math.PI, m, 18 * st, 8 * st, -5)), 22, legB);
+  drawLeg(c, 5, hipY, poseLeg(p, 1, legPose(ph, m, 18 * st, 8 * st, 4)), 22, legA);
   // tunic
   const hs = -sw * 3.5;
   const tunic = () => { c.beginPath(); c.moveTo(-19, top + 2); c.quadraticCurveTo(0, top - 3, 19, top + 2); c.quadraticCurveTo(25, top + 34, 29 + hs, hem); c.quadraticCurveTo(hs, hem + 8, -29 + hs, hem); c.quadraticCurveTo(-25, top + 34, -19, top + 2); c.closePath(); };
@@ -43,7 +44,7 @@ function drawBrother(c, p, t) {
   c.beginPath(); c.moveTo(-24, hipY + 1 + pb); c.quadraticCurveTo(-16, hipY + 6 + pb, -8, hipY + 1 + pb); c.strokeStyle = '#3e2414'; c.lineWidth = 1.6; c.stroke(); ell(c, -16, hipY + 5 + pb, 2, 2, '#e9c45c');
   // scarf
   for (const [dy, ln, pw] of [[6, 30, 0], [11, 22, 1.3]]) {
-    const ex = -14 - ln * (0.45 + m * 0.75), ey = top + dy + ln * (0.75 - m * 0.6) + Math.sin(t * 7 + pw) * (1 + m * 4);
+    const ex = -14 - ln * (0.45 + fm * 0.75), ey = top + dy + ln * (0.75 - fm * 0.6) + Math.sin(t * 7 + pw) * (1 + fm * 4);
     c.beginPath(); c.moveTo(-10, top + 3); c.quadraticCurveTo((ex - 10) / 2, top + dy - 4 + (ey - top) * 0.2, ex, ey); c.strokeStyle = RD0; c.lineWidth = 9.5; c.stroke(); c.strokeStyle = dy > 8 ? RD1 : RD2; c.lineWidth = 6.5; c.stroke();
   }
   c.beginPath(); c.ellipse(3, top + 3, 23, 10, -0.05, 0, TAU); fs(c, lg(c, -20, 0, 26, 0, RD1, RD2), RD0, 2);
@@ -84,7 +85,7 @@ function drawBrother(c, p, t) {
   drawFaceTop(c, p, 7, headY + 5);
   c.restore();
   // front arm, swinging freely (cheering throws it up in the air)
-  { const th = -sw * 0.65 * (1 - ar) + ar * (2.55 + Math.sin(t * 14 + 1) * 0.18), sx = 8, sy = top + 12, hx = sx + Math.sin(th) * 38, hy = sy + Math.cos(th) * 38, bend = 5 * (1 - ar);
+  { const th = poseArm(p, 1, -sw * 0.65 * (1 - ar) + ar * (2.55 + Math.sin(t * 14 + 1) * 0.18)), sx = 8, sy = top + 12, hx = sx + Math.sin(th) * 38, hy = sy + Math.cos(th) * 38, bend = 5 * (1 - ar);
     limb(c, [sx, sy, (sx + hx) / 2 + bend, (sy + hy) / 2, hx, hy], 14.5, B2, B0);
     limb(c, [sx + (hx - sx) * 0.62, sy + (hy - sy) * 0.62, sx + (hx - sx) * 0.75, sy + (hy - sy) * 0.75, sx + (hx - sx) * 0.9, sy + (hy - sy) * 0.9], 15, '#8a5a34', '#40281a');
     c.beginPath(); circ(c, hx, hy + 2, 7.5); fs(c, '#f6cfa9', '#b9825e', 1.5); }

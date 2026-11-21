@@ -16,7 +16,27 @@ city.html     Chapter Two, "Across the City": a journey across town to the Old B
               About 15 to 20 minutes. It ends at Forest Park, which leads on to the forest.
 forest.html   The Forest Trail (the first art scene; the next chapter will be built here).
 
-CONTROLS (two players on one keyboard)
+THE CITY IS BEING REBUILT (since 2026-11-21, branch lab/city-v2)
+city.html is now a test level, "the lab", for new movement: jumping, carrying, the lift and the toss.
+What is written about city.html in the rest of this file describes the first version; it will be
+rewritten when the lab is finished. The plan is in worlds/city/LAB_PLAN.md. For now city.html is one
+test street with five stars to collect, one for each new ability:
+
+  Sister:   A / D walk     W jump     S grab, put down, use
+  Brother:  Left / Right walk     Up jump     Down grab, put down, use
+  Grab next to a box picks it up; grab again puts it down. Only the sister can lift the heavy crate
+  (green bands). Grab next to each other, with nothing else in reach: she lifts him onto her shoulders.
+  Grab again: she tosses him up. Jump while he is up there: he hops down. Both grab at once: a high five.
+  The brother ducks into low gaps by himself. The thin blue plank holds only him. On the see-saw, he
+  stands on the blue end and she jumps onto the green end.
+  On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
+
+  Add to the address to help with testing:
+  city.html?tune=1    sliders for how the jump and the running feel (the numbers are MOVE in shared/movement.js)
+  city.html?debug=1   shows what is solid and the frame rate        city.html?at=3300   starts further along
+  city.html?touch=1   shows the touch buttons on a computer         city.html?fps=30    runs like a slow device
+
+CONTROLS (two players on one keyboard; the house and the forest)
 Sister:   A / D walk     W use, hold     S crawl, look in, read the map
 Brother:  Left / Right walk     Up use, hold     Down crawl, look in, read the map
 Pressing W or Up with nothing nearby makes that character cheer. Cheer together for a high five.

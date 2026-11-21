@@ -1,8 +1,12 @@
 'use strict';
 // Settings for the City world (Chapter Two, "Across the City"). Change a number here and refresh the game.
 // Positions are in scene units: the screen is always 1080 units tall, and the street runs left to right along x.
-// The art is in worlds/city/assets/ (list: assets/manifest.js). The code that runs the level is worlds/city/level.js,
-// and the things to play with (boats, fountain, bell game, stickers, hints...) are in worlds/city/play.js.
+// The art is in worlds/city/assets/ (list: assets/manifest.js).
+//
+// SINCE 2026-11-21 THE CITY IS A TEST LEVEL ("the lab", see LAB_PLAN.md). What runs now is worlds/city/lab.js over the
+// scenery in worlds/city/street.js, and what it places is the LAB block near the end of this file. The puzzle blocks
+// below (PIECES to BRIDGE, STICKERS, hints, chatter) belong to the first city level (level.js and play.js, no longer
+// loaded) and stay only until the stations are rebuilt; the scenery uses a few of their positions.
 //
 // The journey, left to right: Maple Street (map pieces, crossing) - the flour mill yard - the market (the puppy) - the canal
 // (boats and ferry) - Fountain Square - down into the metro ... up again in Old Town (picture game, ladder and jets, parasols)
@@ -263,6 +267,38 @@ const CHATTER = [
   [17350, 'bro', 'There it is! The Old Bridge!'],
   [17360, 'sis', "It's lifted up... how do we get it down?"],
 ];
+
+// ---------- THE LAB (branch lab/city-v2, from 2026-11-21). The city is now a test level: see LAB_PLAN.md.
+// The puzzle settings above belong to the first city level, which is no longer loaded; they go when the stations are
+// rebuilt. For now only the scenery numbers at the top are used (the street, buildings, props, sky), plus this block.
+//
+// Phase 1 is one test street for trying the new movement. Every line in `things` places one object from the kit
+// (shared/kit.js): x is the place along the street ([from, to] for long things), h the height above the pavement.
+// For scale: a jump rises about 245, the brother is about 180 tall and the sister about 220.
+const LAB = {
+  street: [150, 4470],   // how far the siblings can walk
+  plain: [150, 4600],    // along here the street is kept empty: of the usual street things only lamps and trees are drawn
+  start: [380, 540],     // where the sister and the brother begin
+  things: [
+    // jump: steps up, a thin blue plank that only holds light feet, steps down again
+    { kind: 'block', x: [640, 740], h: 62 }, { kind: 'block', x: [740, 840], h: 124 }, { kind: 'block', x: [840, 1010], h: 186 },
+    { kind: 'plank', x: [1010, 1290], h: 186 }, { kind: 'star', x: 1150, h: 256 },
+    { kind: 'block', x: [1290, 1460], h: 186 }, { kind: 'block', x: [1460, 1560], h: 124 }, { kind: 'block', x: [1560, 1660], h: 62 },
+    // a low wall to hop over
+    { kind: 'block', look: 'wall', x: [1765, 1805], h: 150 },
+    // carry: two light boxes and a heavy crate; a shelf too high to jump to without a box; a bell only she can reach from the ground
+    { kind: 'box', x: 2440 }, { kind: 'box', x: 2560 }, { kind: 'crate', x: 2700 },
+    { kind: 'ledge', look: 'shelf', x: [2800, 3000], h: 300 }, { kind: 'star', x: 2900, h: 370 },
+    { kind: 'bell', x: 3110, h: 262 },
+    // together: a balcony for the lift and toss, then a see-saw with a higher balcony over his end
+    { kind: 'ledge', look: 'balcony', x: [3250, 3500], h: 440 }, { kind: 'star', x: 3375, h: 510 },
+    { kind: 'seesaw', x: 3780, half: 170 },
+    { kind: 'ledge', look: 'balcony', x: [3870, 4090], h: 520 }, { kind: 'star', x: 3990, h: 590 },
+    // small: a low tunnel only he fits through, and the end of the test street
+    { kind: 'tunnel', x: [4180, 4330], h: 300, gap: 124 }, { kind: 'star', x: 4400, h: 70 },
+    { kind: 'block', look: 'boards', x: [4470, 4530], h: 400 },
+  ],
+};
 
 // Music files, one for each kind of place (see worlds/README.md). vol balances them; all are CC0 (assets/music/CREDITS.txt).
 const MUSIC_FILES = {

@@ -29,6 +29,39 @@ function drawLeg(c, hx, hy, pose, L, k) {
   ell(c, 18, 3, 4.5, 2.2, '#ffffff', 0.22);
   c.restore();
 }
+// ---------- poses a world can ask for
+// A world where the siblings jump and carry (the city lab) gives each of them p.pose: a few numbers from 0 to 1.
+// Worlds that leave p.pose unset (the house, the forest) draw exactly as they always did.
+//   air     off the ground                         rise    going up (0 = coming down)
+//   carry   both arms up, steadying a box on the head
+//   hold    the sister holding her brother up on her shoulders
+//   ride    the brother balancing up there          toss    flying after a toss or a see-saw launch
+//   strain  heaving at something too heavy          stride  longer steps for running (1 = the walking step)
+function poseStride(p) { return (p.pose && p.pose.stride) || 1; }
+function poseFlow(p, m) { const q = p.pose; return q ? Math.max(m, q.air * 0.8, q.toss) : m; } // how far capes and scarves stream out
+function poseLift(p) { const q = p.pose; return q ? q.air * (1 - q.rise) * 44 : 0; }            // a cape flies up on the way down
+function poseLeg(p, front, walk) {
+  const q = p.pose; if (!q) return walk;
+  let out = walk;
+  const to = (x, l, rot, k) => { if (k > 0.001) out = { x: out.x + (x - out.x) * k, l: out.l + (l - out.l) * k, rot: out.rot + (rot - out.rot) * k }; };
+  to(front ? 6 + 8 * q.rise : -9 + 2 * q.rise, front ? 7 + 15 * q.rise : 13 - 9 * q.rise, front ? 0.15 - 0.4 * q.rise : 0.55, q.air); // a knee up going up, legs loose coming down
+  to(front ? -6 : -16, front ? 5 : 14, 0.6, q.toss);   // tossed: legs trailing
+  to(front ? 5 : -5, 0, 0, q.ride);                    // on her shoulders: feet together
+  to(front ? 13 : -13, 0, 0, q.strain);                // heaving: feet planted wide
+  return out;
+}
+function poseArm(p, front, th) { // th is the arm's angle: 0 hangs down, a quarter turn points ahead, a half turn points straight up
+  const q = p.pose; if (!q) return th;
+  const t = q.t || 0, flap = Math.sin(t * 17 + (front ? 0 : 1.3)) * 0.22, to = (a, k) => { if (k > 0.001) th += (a - th) * k; };
+  to(front ? 2.45 - 0.55 * q.rise + flap * (1 - q.rise) : -2.2 + 3.6 * q.rise - flap * (1 - q.rise), q.air);  // "hup" going up, arms out coming down
+  to(front ? 2.2 + flap * 0.5 : -2.5 - flap * 0.5, q.toss);                        // wheee: arms flung wide
+  to(front ? 1.55 + Math.sin(t * 5) * 0.28 : -1.55 + Math.sin(t * 5) * 0.28, q.ride); // arms out, wobbling for balance
+  to(front ? 2.6 : 3.62, q.hold);
+  to(front ? 2.48 : 3.72, q.carry);                                                  // one hand in front of the load, one behind: the face stays clear
+  to(front ? 0.8 : 0.55, q.strain);
+  return th;
+}
+
 // ---------- faces and expressions
 // Each character has its own features. An expression is a handful of numbers (eye openness, smile, brow tilt...)
 // that glide toward a target chosen from what is happening in the game, so faces change smoothly.
