@@ -15,8 +15,13 @@
 //   plate   { x, id, big }            a pad in the pavement. Small and blue: anybody or any box presses it.
 //                                     big: true is big and green: only the sister or a heavy crate presses it.
 //   gate    { x, h, by: [ids], latch } a shutter that is open only while everything in `by` is on (latch: stays open once up)
-//   lever   { x, h, id, hold, who }   hold: true is on only while the grab key is held; otherwise each use flips it
-//   pulley  { a, b, high, bias: [a, b], rope: { x, h } }   two platforms on one rope: the heavier goes down. Holding
+//   lever   { x, h, id, hold, who, once, base }   hold: true is on only while the grab key is held; otherwise each use
+//                                     flips it (once: true stays on for good)
+//   bar     { x, h }                  a height bar: people walk under, a box carried on the head is knocked off.
+//                                     It keeps a station's boxes in that station.
+//   trap    { x: [from, to], h, by }  a shelf that drops open when its id comes on: what stood on it falls down
+//   pulley  { a, b, high, bias: [a, b], gear, catch, rope: { x, h } }   two platforms on one rope: the heavier goes down (what
+//                                     is on b, and the pull, count gear times: a block and tackle). Holding
 //                                     the rope pulls on b's side with the holder's own weight.
 //   boat    { x, w }                  small and blue, floating: sinks gently under anything heavy, comes back up
 //   branch  { x: [from, to], h, from: 'left' | 'right' }   like the thin plank, growing out of one side
@@ -312,7 +317,7 @@ KIT.lever = (world, d, ground) => {
   KIT_AT[d.id] = { x, col };
   const thing = { x, y, hold: !!d.hold,
     canUse: (p) => (p.grounded || p.held) && Math.abs(p.x - x) <= MOVE.arm && sibReachY(p) <= y + 8 && p.y > y - 6 && (!d.who || p.kind === d.who),
-    use(p) { p.reachT = 0.3; p.dir = Math.sign(x - p.x) || p.dir; if (!d.hold) st.on = !st.on; snd('latch'); } };
+    use(p) { p.reachT = 0.3; p.dir = Math.sign(x - p.x) || p.dir; if (!d.hold) st.on = d.once ? true : !st.on; snd('latch'); } };
   return { state: st, thing,
     after(dt) {
       if (d.hold) st.on = [MV.sis, MV.bro].some((p) => p.holding === thing);
@@ -320,8 +325,8 @@ KIT.lever = (world, d, ground) => {
     },
     draw(c) {
       const px = x + 26, ptop = y - 46;
-      soft(c, px, ground + 8, 30, 6, '#2a1a0e', 0.28);
-      c.fillStyle = lg(c, px - 7, 0, px + 7, 0, '#8a6844', '#6b4e30', '#4f3820'); rrect(c, px - 7, ptop, 14, ground + 12 - ptop, 4); c.fill(); c.strokeStyle = KIT_EDGE; c.lineWidth = 2; c.stroke();
+      const pbot = d.base ? ground - d.base : ground + 12; if (!d.base) soft(c, px, ground + 8, 30, 6, '#2a1a0e', 0.28); // base: it stands on a ledge that high
+      c.fillStyle = lg(c, px - 7, 0, px + 7, 0, '#8a6844', '#6b4e30', '#4f3820'); rrect(c, px - 7, ptop, 14, pbot - ptop, 4); c.fill(); c.strokeStyle = KIT_EDGE; c.lineWidth = 2; c.stroke();
       rrect(c, x - 20, y - 26, 52, 52, 8); fs(c, lg(c, 0, y - 26, 0, y + 26, '#8a8a92', '#62626a'), '#1c1a20', 2.2);
       rrect(c, x - 20, y - 26, 52, 11, 5); fs(c, col, '#1c1a20', 1.6);
       rrect(c, x - 4, y - 8, 8, 26, 4); fs(c, '#2c2c34');
@@ -343,7 +348,7 @@ KIT.pulley = (world, d, ground) => {
   return { state: st, a: la, b: lb, thing: rope,
     update(dt) {
       st.pull = rope ? [MV.sis, MV.bro].reduce((f, p) => f + (p.holding === rope ? p.weight : 0), 0) : 0;
-      const wa = world.loadOn(la) + bias[0], wb = world.loadOn(lb) + bias[1] + st.pull, dir = wb > wa ? 1 : wa > wb ? -1 : 0, before = st.u;
+      const wa = world.loadOn(la) + bias[0], wb = (world.loadOn(lb) + st.pull) * (d.gear || 1) + bias[1], up = wb > wa && !(d.catch && world.loadOn(la) === 0), dir = up ? 1 : wa > wb ? -1 : 0, before = st.u; // catch: it will not go up empty
       st.u = clamp(st.u + dir * (d.speed || 150) * dt / (high - low), 0, 1);
       const moving = st.u !== before; if (moving && !st.moving) snd('creak'); if (!moving && st.moving) snd('clunk'); st.moving = moving;
       la.y = ground - lerp(low, high, st.u); lb.y = ground - lerp(high, low, st.u);
@@ -432,5 +437,35 @@ KIT.ladder = (world, d, ground) => {
         c.beginPath(); circ(c, 0, 0, 24); fs(c, '#c9a36a', KIT_EDGE, 2.2); c.strokeStyle = '#8a6f44'; c.lineWidth = 3; c.beginPath(); for (let a = 0; a < 13; a += 0.4) { const r = 2 + a * 1.5; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.stroke();
         c.fillStyle = KIT_BLUE; c.fillRect(-26, -5, 52, 10); c.strokeStyle = '#1f3a55'; c.lineWidth = 1.6; c.strokeRect(-26, -5, 52, 10); c.restore();
       }
+    } };
+};
+
+// ---------- a height bar, like the ones at car parks. People walk under it; a box carried on the head does not fit
+// and is knocked off. Put one at the end of a station and its boxes stay in that station.
+KIT.bar = (world, d, ground) => {
+  const h = d.h || 234, w = 30, x0 = d.x - w / 2, x1 = d.x + w / 2, top = ground - h - 30; world.solid(x0, top, x1, ground - h);
+  return { draw(c) {
+    c.fillStyle = '#3c3a40'; c.fillRect(d.x - 4, top + 6, 8, ground + 12 - top);
+    soft(c, d.x, ground + 8, 26, 6, '#2a1a0e', 0.28);
+    rrect(c, d.x - 44, top, 88, 30, 6); fs(c, '#fffbf0', '#1c1a20', 2.2);
+    c.save(); rrect(c, d.x - 44, top, 88, 30, 6); c.clip(); c.fillStyle = '#d9534a'; for (let x = d.x - 60; x < d.x + 50; x += 30) { c.beginPath(); c.moveTo(x, top + 30); c.lineTo(x + 15, top + 30); c.lineTo(x + 30, top); c.lineTo(x + 15, top); c.closePath(); c.fill(); } c.restore();
+    // a little picture: no boxes past here
+    const sy = top - 34; c.beginPath(); circ(c, d.x, sy, 24); fs(c, '#fffbf0', '#c9402f', 5); rrect(c, d.x - 11, sy - 10, 22, 20, 3); fs(c, '#c9a36a', KIT_EDGE, 2);
+    c.strokeStyle = '#c9402f'; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); c.moveTo(d.x - 16, sy + 16); c.lineTo(d.x + 16, sy - 16); c.stroke();
+  } };
+};
+
+// ---------- a trapdoor shelf: it holds whatever stands on it until its id comes on, then swings down and lets it fall
+KIT.trap = (world, d, ground) => {
+  const [x0, x1] = d.x, y = ground - d.h, l = world.ledge(x0, x1, y), st = { open: 0 };
+  return { state: st, ledge: l,
+    update(dt) { const on = kitOn(d.by); if (on && !l.off) { l.off = true; snd('clunk'); } st.open = clamp(st.open + (on ? dt / 0.35 : -dt / 0.6), 0, 1); if (!on && st.open === 0) l.off = false; },
+    draw(c) {
+      const w = x1 - x0;
+      c.strokeStyle = '#2c2c34'; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0 - 6, y - 150); c.lineTo(x0 - 6, y + 60); c.moveTo(x0 - 6, y - 140); c.lineTo(x1, y - 140); c.stroke(); // a wall crane behind it
+      c.lineWidth = 3; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(x1 - 14, y - 140); c.lineTo(x1 - 14, y - 6 + st.open * 60); c.stroke(); c.setLineDash([]);
+      c.save(); c.translate(x0, y); c.rotate(ease(st.open) * 1.45);
+      rrect(c, 0, KIT_TOP * 0.6, w, 13, 3); fs(c, lg(c, 0, 0, 0, 20, '#b88d5a', '#96703f'), KIT_EDGE, 2.2); rrect(c, -2, -KIT_TOP * 0.8, w + 4, KIT_TOP * 1.7, 3); fs(c, '#dcbb85', KIT_EDGE, 2.2);
+      c.restore(); ell(c, x0, y + 4, 7, 7, '#2c2c34');
     } };
 };

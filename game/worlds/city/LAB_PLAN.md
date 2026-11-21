@@ -82,3 +82,18 @@ haul on, small boats, a branch, a ferry and a rope ladder. One of each stands on
 - Holding the rope pulls with the holder's own weight, so she can haul him up and he cannot haul her.
 - The ferry was not in the brief's list, but the canal station needs one, and the test street needed a way across.
 - Ladders are climbed with the jump key held; there is still no "down" key, people just hop off.
+
+**Phase 3 is done (2026-11-21).** The street was laid out again as eight stations (`STATIONS` in `settings.js`); the
+first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bell game, jets and parasols live on in
+`things.js`. Where the brief and the "both are needed" rule pulled apart, I chose the rule:
+- **Station 1.** As written, she could do it alone. Now the crate hangs on a hoist and only his hand fits the
+  release hatch.
+- **Station 2.** She stands on the box and lifts him from there; he may start from the ground beside it.
+- **Station 5.** The lift goes up to 520, above a toss, so the rope is the only way up. The counterweight has a
+  block and tackle: two boxes lift her, and he stays up top to load them. The lift will not go up empty.
+- **Station 6.** One crank on a high shelf opens all three parasols, which then stay open as steps.
+- **Station 7.** Her lever is high, his is in the low hut door, 420 apart: nobody can hold both.
+- A **height bar** ends every station that has boxes: a box on a head is knocked off, so boxes cannot be carried
+  on to help with a later station.
+- Cut, as the brief says: the crossing, the metro (not kept as a ride), the bus, every code. Also cut: the ladder
+  on wheels. Kept for fun: the water jets (on the terrace), the fountain, the pigeons and the bell game.

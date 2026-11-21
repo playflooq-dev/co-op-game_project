@@ -1,7 +1,7 @@
 'use strict';
 // The city street as scenery: the sky and skyline, the buildings, pavement and road, the side street, the canal and the
-// river, lamps and trees, bunting, pigeons and drifting leaves. Nothing in this file can be bumped into or used: what
-// the siblings play with is placed in settings.js (LAB) and run by lab.js. Where things stand is in settings.js.
+// river, lamps and stalls, bunting, pigeons and drifting leaves. Nothing in this file can be bumped into or used: what
+// the siblings play with is placed by the STATIONS in settings.js and run by lab.js. Where things stand is in settings.js.
 // (Taken from the first city level's level.js and play.js, without the puzzles.)
 const FEET = CITY.feet, BASE = CITY.facadeBase, HOR = CITY.horizon, KERB = CITY.kerb;
 let camX = 0;
@@ -26,7 +26,7 @@ function drawSky(c, t, k = S) {
 }
 
 // ---------- gaps between the buildings: a side street, the canal or the river running away from the camera
-const GAPS = [[CROSSING.road[0], CROSSING.road[1], 'road'], [FERRY.canal[0], FERRY.canal[1], 'water'], [BRIDGE.river[0], BRIDGE.river[1], 'water']];
+const GAPS = [[ROAD[0], ROAD[1], 'road'], [CANAL[0], CANAL[1], 'water'], [RIVER[0], RIVER[1], 'water']];
 function drawGap(c, x0, x1, kind) {
   if (!inView(x0, x1)) return;
   const cx = (x0 + x1) / 2, hw = kind === 'road' ? 36 : 70, k = 0.55;
@@ -54,7 +54,7 @@ function drawGround(c) {
   let x = L; const gaps = GAPS.filter((g) => g[1] > L && g[0] < R2).sort((a, b) => a[0] - b[0]);
   const band = (a, b) => {
     if (b <= a) return;
-    const park = BRIDGE.river[1];
+    const park = RIVER[1];
     const seg = (s0, s1, kind) => {
       if (s1 <= s0) return;
       if (kind === 'park') { c.fillStyle = SP.grassTexture ? textureFast(c, SP.grassTexture[0]) : '#7ea551'; c.fillRect(s0, BASE - 4, s1 - s0, 90); c.fillStyle = SP.pathTexture ? textureFast(c, SP.pathTexture[0]) : '#d9c49a'; c.fillRect(s0, FEET - 30, s1 - s0, 60); }
@@ -97,8 +97,8 @@ function drawBuildings(c) {
   for (const [name, x] of BUILDINGS) {
     const a = W(name); if (!inView(x - a.ax, x - a.ax + a.w)) continue;
     if (name === 'warehouse') { // the flour mill has see-through holes for its shutter and arch: the yard shows behind them
-      putFast(c, W('courtyard'), x, BASE); putFast(c, W('courtGate'), ALLEY.gate, ALLEY.floor, ALLEY.depth); putFast(c, a, x, BASE);
-      const sw = 200, sh = 240, sx = ALLEY.shutter - sw / 2, top = BASE - sh; // the roll-up shutter, shut
+      putFast(c, W('courtyard'), x, BASE); putFast(c, W('courtGate'), x + 170, 905, 0.9); putFast(c, a, x, BASE);
+      const sw = 200, sh = 240, sx = x - 320 - sw / 2, top = BASE - sh; // the roll-up shutter, shut
       c.fillStyle = lg(c, sx, 0, sx + sw, 0, '#7f8a96', '#a8b2bc', '#8a949e'); c.fillRect(sx, top, sw, sh);
       c.strokeStyle = 'rgba(40,45,55,.45)'; c.lineWidth = 2; for (let y = top + sh - 12; y > top; y -= 12) { c.beginPath(); c.moveTo(sx, y); c.lineTo(sx + sw, y); c.stroke(); }
       c.fillStyle = '#5a646e'; c.fillRect(sx, top + sh - 8, sw, 8);
@@ -107,14 +107,12 @@ function drawBuildings(c) {
     putFast(c, a, x, BASE);
   }
 }
-// Along the lab's test street only lamps are kept, so that everything else there is something to play with.
-const propShown = (name, x) => name === 'streetLamp' || x < LAB.plain[0] || x > LAB.plain[1];
 function staticProps(c) {
-  for (const [name, x] of PROPS) { const a = W(name); if (propShown(name, x) && inView(x - a.ax, x - a.ax + a.w)) putFast(c, a, x, BASE + 12); }
-  if (SP.trees) TREES.forEach(([x, s], i) => { if (!propShown('tree', x) || !inView(x - 200, x + 200)) return; putFast(c, SP.trees[i % SP.trees.length], x, BASE - 34, s); putFast(c, W('planter'), x, BASE + 14); });
-  if (inView(BRIDGE.river[1] - 200, BRIDGE.gate + 600)) {
+  for (const [name, x] of PROPS) { const a = W(name); if (inView(x - a.ax, x - a.ax + a.w)) putFast(c, a, x, BASE + 12); }
+  if (inView(RIVER[1] - 200, PARK_GATE + 600)) {
     PARK.forEach(([kind, x, s], i) => { if (SP[kind] && inView(x - 300, x + 300)) putFast(c, SP[kind][i % SP[kind].length], x, BASE + 16, s); });
-    putFast(c, W('parkGate'), BRIDGE.gate, BASE + 18);
+    putFast(c, W('parkGate'), PARK_GATE, BASE + 18);
+    for (const px of RIVER) { c.fillStyle = textureFast(c, W('stone')); c.fillRect(px - 26, FEET, 52, VH - FEET); c.fillStyle = 'rgba(20,30,40,.3)'; c.fillRect(px - 26, 980, 52, VH - 980); } // the bridge's stone piers
   }
 }
 function drawLampGlow(c) {

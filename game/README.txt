@@ -16,36 +16,34 @@ city.html     Chapter Two, "Across the City": a journey across town to the Old B
               About 15 to 20 minutes. It ends at Forest Park, which leads on to the forest.
 forest.html   The Forest Trail (the first art scene; the next chapter will be built here).
 
-THE CITY IS BEING REBUILT (since 2026-11-21, branch lab/city-v2)
-city.html is now a test level, "the lab", for new movement: jumping, carrying, the lift and the toss.
-What is written about city.html in the rest of this file describes the first version; it will be
-rewritten when the lab is finished. The plan is in worlds/city/LAB_PLAN.md. For now city.html is one
-test street with five stars to collect, one for each new ability:
+THE CITY IS A TEST LEVEL (since 2026-11-21, branch lab/city-v2)
+city.html is now "the lab": eight stations that each try one idea with the new movement (jumping,
+carrying, the lift and the toss). What is written about city.html further down describes the first
+version and will be rewritten when the lab is finished. The plan is in worlds/city/LAB_PLAN.md.
 
-  Sister:   A / D walk     W jump     S grab, put down, use
+  Sister:   A / D walk     W jump (hold it to climb a ladder)     S grab, put down, use (hold it on a lever or rope)
   Brother:  Left / Right walk     Up jump     Down grab, put down, use
   Grab next to a box picks it up; grab again puts it down. Only the sister can lift the heavy crate
   (green bands). Grab next to each other, with nothing else in reach: she lifts him onto her shoulders.
   Grab again: she tosses him up. Jump while he is up there: he hops down. Both grab at once: a high five.
-  The brother ducks into low gaps by himself. The thin blue plank holds only him. On the see-saw, he
-  stands on the blue end and she jumps onto the green end.
+  The brother ducks into low gaps by himself.
+  Green things are the sister's job (heavy, high), blue things the brother's (light, small).
   On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
 
-  Past the tunnel the street goes on with one of each new object (the "kit"), to try before the
-  stations are built (city.html?at=4500 starts there):
-  - Plates and gates. The big green plate needs her or the heavy crate; the small blue one anybody or a
-    box. A gate is open only while its plate is pressed, so leave something on the plate.
-  - The canal. The small blue boats hold him and sink under her. On the far bank his lever sends the
-    ferry over for her, and brings it back.
-  - The pulley lift. She holds grab on the rope ring and he rides up. Up there are three boxes: he puts
-    them on the other platform and steps on as well, and that lifts her.
-  - The rope ladder. Toss him onto the balcony, he presses grab at the bundle, and she climbs by holding
-    jump. The branch beside it holds only him.
-  - The two-switch door. Both levers must be held (keep grab down) at the same moment.
+  The stations (city.html?station=3 starts at station 3):
+  0  Maple Street: steps and a low wall to jump, a box to carry. Then the wind tears the map: one piece
+     on a shop sign (she reaches it), one in a drain (his hand fits), one in a window box (she lifts him).
+  1  The flour mill: he lets the heavy crate down from the hoist, she carries it onto the big green plate.
+  2  The market: the puppy has the last piece, up on an awning. Bring the box, she stands on it and lifts him.
+  3  Fountain Square: she jumps on the see-saw, he flies up to the balcony and lets a rope ladder down.
+  4  The canal: the small boats hold only him; his lever sends the ferry over for her.
+  5  Old Town: she hauls him up on the lift; he puts two boxes on the other platform, and that lifts her.
+  6  The cafe: she tosses him up to the crank, the parasols open, and both climb them over the wall.
+  7  The Old Bridge: she holds the high lever, he the low one, and the bridge comes down.
 
   Add to the address to help with testing:
+  city.html?station=5 starts at a station    city.html?debug=1  shows what is solid, what is switched on, station names
   city.html?tune=1    sliders for how the jump and the running feel (the numbers are MOVE in shared/movement.js)
-  city.html?debug=1   shows what is solid and the frame rate        city.html?at=3300   starts further along
   city.html?touch=1   shows the touch buttons on a computer         city.html?fps=30    runs like a slow device
 
 CONTROLS (two players on one keyboard; the house and the forest)

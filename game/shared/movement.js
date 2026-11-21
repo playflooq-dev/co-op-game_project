@@ -175,7 +175,7 @@ function grabAction(p) {
   if (duo.state) return;
   const th = hooks.thing ? hooks.thing(p) : null;
   if (th) { th.use(p); if (th.hold) p.holding = th; return; }
-  const box = nearBox(p);
+  const box = p.grounded ? nearBox(p) : null; // only while standing: a jump is no way to reach a box up high
   if (box) { if (box.heavy && p === bro) tooHeavy(p, box); else pickUp(p, box); return; }
   if (canLift()) { // wait a moment: if the other one presses too, they wanted a high five
     if (MV.pending && MV.pending.who !== p) { MV.pending = null; highFive(); } else if (!MV.pending) MV.pending = { who: p, t: MOVE.liftDelay };
@@ -232,7 +232,7 @@ function putDown(p, where) { // in front of them, on the first thing below; wher
 function canLift() {
   const { sis, bro, duo, world } = MV;
   return !duo.state && !sis.gone && !bro.gone && sis.grounded && bro.grounded && !sis.carry && !bro.carry && !bro.crawl
-    && Math.abs(sis.x - bro.x) <= MOVE.liftReach && Math.abs(sis.y - bro.y) <= 40 && world.fits(bro, sis.x, sis.y - MOVE.liftHeight, bro.standH);
+    && Math.abs(sis.x - bro.x) <= MOVE.liftReach && Math.abs(sis.y - bro.y) <= 110 && world.fits(bro, sis.x, sis.y - MOVE.liftHeight, bro.standH);
 }
 function startLift() {
   const { sis, bro, duo } = MV;
