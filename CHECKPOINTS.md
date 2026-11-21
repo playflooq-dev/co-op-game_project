@@ -7,6 +7,7 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 
 | Checkpoint (git tag) | Date | What it holds |
 |---|---|---|
+| `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city lab, on the branch `lab/city-v2`: the city as a test level of eight stations for children of 5 to 10, with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. Nothing in it is approved yet. The house and the forest are as at the checkpoint below. Not on the live site. |
 | `checkpoint-2026-11-20-city-music` | 2026-11-20 | Chapter Two rebuilt to be fun (new puzzles, Old Town, hints, stickers), recorded CC0 music and sound effects in every chapter, and the puzzle-design research. Same as the live site at https://forest-trail-d56.pages.dev on 2026-11-20. |
 | `checkpoint-2026-11-18-forest-trail` | 2026-11-18 | The approved Forest Trail scene: the art style and the two characters. |
 
@@ -15,7 +16,7 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 Ask Claude, or run these in `co-op-game_project`:
 
 - See a checkpoint without changing anything: `git switch --detach checkpoint-2026-11-20-city-music` (go back with
-  `git switch level-2/city`).
+  `git switch lab/city-v2`, or `git switch level-2/city` for the branch without the lab).
 - Start new work from a checkpoint: `git switch -c my-new-branch checkpoint-2026-11-20-city-music`.
 
 ## Every commit so far

@@ -140,7 +140,7 @@ const STATIONS = [
   { name: '6 The cafe: boost and toss', goal: 'parasol', x: [12420, 14000], start: [12480, 12560], view: [12560, 13900], things: [
     // a wall in the way, and three closed parasols. The crank is on a high shelf: she tosses him up, he winds it,
     // and the parasols open into steps over the wall.
-    { kind: 'ledge', look: 'shelf', x: [12700, 12860], h: 440 }, { kind: 'lever', id: 'crank', x: 12770, h: 560, base: 440, once: true },
+    { kind: 'ledge', look: 'shelf', x: [12700, 12860], h: 440 }, { kind: 'lever', id: 'crank', x: 12770, h: 560, base: 440, once: true, who: 'bro' },
     { kind: 'parasol', x: 13050, h: 160, by: 'crank' }, { kind: 'parasol', x: 13260, h: 310, by: 'crank', late: 0.35 }, { kind: 'parasol', x: 13470, h: 460, by: 'crank', late: 0.7 },
     { kind: 'block', look: 'wall', x: [13600, 13690], h: 520 }, { kind: 'sticker', icon: 'note', x: 13645, h: 590 },
   ] },

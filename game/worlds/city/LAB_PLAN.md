@@ -125,3 +125,7 @@ first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bel
 **Not tested:** a real tablet or phone (only those screen sizes on this computer, where it draws 110 to 220 frames a
 second; `city.html?fps=30` and `?fps=20` show it stays playable when slow); real fingers on the buttons; the sounds
 by ear; and above all real children. A script only finds the short cuts somebody thought of.
+
+**Phase 6 is done (2026-11-21).** `game/README.txt` and `game/worlds/README.md` describe the lab and how to place
+objects; `OPEN_QUESTIONS.md` has what to learn at each station; `DECISIONS.md` lists what is proposed, with nothing
+approved. The git tag is `checkpoint-2026-11-lab-city-v2`. Not done: lighter music files for the web (optional).

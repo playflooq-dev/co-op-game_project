@@ -9,8 +9,10 @@ The look, the characters (an older sister and a younger brother) and how the sto
 - The siblings' names. In the game they are called "Sister" and "Brother" for now.
 - Where the hunt goes after the city and the forest (the map shows a waterfall and an old oak), and what the treasure is.
 
-## 1b. Chapter Two (the city): rebuilt, waiting for feedback
-Playable in `game/city.html`, aimed at 15 to 20 minutes. Rebuilt on 2026-11-19 on decisions 16 to 24. In order:
+## 1b. Chapter Two (the city): the first version
+**This level is no longer in `game/city.html`**: since 2026-11-21 that page is the city lab (see 1c). The version
+described here is kept at the git tag `checkpoint-2026-11-20-city-music` and on the live site as it was that day.
+It was aimed at 15 to 20 minutes and rebuilt on 2026-11-19 on decisions 16 to 24. In order:
 0. **The torn map**: the wind tears the treasure map. One piece lands on a shop sign (only the sister reaches), one in a
    drain (only the brother's hand fits), one in a window box (too high for both: she lifts him up). Each piece has a
    little picture on it.
@@ -42,6 +44,43 @@ Still open:
 - Music and sounds: recorded CC0 tracks since 2026-11-19 (A New Town, Quaint Town, Hot Springs Town, Magic Town, Fort
   Fairy; Kenney sound effects). Do they suit each place, and are the volumes right?
 - Should the siblings meet people in the city (shopkeepers, a ferryman)?
+
+## 1c. The city lab
+
+Since 2026-11-21 `game/city.html` is no longer the level described in 1b (that one is kept at the git tag
+`checkpoint-2026-11-20-city-music`). It is a test level for children of about 5 to 10 playing with a parent or with
+each other: eight stations, each one idea. Nothing in it is approved (see "Proposed" in [DECISIONS.md](DECISIONS.md)).
+How to open a station, and the controls, are in `game/README.txt`.
+
+**For every station, watch for:** how long it takes; whether they solve it before any hint, after the sparkle (20 s),
+the arrow (40 s) or the ghost (60 s); whether both children are busy or one only waits; whether they talk to each
+other; and where they laugh. Try each with a parent and a child, two children, and one player alone.
+
+| Station | The idea | What we want to learn |
+|---|---|---|
+| 0 Maple Street, first half | Jump and carry | Is the jump comfortable at this height (it was lowered once)? Do they find "grab" for the box without being told? Do they understand that the bar with the crossed-out box means boxes stay behind? |
+| 0 Maple Street, the torn map | Her reach, his small hand, the lift | Do they see from the green band and the blue drain whose piece is whose? Do they discover the lift by themselves, and how: by accident, or from the two-hands sign? Is pressing grab twice (lift, then take) clear? |
+| 1 The flour mill | Plate and gate | Do they connect the big green plate with the heavy green crate, and the lit cable with the shutter? Does a five-year-old understand why standing on the plate herself is not enough? Is the low hatch for him noticed? |
+| 2 The market | A box as a step | Do they think of the box before the hint? Is "she stands on the box, then lifts him" one step too many for the youngest? Do they like the puppy, and do they find that it can be petted? |
+| 3 Fountain Square | The see-saw | Do they find the see-saw at all with the fountain and the bell game beside it, or do the toys distract (and is that bad)? Is being launched fun or frightening? Does he find the rolled-up ladder? Is "hold jump to climb" found without help? |
+| 4 The canal | Light feet only | Is her sinking funny, or does it feel like failing? Do they understand after one try that the blue boats are his? Is the lever on the far bank found, and that it works twice (send, bring back)? Is she bored while he crosses? |
+| 5 Old Town | The pulley lift | The hardest station. Do they understand that she must stay on the rope while he rides? That she then stands on the lift while he loads boxes? Is two boxes the right number? How many need the ghost here? |
+| 6 The cafe | Boost and toss | Do they use the toss on purpose by now? Is aiming it at the shelf fiddly? Are the parasol steps easy to climb, or do small children fall off and get cross? |
+| 7 The Old Bridge | Two levers at once | Do they understand "at the same time", and do they hold on long enough (about three seconds)? Does it feel like an ending? |
+
+**Questions about the whole lab**
+- Is the colour language (green hers, blue his, plain wood either) noticed by children, or only by adults?
+- Are the picture hints understood? Does the ghost help, or is it mistaken for a third character?
+- Are 20, 40 and 60 seconds the right waits? (They are `HINT_TIMES` in `game/worlds/city/settings.js`.)
+- Does one player alone, with both hands, manage every station? The bridge and the lift need two keys held at once.
+- On a tablet held by two people: are four buttons each reachable, and is the picture big enough?
+- Do they notice the stickers, and do the two that need the lift get found?
+- Is the brother's part as much fun as the sister's? He is carried, tossed and launched; she does more of the lifting.
+- The first city level had the siblings talking in speech bubbles. The lab has no words at all. Do we miss their voices?
+- If the lab is approved, the house (reading a chalked code, no jumping) no longer fits. Rebuild it the same way?
+
+**Not built in the lab:** the metro ride between stations (cut, it could return as a calm ride with no choices), the
+ladder on wheels, split screens and pings for playing online, lighter music files for the web.
 
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking

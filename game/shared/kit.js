@@ -318,7 +318,7 @@ KIT.gate = (world, d, ground) => {
 // ---------- a lever. hold: true is on only while somebody keeps the grab key down at it; otherwise each use flips it.
 // High up (above 230) it is the sister's, with a green band; who: 'bro' makes it one only his small hand works, in blue.
 KIT.lever = (world, d, ground) => {
-  const x = d.x, y = ground - d.h, st = { on: !!d.on, tilt: d.on ? 1 : 0 }, col = d.who === 'bro' ? KIT_BLUE : d.h > 230 ? KIT_GREEN : '#d9a94e';
+  const x = d.x, y = ground - d.h, st = { on: !!d.on, tilt: d.on ? 1 : 0 }, col = d.who === 'bro' ? KIT_BLUE : d.h - (d.base || 0) > 230 ? KIT_GREEN : '#d9a94e';
   KIT_AT[d.id] = { x, col };
   const thing = { x, y, hold: !!d.hold,
     canUse: (p) => (p.grounded || p.held) && Math.abs(p.x - x) <= MOVE.arm && sibReachY(p) <= y + 8 && p.y > y - 6 && (!d.who || p.kind === d.who),

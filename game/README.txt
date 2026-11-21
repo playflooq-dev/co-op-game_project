@@ -8,103 +8,131 @@ Use an up-to-date Chrome, Edge, Firefox or Safari.
 
 THE CHAPTERS
 index.html    Chapter One, "Home Alone": the brother and sister are locked in the house
-              and must find the spare key. Getting out leads on to Chapter Two.
-city.html     Chapter Two, "Across the City": a journey across town to the Old Bridge:
-              a torn map, a road crossing, a flour mill yard, a runaway puppy, little boats
-              and a ferry, Fountain Square, the metro, Old Town (a picture game, a ladder on
-              wheels, cafe parasols), a bus and a lift bridge.
-              About 15 to 20 minutes. It ends at Forest Park, which leads on to the forest.
-forest.html   The Forest Trail (the first art scene; the next chapter will be built here).
+              and must find the spare key. Getting out leads on to the city.
+city.html     The city. Since 2026-11-21 it is a TEST LEVEL ("the lab"): eight stations that each
+              try one idea with new movement (jumping, carrying, the lift and the toss), made for
+              parents playing with children of about 5 to 10, or two children together. Nothing in
+              it needs reading. Everything in it may still change. It ends at Forest Park.
+forest.html   The Forest Trail (the first art scene; a later chapter will be built here).
 
-THE CITY IS A TEST LEVEL (since 2026-11-21, branch lab/city-v2)
-city.html is now "the lab": eight stations that each try one idea with the new movement (jumping,
-carrying, the lift and the toss). What is written about city.html further down describes the first
-version and will be rewritten when the lab is finished. The plan is in worlds/city/LAB_PLAN.md.
+The house and the forest still play the old way: walking, no jumping, and words on the screen.
+What follows is in two parts: the city lab first, then the house and the forest.
 
-  Sister:   A / D walk     W jump (hold it to climb a ladder)     S grab, put down, use (hold it on a lever or rope)
-  Brother:  Left / Right walk     Up jump     Down grab, put down, use
-  Grab next to a box picks it up; grab again puts it down. Only the sister can lift the heavy crate
-  (green bands). Grab next to each other, with nothing else in reach: she lifts him onto her shoulders.
-  Grab again: she tosses him up. Jump while he is up there: he hops down. Both grab at once: a high five.
-  The brother ducks into low gaps by himself.
-  Green things are the sister's job (heavy, high), blue things the brother's (light, small).
-  On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
 
-  The stations (city.html?station=3 starts at station 3):
-  0  Maple Street: steps and a low wall to jump, a box to carry. Then the wind tears the map: one piece
-     on a shop sign (she reaches it), one in a drain (his hand fits), one in a window box (she lifts him).
-  1  The flour mill: he lets the heavy crate down from the hoist, she carries it onto the big green plate.
-  2  The market: the puppy has the last piece, up on an awning. Bring the box, she stands on it and lifts him.
-  3  Fountain Square: she jumps on the see-saw, he flies up to the balcony and lets a rope ladder down.
-  4  The canal: the small boats hold only him; his lever sends the ferry over for her.
-  5  Old Town: she hauls him up on the lift; he puts two boxes on the other platform, and that lifts her.
-  6  The cafe: she tosses him up to the crank, the parasols open, and both climb them over the wall.
-  7  The Old Bridge: she holds the high lever, he the low one, and the bridge comes down.
+THE CITY LAB
+============
 
-  Add to the address to help with testing:
-  city.html?station=5 starts at a station    city.html?debug=1  shows what is solid, what is switched on, station names
-  city.html?tune=1    sliders for how the jump and the running feel (the numbers are MOVE in shared/movement.js)
-  city.html?touch=1   shows the touch buttons on a computer         city.html?fps=30    runs like a slow device
+CONTROLS (two players on one keyboard, or one player with both hands)
+Sister:   A / D walk     W jump     S grab
+Brother:  Left / Right walk     Up jump     Down grab
+The keys are shown as pictures at the bottom of the screen. M switches the sound off and on.
 
-CONTROLS (two players on one keyboard; the house and the forest)
-Sister:   A / D walk     W use, hold     S crawl, look in, read the map
-Brother:  Left / Right walk     Up use, hold     Down crawl, look in, read the map
+"Grab" does whatever fits where they stand:
+- next to a box: pick it up. Again: put it down in front (on a pile, it goes on top).
+- next to something to use (a lever, a map piece, a bell): use it. Some levers and the rope
+  only work while the key is held down.
+- next to each other, with nothing else in reach: she lifts him onto her shoulders.
+  Grab again: she tosses him up and forwards. Jump while he is up there: he hops down.
+- both at the same moment: a high five.
+Jump, held at a rope ladder, climbs it.
+A little sign over a head shows what grab would do: a hand (pick up or use), two hands (the lift),
+an arrow (climb).
+
+On a tablet or phone, hold it sideways. Each player gets four buttons in their bottom corner:
+the sister's on the left, the brother's on the right.
+
+WHAT EACH OF THEM CAN DO
+                Sister (tall, strong, heavy)             Brother (small, light)
+Walk and jump   yes                                      yes, a little faster
+Carry           light boxes and the heavy crate          light boxes only
+Weight          presses the big green plates;            walks on thin planks, small boats
+                thin planks, small boats and             and branches
+                branches give way under her
+Size            reaches high levers and signs            ducks into low gaps by himself;
+                                                         his hand fits small hatches and drains
+Together        lifts him onto her shoulders,            rides up there and reaches higher still;
+                and tosses him up to a ledge             is tossed
+See-saw         her landing sends him flying             too light to send her anywhere
+
+Colours say whose job a thing is: GREEN is the sister's (heavy or high), BLUE is the brother's
+(light or small), plain wood is for either.
+
+Nobody can get hurt or lose. A fall into water is a splash, and a moment later that sibling is
+back on the bank.
+
+THE STATIONS
+Each is one idea on one screen, and needs both of them.
+0  Maple Street. Steps and a low wall to jump; a box to carry, and a shelf it helps to reach.
+   Then the wind tears the map into four pieces. One lands on a shop sign (she reaches it), one
+   in a drain (only his hand fits), one in a window box (too high for both: she lifts him).
+   The gate opens when all three are found.
+1  The flour mill. The shutter stays open only while the big green plate is held down. The heavy
+   crate would do it, but it is up on the hoist: he works the low hatch that lets it down, and
+   she carries it onto the plate.
+2  The market. The puppy has the last piece, up on a high awning. Bring the box under it; she
+   stands on the box and lifts him.
+3  Fountain Square. He stands on the blue end of the see-saw, she jumps onto the green end, and
+   he flies up to the balcony. Up there he lets the rope ladder down for her. The fountain and
+   the bell game are only there to play with.
+4  The canal. The small blue boats hold him and sink under her. He crosses, and his lever on the
+   far bank sends the ferry over for her (and brings it back).
+5  Old Town. He stands on the lift; she holds the rope ring and hauls him up. Up there he puts
+   two boxes on the other platform, and that lifts her. On the terrace two water jets give a bounce.
+6  The cafe. She tosses him onto the high shelf, he turns the crank, and the three parasols open
+   into steps over the wall.
+7  The Old Bridge. She holds the high lever, he holds the low one in the hut door, both at once,
+   and the bridge comes down. Over it is the gate of Forest Park.
+
+STUCK?
+A thought bubble over the sister shows a picture of what the station is about. If nothing
+happens for a while, the thing to use next starts to sparkle (after about 20 seconds), then an
+arrow points at it (40 seconds), then a faint ghost of the sibling whose job it is shows where
+to stand and what to press (60 seconds). The ghost is green for her and blue for him.
+
+STICKERS
+Eight stickers are hidden along the way. None is needed. Two can only be reached from her
+shoulders, one only he can get to, one is for petting the puppy and one for ringing the bell.
+The card at the end shows the map, the stickers found and the time, in pictures and numbers.
+
+FOR TESTING (add to the address)
+city.html?station=5    starts at station 5 (0 to 7)
+city.html?debug=1      shows what is solid, what is switched on, the station names, the frame rate
+city.html?tune=1       sliders for how the jump and the running feel
+city.html?hints=fast   the hints come ten times sooner
+city.html?touch=1      shows the touch buttons on a computer
+city.html?fps=30       draws only 30 frames a second, to feel a slow device
+They can be joined with "&": city.html?station=3&debug=1
+
+
+THE HOUSE AND THE FOREST
+========================
+
+CONTROLS (two players on one keyboard)
+Sister:   A / D walk     W use, climb up     S go down, look in
+Brother:  Left / Right walk     Up use, climb up     Down go down, crawl in
+In the forest: A / D and W to cheer; Left / Right and Up to cheer.
 Pressing W or Up with nothing nearby makes that character cheer. Cheer together for a high five.
 A hint over each character's head shows what they can do where they stand.
 On a phone or tablet, on-screen buttons appear instead.
-Every chapter has music, and the house and the city have sound effects. M switches the sound off and on.
-The music and sounds are free CC0 recordings (see the CREDITS.txt files in the music and sounds folders).
-Browsers only allow sound after the first key press or tap.
 
-WHAT EACH OF THEM CAN DO
 The sister is tall: she reaches things that are high up.
-The brother is small: he fits through small doors and gaps, and he is light.
-Together: when something is too high for both, they stand under it and she lifts him up.
+The brother is small: he fits through small doors and gaps.
 
-STUCK? (Chapter Two)
-The card at the top says what to do next, but not how. If the same goal stays up for a while,
-hints appear on the treasure map, one at a time, from a small nudge to the answer.
-Open the map with S or Down when nothing else is nearby.
+HOW THE HOUSE PUZZLE WORKS (spoiler)
+He finds the box code in the dark cupboard under the stairs; she gets Dad's box from the tall
+bookcase; the spare key inside opens the front door.
 
-STICKERS (Chapter Two)
-Eight stickers are hidden along the way. None is needed to finish. Some need the sister,
-some the brother, some both. The end card shows how many were found, the time, and the
-scores in the bell game.
 
-HOW THE PUZZLES WORK (spoilers)
-Chapter One: he finds the box code in the dark cupboard, she gets Dad's box from the bookcase.
-Chapter Two:
-- The wind tears the map into four pieces. One is on a shop sign (she reaches it), one in a
-  drain (his hand fits), one in a window box (she lifts him up). Each piece has a little
-  picture on it; the pictures change every game.
-- Maple Street: press the button, wait for the green man.
-- The flour mill yard: the shutter only stays up while the button outside is held. The chain
-  that locks it open is inside, high up, so she must go in first. Then he crawls under the
-  yard gate and opens it from the other side.
-- The puppy has the fourth piece. It hides under a market stall. She waits on one side,
-  he crawls in from the other, and it runs out to her.
-- The canal: she holds the rope ring on the mooring post, which pulls the little boats into
-  a line. He walks across them (they would sink under her) and sends the ferry back for her.
-- Fountain Square: a place to play. Splash in the fountain, try the bell game.
-- The metro: Blue line towards Harbour, change at Central, Green line to Old Town.
-- Old Town: the bus needs a ticket each.
-  The picture game: four paintings are shown, then turn round. The board shows one picture
-  for each of them; each stands at the painting that hides their own picture. Three rounds
-  win a ticket.
-  The ladder on wheels is in the way and only rolls when both push. Three water jets spout in
-  turn; they bubble first. Anyone caught is soaked and pushed back a little.
-  The parasols: the other ticket is on a shop sign. She climbs the ladder (he cannot reach
-  from it), and he winds each parasol open so she can step from one to the next.
-- The bus: trace the line on the route map from "Old Bridge" back to its number, set that
-  number on the blue box by the stop, and get on together. (Shuffled every game.)
-- The Old Bridge: she switches on the power, he crawls into the hut. The controls want the
-  four pictures from the map pieces, in order: she reads them from the map, he sets them.
-  Then he holds the lever. Halfway down the brake catches: she holds the brake handle on
-  the power post while he holds the lever.
+SOUND
+Every chapter has music, and the house and the city have sound effects. They are free CC0
+recordings (see the CREDITS.txt files in the music and sounds folders).
+Browsers only allow sound after the first key press or tap.
 
 WHAT IS IN THE FOLDER
 index.html, city.html, forest.html   the chapters; open index.html to start
 worlds/        one folder per world (house, city, forest): its art, its settings and its code.
-               worlds/README.md explains how to change or replace any of it.
-shared/        what every world uses: the two characters, the shared play code and the sounds
+               worlds/README.md explains how to change or replace any of it, and how to place
+               objects in the city. worlds/city/LAB_PLAN.md is the story of the city lab.
+shared/        what more than one world uses: the two characters, the sounds, and for worlds with
+               jumping the physics, the movement and the object kit
 tools/         developer tools used to create the artwork and test the game; not needed to play

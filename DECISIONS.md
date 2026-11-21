@@ -28,7 +28,9 @@ https://forest-trail-d56.pages.dev. (The folder was called `forest-scene/` until
 
 ## Story and levels
 
-Chapter One, "Home Alone", is [game/index.html](game/index.html). Chapter Two, "Across the City", is [game/city.html](game/city.html).
+Chapter One, "Home Alone", is [game/index.html](game/index.html). Chapter Two, "Across the City", was [game/city.html](game/city.html)
+until 2026-11-21; that page is now the test level described under "Proposed" below, and the level decided here is kept
+at the git tag `checkpoint-2026-11-20-city-music`.
 
 | # | Decision | Notes |
 |---|---|---|
@@ -55,6 +57,44 @@ Chapter Two is the first chapter built this way.
 | 23 | **Places to rest and play, and stickers** | Each chapter has a calm place with toys that do not have to be used (Fountain Square: the fountain, the bell game). Eight hidden stickers reward looking around; none is needed to finish. |
 | 24 | **Sound** | Recorded CC0 music for each place (house, city streets, metro, Old Town, forest) and recorded CC0 sound effects (Kenney), chosen 2026-11-19 after the music made by code was "not good enough". The pieces cross-fade between places; M switches all sound off and on. Code-made sounds remain only as a fallback and for sounds with no good recording (barks, honks, splashes). |
 
+## Proposed (testing in the city lab)
+
+**None of this is approved.** Since 2026-11-21 the city ([game/city.html](game/city.html)) is a test level, "the lab",
+for a new audience: parents playing with children of about 5 to 10, two children together, or one player with both
+characters. The ideas below are being tried there and will be approved, changed or dropped after playtests with
+children. What we want to learn is in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "The city lab".
+
+| | Proposal | Notes |
+|---|---|---|
+| A | **Jumping, with no death pits** | Both siblings walk and jump. The jump is always the same height (now 1.1 brother-heights, lowered once after a first feel test), with a little forgiveness at edges and before landing. No lives, no game over, no fall damage, no timed jumps over hazards. Whoever falls out of the picture or into water is back within a second, with a splash or a puff. |
+| B | **The new abilities** (table below) | Carrying, weight and size, and three moves together: the lift, the toss and the see-saw. |
+| C | **An object kit** | Puzzles are built from a small set of objects placed by settings: light box, heavy crate, small blue and big green plates, gates, levers, a two-switch door, see-saw, pulley lift, thin planks, small boats and branches, a ferry, a rope ladder, a height bar. |
+| D | **A colour language** | Green means the sister's job (heavy or high). Blue means the brother's job (light or small). Plain wood is for either. |
+| E | **Pictures instead of words** | Nothing needs reading. The goal is a picture in a thought bubble. Hints are pictures: the right thing sparkles after about 20 seconds, an arrow points at it after 40, a faint ghost of the right sibling shows the move after 60. Signs over heads are a hand, two hands or an arrow. The end card is pictures and numbers. |
+| F | **Stations** | A chapter is a row of stations, each one idea on one screen, one to two minutes, needing both siblings, with a way of checking by script that one sibling cannot finish it alone. |
+
+The proposed abilities:
+
+| | Sister (tall, strong, heavy) | Brother (small, light) |
+|---|---|---|
+| Walk and jump | Yes | Yes |
+| Carry | Heavy crates and light boxes | Light boxes only |
+| Weight | Presses the big green plates; thin planks, small boats and branches give way under her | Walks on thin planks, small boats and branches |
+| Size | Reaches high levers and signs | Ducks into low gaps by himself (no crawl button); his hand fits small hatches and drains |
+| Together | Lifts him onto her shoulders; from there tosses him up to a ledge | Rides on her shoulders and reaches higher still |
+| See-saw | Her landing sends him flying | Too light to send her anywhere |
+
+**If these are approved, earlier decisions change:**
+- **12** (Level 1 is a side cutaway of the house: "walking and stairs, no jumping") and **13** (the hidden spare key,
+  solved by reading a chalked code): the house would need jumping, and a puzzle without reading.
+- **16** (the siblings' abilities stay the same all game): the abilities table above replaces "tall" and "small and
+  light" with a longer list; they would still stay fixed for the whole game.
+- **17** (no jumping; she lifts him instead): jumping comes in. The lift stays, and the toss is added.
+- **19** (the goal says what to do in words, and hints are sentences on the treasure map): pictures replace both.
+
+Decisions 5 (split information) and 21 to 22 (the map pictures as a code that changes every game) are also not used
+in the lab: with children of 5 to 10 on one screen there are no codes. Whether they return for older players is open.
+
 ## Decision log
 
 | Date | Decision |
@@ -68,3 +108,4 @@ Chapter Two is the first chapter built this way.
 | 2026-11-18 | Client feedback on Level 1: the siblings carry nothing (no staff, no lantern; the cupboard got a pull-cord light), and Level 2 is the city, so the house now looks out on a city (decisions 7, 11, 13 updated). |
 | 2026-11-18 | Level 2 is a side-scrolling city level of 15 to 20 minutes, and every world is kept in its own folder (decisions 14 and 15). |
 | 2026-11-19 | Client feedback on Level 2: the look is right, but it was no fun to play. Researched how similar games handle puzzles, agreed the play rules in decisions 16 to 24, and rebuilt the city level on them. |
+| 2026-11-21 | New audience: parents with children of about 5 to 10, and two children together. The city became a test level ("the lab") on the branch `lab/city-v2`. Nothing was approved; the ideas being tried are listed under "Proposed (testing in the city lab)". |
