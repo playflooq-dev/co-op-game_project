@@ -69,3 +69,22 @@ surprise; it comes back in every later level.
 - **By watching children of 5 to 10.** Where do they stand still for more than ten seconds? Where do they laugh?
   Does anybody only wait? Which hint (sparkle, arrow, ghost) did each puzzle need? A puzzle that needs the ghost
   for most children is too hard for where it stands, and moves to a later level.
+
+## Level 1, measured (2026-11-23)
+
+From the scripted play-through, `game/tools/playtest-park.html`. The script walks straight to each thing and never
+stops to think or play, so real players will take longer: my guess is three to four times as long, which has to be
+checked with children.
+
+| Section | Script | What it shows |
+|---|---|---|
+| 1 Learn to move | 23 s | No puzzle and no hint. With the dog, the ball, the puddle and the log to stop at, about 1 to 2 minutes for a child (rule 1). |
+| 2 Plate and gate (teach) | 14 s | The easiest puzzle comes first. |
+| 3 Box on plate (practise) | 21 s | The longest: the one harder step of the level. |
+| 4 The pond | 9 s | Nothing to solve after the harder one (rule 4). |
+| 5 The balloon (twist) | 10 s | Short again. |
+| 6 The way out | 10 s | The easiest of all, and both at once (rule 7). |
+| Whole level | 86 s | About 4.5 to 6 minutes for players, against the planned 5 (rule 5). The city lab takes the same script 154 s. |
+
+So the order is easy, harder, calm, easy, easy. The second test (`?solo=1`) lets one sibling try every puzzle alone,
+with every short cut I could think of (34 checks); none works. In every puzzle both siblings walk and both do something (rule: neither one only waits).

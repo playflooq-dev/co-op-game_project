@@ -57,6 +57,7 @@ function solve(n) { // a happy jingle, and they cheer together
   if (n === 5) highFive(); // the finale ends with a high five
   if (typeof lifeSolved === 'function') lifeSolved(n);
 }
+for (const n in PUZZLES) if (PUZZLES[n]()) game.solved[n] = true; // starting part-way (?section=): what lies behind is done already, without the jingle
 
 // ---------- every frame
 function update(dt) {
