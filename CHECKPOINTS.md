@@ -22,10 +22,14 @@ Ask Claude, or run these in `co-op-game_project`:
 ## Every commit so far
 
 Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is rebuilt as a test level (the plan is in
-`game/worlds/city/LAB_PLAN.md`). The small commits that only add a row to this table are not listed.
+`game/worlds/city/LAB_PLAN.md`). Commits from `23e48ce` on are on the branch `level-1/gentle`, which starts from the
+lab and adds a gentle first level, the park (the rules it follows are in `PROGRESSION.md`). The small commits that
+only add a row to this table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `173ad1d` | 2026-11-23 | Level 1, Phase 2: the park. A new world in `game/worlds/park/` with the page `game/park.html`: six gentle sections (learn to move, plate and gate, box on plate, the pond, the balloon and the lift, the way out together), built from forest and city art. Easier jumping and earlier hints than the lab. Shared code got two switchable additions (no toss; a gate that opens for either of two plates) and three icons. |
+| `23e48ce` | 2026-11-23 | Level 1, Phase 1: `PROGRESSION.md`, the rules for how levels grow (one new mechanic a level, teach, practise, twist) and the planned levels. |
 | `fc106c7` | 2026-11-21 | City lab, Phase 6: the documents (README files, the city lab's open questions, the proposals in DECISIONS.md). The checkpoint `checkpoint-2026-11-lab-city-v2` is on the commit after this one. |
 | `3fe28fe` | 2026-11-21 | City lab, Phase 5: testing. A second scripted test tries 29 ways one sibling might finish a station alone; it found one (dashing through the mill shutter), now closed. Results for the play-through, small screens and what could not be tested are in `LAB_PLAN.md`. |
 | `5832a3b` | 2026-11-21 | City lab, Phase 4: no reading. A picture bubble for the goal, picture hints (sparkle, arrow, ghost of the right sibling), signs over heads, eight stickers in the new stations, an end card of pictures and numbers. |
