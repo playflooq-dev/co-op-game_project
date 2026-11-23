@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Park</title>
+<style>
+  html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
+  canvas{display:block}
+  /* the keys, as pictures: green for the sister, blue for the brother */
+  #hud{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:22px;pointer-events:none;white-space:nowrap}
+  #hud div{display:flex;align-items:center;gap:4px;padding:6px 12px 6px 8px;border-radius:14px;border:2px solid #fff5}
+  #hud .s{background:#60703aa8}#hud .b{background:#3e6892a8}#hud .m{background:#0005;border-color:#fff2}
+  #hud kbd{display:grid;place-items:center;min-width:26px;height:26px;padding:0 3px;box-sizing:border-box;border-radius:7px;background:#fffbf0;color:#3a2618;font:700 15px/1 Georgia,serif;box-shadow:0 2px 0 #0006}
+  #hud svg{width:20px;height:20px;margin:0 9px 0 3px}#hud svg:last-child{margin-right:0}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  @media (pointer:coarse){#hud{display:none}}
+  body.touch #hud{display:none}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div class="s"><kbd>A</kbd><kbd>D</kbd><svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6M4 12h16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><kbd>W</kbd><svg viewBox="0 0 24 24"><path d="M12 3 20.5 12.5h-5V21h-7v-8.5h-5z" fill="#fff"/></svg><kbd>S</kbd><svg viewBox="0 0 24 24" fill="#fff"><rect x="5.6" y="5.5" width="3" height="9" rx="1.5"/><rect x="9.3" y="3" width="3" height="11" rx="1.5"/><rect x="13" y="3.6" width="3" height="10.5" rx="1.5"/><rect x="16.7" y="6" width="3" height="8.5" rx="1.5"/><rect x="5.6" y="11" width="14.1" height="10" rx="4.2"/><rect x="2" y="10.6" width="3.3" height="8.4" rx="1.65" transform="rotate(-38 3.6 14.8)"/></svg></div>
+  <div class="b"><kbd>&larr;</kbd><kbd>&rarr;</kbd><svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6M4 12h16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><kbd>&uarr;</kbd><svg viewBox="0 0 24 24"><path d="M12 3 20.5 12.5h-5V21h-7v-8.5h-5z" fill="#fff"/></svg><kbd>&darr;</kbd><svg viewBox="0 0 24 24" fill="#fff"><rect x="5.6" y="5.5" width="3" height="9" rx="1.5"/><rect x="9.3" y="3" width="3" height="11" rx="1.5"/><rect x="13" y="3.6" width="3" height="10.5" rx="1.5"/><rect x="16.7" y="6" width="3" height="8.5" rx="1.5"/><rect x="5.6" y="11" width="14.1" height="10" rx="4.2"/><rect x="2" y="10.6" width="3.3" height="8.4" rx="1.65" transform="rotate(-38 3.6 14.8)"/></svg></div>
+  <div class="m"><kbd>M</kbd><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#fff"/><path d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+</div>
+<div id="load">The Park</div>
+<!-- The park: Level 1, the gentle first level (see PROGRESSION.md). It has no art of its own: it borrows from the
+     forest and the city. Its settings and code are in worlds/park/; the characters, the physics, the movement and the
+     object kit are in shared/. On touch screens shared/movement.js adds the buttons. -->
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/city/assets/manifest.js"></script>
+<script src="worlds/park/settings.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script src="shared/sound.js"></script>
+<script src="shared/stage.js"></script>
+<script src="shared/physics.js"></script>
+<script src="shared/icons.js"></script>
+<script src="shared/movement.js"></script>
+<script src="shared/kit.js"></script>
+<script>const LOAD = { title: 'The Park', script: ['worlds/park/scenery.js', 'worlds/park/things.js', 'worlds/park/life.js', 'worlds/park/level.js'], sets: [
+  { assets: CITY_ASSETS, base: 'worlds/city/assets/', only: ['skylineFar', 'skylineNear', 'streetLamp', 'bench', 'parkGate'] },            // borrowed from the city
+  { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'trees', 'blossomTrees', 'pines', 'bushes', 'flowers', 'grass', 'rocks', 'logs', 'grassTexture', 'pathTexture'] }, // and from the forest
+] };</script>
+<script src="shared/loader.js"></script>
+</body></html>
