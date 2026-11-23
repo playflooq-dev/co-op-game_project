@@ -31,8 +31,9 @@ const PARK_MOVE = {
 const HINT_TIMES = [10, 20, 35];
 
 // ---------- THE SECTIONS, left to right. Level 1 may only use: walking, jumping, small blue plates, gates, one light
-// box, and the lift. Each line in `things` places one object: kinds from shared/kit.js (block, box, plate, gate, bar,
-// sticker) and the park's own from things.js and life.js. x is the place along the path ([from, to] for long
+// box, and the lift. Each line in `things` places one object: kinds from shared/kit.js (block, plate, bar, sticker),
+// the park's own from things.js (hurdle, log, puddle, ball, parkgate, parkbox, pond, balloon) and the ones that only
+// react from life.js (dog, birds, flowers). x is the place along the path ([from, to] for long
 // things), h the height above the path. `view` is the stretch the camera holds still on while both are inside it;
 // `goal` is the picture in the thought bubble. park.html?section=3 starts at section 3.
 // For scale: a jump rises about 226; he is 188 tall and she 222; she reaches 284 up (370 standing on a box), he 232,
@@ -45,30 +46,38 @@ const SECTIONS = [
     { kind: 'hurdle', x: 1900, h: 82 },
     { kind: 'puddle', x: 2260, w: 210 },
     { kind: 'log', x: 2640, h: 84 }, { kind: 'sticker', icon: 'apple', x: 2640, h: 154 }, // a sticker for standing on the log
+    // a friendly dog tags along as far as the first gate (pet it for a sticker); birds; flowers that bounce
+    { kind: 'dog', x: 810, to: 3220 }, { kind: 'sticker', icon: 'paw', when: 'petted' },
+    { kind: 'birds', x: 950, n: 3 }, { kind: 'birds', x: 2450, n: 2 },
+    { kind: 'flowers', x: [520, 960], n: 5 }, { kind: 'flowers', x: [1420, 1570], n: 2 }, { kind: 'flowers', x: [2820, 3260], n: 5 },
   ] },
   { name: '2 Plate and gate (teach)', goal: 'gate', x: [3300, 4700], start: [3380, 3470], view: [3320, 4680], things: [
     // the gate is open while somebody stands on either plate: one holds it, the other walks through and holds it
     // from the far side. The plates are far enough from the gate that nobody can step off and dash through.
     { kind: 'plate', id: 'a', x: 3640 }, { kind: 'parkgate', x: 4010, by: ['a', 'b'], any: true }, { kind: 'plate', id: 'b', x: 4380 },
+    { kind: 'birds', x: 4210, n: 2 }, { kind: 'flowers', x: [4470, 4690], n: 3 },
   ] },
   { name: '3 Box on plate (practise)', goal: 'gate', x: [4700, 6100], start: [4780, 4870], view: [4720, 6080], things: [
     // this time there is no plate on the far side, but there is a box: one holds the gate, the other fetches the
     // box and brings it back onto the plate. A box can do a person's job. The bar keeps the box in this section.
     { kind: 'plate', id: 'c', x: 5010 }, { kind: 'parkgate', x: 5400, by: ['c'] }, { kind: 'parkbox', x: 5730 },
-    { kind: 'bar', x: 6030 },
+    { kind: 'bar', x: 6030 }, { kind: 'birds', x: 5560, n: 2 },
   ] },
   { name: '4 The pond (a calm moment)', x: [6100, 7300], start: [6180, 6270], view: [6120, 7280], things: [
     // nothing has to be done here: splash at the pond, and there is a sticker for it
     { kind: 'pond', x: [6420, 7000] }, { kind: 'sticker', icon: 'drop', when: 'splashed' },
+    { kind: 'flowers', x: [6130, 6400], n: 4 }, { kind: 'flowers', x: [7020, 7290], n: 4 }, { kind: 'birds', x: 7080, n: 3 },
   ] },
   { name: '5 The balloon (twist: the lift)', goal: 'balloon', x: [7300, 8500], start: [7380, 7470], view: [7320, 8480], things: [
     // a red balloon is caught on a branch, too high for either: she lifts him and he takes it.
     // The little gate after the tree opens for whoever brings a balloon.
     { kind: 'balloon', x: 7840, h: 392 }, { kind: 'parkgate', x: 8250, by: ['balloon'], latch: true },
+    { kind: 'flowers', x: [7480, 7700], n: 3 },
   ] },
   { name: '6 The way out (together)', goal: 'exit', x: [8500, 9700], start: [8580, 8670], view: [8520, 9900], things: [
     // two plates side by side: both at once, and the gate stays open
     { kind: 'plate', id: 'e1', x: 8860 }, { kind: 'plate', id: 'e2', x: 9000 }, { kind: 'parkgate', x: 9190, by: ['e1', 'e2'], latch: true, last: true },
+    { kind: 'flowers', x: [8540, 8780], n: 3 }, { kind: 'birds', x: 9420, n: 3 },
   ] },
 ];
 
