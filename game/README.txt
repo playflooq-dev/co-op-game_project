@@ -2,27 +2,99 @@ TREASURE HUNT - game prototype
 ==============================
 
 HOW TO OPEN
-Double-click index.html. It opens in your web browser.
+Double-click index.html. It opens in your web browser and starts Level 1, the park.
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
-THE CHAPTERS
-index.html    Chapter One, "Home Alone": the brother and sister are locked in the house
-              and must find the spare key. Getting out leads on to the city.
+THE PAGES
+index.html    Starts the game: it passes straight on to park.html.
+park.html     LEVEL 1, "The Park" (since 2026-11-23). A gentle first level of about five minutes for
+              parents playing with children of about 5 to 10, or two children together: first only
+              walking and jumping, then four very small puzzles. Nothing in it needs reading.
+              It is waiting for feedback and is not approved yet. Its end card leads on to the city.
 city.html     The city. Since 2026-11-21 it is a TEST LEVEL ("the lab"): eight stations that each
-              try one idea with new movement (jumping, carrying, the lift and the toss), made for
-              parents playing with children of about 5 to 10, or two children together. Nothing in
-              it needs reading. Everything in it may still change. It ends at Forest Park.
+              try one idea with new movement (jumping, carrying, the lift and the toss). It was found
+              far too hard as a first level; it stays as the place where ideas are tried.
+              It ends at Forest Park.
+house.html    "Home Alone" (this was index.html until 2026-11-23): the brother and sister are locked
+              in the house and must find the spare key. Getting out leads on to the city.
 forest.html   The Forest Trail (the first art scene; a later chapter will be built here).
 
-The house and the forest still play the old way: walking, no jumping, and words on the screen.
-What follows is in two parts: the city lab first, then the house and the forest.
+The park and the city lab play the new way: jumping, pictures in place of words. The house and the
+forest still play the old way: walking, no jumping, and words on the screen.
+How the levels are meant to get harder, one small step at a time, is in PROGRESSION.md (one folder up).
+What follows is in three parts: the park, the city lab, then the house and the forest.
+
+
+LEVEL 1: THE PARK
+=================
+
+CONTROLS (two players on one keyboard, or one player with both hands)
+Sister:   A / D walk     W jump     S grab
+Brother:  Left / Right walk     Up jump     Down grab
+The keys are shown as pictures at the bottom of the screen. M switches the sound off and on.
+
+"Grab" does whatever fits where they stand:
+- next to the box: pick it up. Again: put it down in front.
+- next to something to use or to play with (the balloon, the pond, the dog): use it.
+- next to each other, with nothing else in reach: she lifts him onto her shoulders.
+  Grab again, or jump: he gets down. (There is no toss in Level 1.)
+- both at the same moment: a high five.
+A little sign over a head shows what grab would do: a hand (pick up or use), and from the balloon
+tree on, two hands (the lift).
+
+On a tablet or phone, hold it sideways. Each player gets four buttons in their bottom corner:
+the sister's on the left, the brother's on the right.
+
+Nobody can get hurt or lose. There is nothing to fall into and nothing to fall off.
+
+THE SECTIONS
+1  Learn to move. No puzzle: two small steps, a low fence, a puddle and a log to hop over,
+   a ball to kick. A dog comes along as far as the first gate.
+2  Plate and gate. The gate is open while somebody stands on a blue plate. One holds it open,
+   the other walks through and holds the plate on the far side, and the first one follows.
+3  Box on plate. This gate has only one plate, but there is a box behind it. One holds the plate,
+   the other fetches the box and puts it on the plate. A box can do a person's job.
+4  The pond. A calm moment: nothing has to be done. Grab at the pond makes a splash.
+5  The balloon. A red balloon is caught in a tree, too high for either. She lifts him, he takes
+   it, and the little gate opens for whoever carries a balloon.
+6  The way out. Two plates side by side: both stand on one at the same time, the gate opens for
+   good, confetti, a high five. Walk to the big park gate together to finish.
+The card at the end shows the stickers found and the time. Jump goes on to the next level
+(for now, the city lab).
+
+STUCK?
+A thought bubble over the sister shows a picture of what the section is about (a gate, the
+balloon, the way out). If the next step is not done for a while, the thing to use starts to
+sparkle (after about 10 seconds), then an arrow points at it (20 seconds), then a faint, glittering
+ghost of a sibling shows where to stand and what to do (35 seconds). The ghost is green for her
+and blue for him. These times are HINT_TIMES in worlds/park/settings.js.
+
+STICKERS
+Three, none of them needed: an apple for standing on the log, a paw for petting the dog, a drop
+for splashing at the pond.
+
+THINGS THAT REACT (none is needed)
+Birds fly up when somebody jumps or runs close, and come back. Flowers and grass bounce when
+walked through. The puddle splashes. The ball rolls and bounces. The dog hops, yips and wags.
+A cat sits on the box; it hops off when the box is picked up and goes back when it is left alone.
+The ducks swim away from a splash. The siblings cheer when a gate opens, he giggles when lifted,
+she looks proud when he has the balloon, and they wave to each other when apart and standing still.
+
+FOR TESTING (add to the address; index.html passes these on)
+park.html?section=3    starts at section 3 (1 to 6)
+park.html?debug=1      shows what is solid, which plates are on, the section names, the frame rate
+park.html?tune=1       sliders for how the jump and the running feel
+park.html?hints=fast   the hints come ten times sooner
+park.html?touch=1      shows the touch buttons on a computer
+park.html?fps=30       draws only 30 frames a second, to feel a slow device
+They can be joined with "&": park.html?section=5&debug=1
 
 
 THE CITY LAB
 ============
 
-CONTROLS (two players on one keyboard, or one player with both hands)
+CONTROLS (the same keys as in the park; the lab adds the toss, levers and ladders)
 Sister:   A / D walk     W jump     S grab
 Brother:  Left / Right walk     Up jump     Down grab
 The keys are shown as pictures at the bottom of the screen. M switches the sound off and on.
@@ -124,15 +196,17 @@ bookcase; the spare key inside opens the front door.
 
 
 SOUND
-Every chapter has music, and the house and the city have sound effects. They are free CC0
-recordings (see the CREDITS.txt files in the music and sounds folders).
+Every page has music, and the park, the house and the city have sound effects. They are free CC0
+recordings (see the CREDITS.txt files in the music and sounds folders); the park borrows the
+city's daytime music. A few animal sounds are made by code.
 Browsers only allow sound after the first key press or tap.
 
 WHAT IS IN THE FOLDER
-index.html, city.html, forest.html   the chapters; open index.html to start
-worlds/        one folder per world (house, city, forest): its art, its settings and its code.
-               worlds/README.md explains how to change or replace any of it, and how to place
-               objects in the city. worlds/city/LAB_PLAN.md is the story of the city lab.
+index.html, park.html, city.html, house.html, forest.html   the pages; open index.html to start
+worlds/        one folder per world (park, house, city, forest): its art, its settings and its
+               code. worlds/README.md explains how to change or replace any of it, and how to
+               place objects in the park and the city. worlds/city/LAB_PLAN.md is the story of
+               the city lab.
 shared/        what more than one world uses: the two characters, the sounds, and for worlds with
                jumping the physics, the movement and the object kit
 tools/         developer tools used to create the artwork and test the game; not needed to play

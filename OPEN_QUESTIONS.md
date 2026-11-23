@@ -82,6 +82,42 @@ other; and where they laugh. Try each with a parent and a child, two children, a
 **Not built in the lab:** the metro ride between stations (cut, it could return as a calm ride with no choices), the
 ladder on wheels, split screens and pings for playing online, lighter music files for the web.
 
+## 1d. Level 1 (the park): waiting for feedback
+
+Built on 2026-11-23 on the branch `level-1/gentle`, after the client found the city lab far too difficult as a first
+level. `game/index.html` now opens it. It follows the rules in [PROGRESSION.md](PROGRESSION.md): first only moving,
+then four very small puzzles, a calm moment in between, and a finale together. Nothing in it is approved (see
+"Proposed" in [DECISIONS.md](DECISIONS.md)). The controls and how to open one section are in `game/README.txt`.
+
+**While children of 5 to 10 play, watch for three things above all:**
+- **Where do they stand still for more than 10 seconds?** That is where the level is unclear or too hard. Note the
+  section, and which hint got them going again: the sparkle (10 s), the arrow (20 s) or the ghost (35 s).
+- **Where do they laugh?** The dog, the cat on the box, the ducks, the birds, the puddle, being lifted. More of what
+  works goes into the next levels; what nobody notices can go.
+- **Does anybody only wait?** Each puzzle is built so that both walk and both do something. Watch the one who holds
+  the plate in sections 2 and 3: is waving enough to do, or do they get bored?
+
+| Section | What we want to learn |
+|---|---|
+| 1 Learn to move | Do they play (ball, puddle, log, dog), or run straight through? Is one to two minutes without a puzzle welcome, or too long? Is the jump comfortable (it is a little higher and more forgiving than in the lab)? Do they find that the dog can be petted? |
+| 2 Plate and gate | Do they connect the plate, the lit cable and the gate without help? Does the second one think of the plate on the far side, or does the first stay stuck behind the gate? |
+| 3 Box on plate | The one harder step. Do they see that the box can hold the plate? Who thinks of it, the child or the parent? Is carrying (grab, walk, grab) found without being told? Does the cat make them want to pick the box up, or keep them from it? |
+| 4 The pond | Do they stop here at all? Do they find the splash? Is a calm moment after the harder puzzle felt as a rest? |
+| 5 The balloon | Do they discover the lift by themselves, from the two-hands sign, or only from the ghost? Is "grab to be lifted, grab again to take it" clear? Is being lifted funny? |
+| 6 The way out | Do they understand "both at the same time" at once? Does the confetti and the high five feel like an ending? |
+
+**Questions about the whole level**
+- How long does it take? The plan is about five minutes; the script needs a minute and a half without thinking.
+- Is it too easy for a ten-year-old, and does that matter in a first level?
+- Section 3 puts the box behind the gate, so that one sibling cannot do it alone. Is that one step too many for the
+  very first box? The simpler version (box and plate on the same side) could be solved by one child.
+- The ghost was mistaken for a blurry third child in the lab. In the park it glitters, fades in and out, and carries
+  what it should carry. Is it understood now?
+- Does one player alone, with both hands, manage the level? Only the last plates need both at once.
+- Is the end card understood without words (stickers, a clock, an arrow to go on)?
+- After the park the game goes on to the city lab, which is much harder. That jump is known and stays until Level 2
+  (the see-saw) is built.
+
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
   puzzles, and is easy to keep in sync online.
