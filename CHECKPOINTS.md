@@ -33,6 +33,7 @@ row to this table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `75278d1` | 2026-11-24 | No stickers in the city lab either: its eight stickers, the sticker box at the top left and the count on the end card are gone (the end card shows the map and the time). The stations and the map pieces are unchanged. This is after the checkpoint `checkpoint-2026-11-level-1-plain`. |
 | `49f4e48` | 2026-11-24 | Level 1 plain, Step 5: tests and documents. The park passes its play-through at computer, tablet and phone sizes and its solo test (37 checks); the city lab, the house and the forest are unchanged. The checkpoint `checkpoint-2026-11-level-1-plain` is on the commit after this one. |
 | `bb55c0a` | 2026-11-24 | Level 1 plain, Step 4: the first-time player review, `game/worlds/park/REVIEW.md`: every thing in the level that could distract or need explaining, with a recommendation for each (29 items). Only what the opening clearly needed was applied. |
 | `571fddd` | 2026-11-24 | Level 1 plain, Step 3: the opening is only about learning to move. Each player's keys are shown as big pictures next to their own sibling, one move at a time (walk, then jump; grab only at the first box); a ghost shows the move to a player who stands still; on touch screens the button pulses. A longer, plainer path with a few very low steps and one log. No lift in section 1. The puzzles are unchanged. |
