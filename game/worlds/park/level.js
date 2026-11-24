@@ -1,7 +1,8 @@
 'use strict';
 // Level 1, the park: it builds the sections from settings.js, lets the siblings move with shared/movement.js on the
 // physics in shared/physics.js, and draws it all over the scenery in scenery.js. The objects come from shared/kit.js
-// and the park's own things.js and life.js. (The way a level is run is the same as in the city lab's lab.js.)
+// and the park's own things.js and life.js; learn.js shows the keys as pictures while players learn to move.
+// (The way a level is run is the same as in the city lab's lab.js.)
 // Useful while testing (add to the address of park.html):
 //   ?section=3  starts at section 3 (1 to 6)                 ?at=2400    starts both siblings at that place
 //   ?debug=1    shows what is solid, which plates are on, the section names and the frame rate
@@ -30,6 +31,7 @@ const kitIn = (n, kind, i = 0) => kit.filter((o) => o.section === n && o.def.kin
 setupMovement(world, players, {
   thing: (p) => { let best = null, bd = 1e9; for (const o of kit) if (o.thing && o.thing.canUse(p)) { const d = Math.abs(o.thing.x - p.x); if (d < bd) { bd = d; best = o.thing; } } return best; },
   canJoin: (p, o) => Math.abs(o.y - p.safe.y) < 60,
+  canLift: () => game.section >= LEARN_SET.liftFrom - 1, // no lift while they are still learning to move
 });
 MV.bottom = VH + 260;
 const pads = makeTouchPads(QS.get('touch'));
@@ -68,6 +70,7 @@ function update(dt) {
   for (const o of kit) if (o.after) o.after(dt);
   settleSiblings(dt);
   if (typeof lifeUpdate === 'function') lifeUpdate(dt);
+  if (typeof learnUpdate === 'function') learnUpdate(dt);
   updateMoveFx(dt); updateTalk(dt);
   game.shake = Math.max(0, game.shake - dt * 2.5);
   for (const n in PUZZLES) if (!game.solved[n] && PUZZLES[n]()) solve(+n);
@@ -93,16 +96,16 @@ function drawBadge(c, x, y, icon, col, t) { // a little sign over a head, in pla
   c.save(); c.translate(x, y + Math.sin(t * 5) * 2.5); c.globalAlpha *= 0.95;
   c.beginPath(); circ(c, 0, 0, 23); fs(c, col, '#fff6dc', 3); drawIcon(c, icon, 0, icon === 'hands' ? 0 : 1, icon === 'hands' ? 1.05 : 0.95); c.restore();
 }
-function drawSigns(c, t) { // what the grab key would do, shown as a picture: a hand to pick up or use, two hands for the lift
+function signFor(p) { // what the grab key would do for this sibling right now: 'hand' (pick up or use), 'hands' (the lift), or nothing
   const duo = MV.duo;
-  for (const p of players) {
-    if (p.gone || p.carry || p.holding || duo.state === 'up' || !(p.grounded || p.held)) continue;
-    const th = MV.hooks.thing(p), headY = p.y - p.h - 34;
-    if (duo.state === 'on') { if (p === bro && th) drawBadge(c, p.x, headY, 'hand', p.col, t); continue; }
-    const box = th ? null : nearBox(p);
-    if (th || box) drawBadge(c, p.x, headY, 'hand', p.col, t);
-    else if (p === bro && game.section >= 4 && canLift() && sis.idle > 0.7 && bro.idle > 0.7) drawBadge(c, p.x, headY, 'hands', p.col, t); // the lift: only from the balloon tree on, and once they have stood together for a moment
-  }
+  if (p.gone || p.carry || p.holding || duo.state === 'up' || !(p.grounded || p.held)) return null;
+  const th = MV.hooks.thing(p);
+  if (duo.state === 'on') return p === bro && th ? 'hand' : null;
+  if (th || nearBox(p)) return 'hand';
+  return p === bro && game.section >= 4 && canLift() && sis.idle > 0.7 && bro.idle > 0.7 ? 'hands' : null; // the lift: only from the balloon tree on, and once they have stood together for a moment
+}
+function drawSigns(c, t) { // ... shown as a little picture over the head. (While somebody is still learning the grab key, learn.js shows the key itself instead.)
+  for (const p of players) { const icon = signFor(p); if (icon && !(typeof learnShows === 'function' && learnShows(p))) drawBadge(c, p.x, p.y - p.h - 34, icon, p.col, t); }
 }
 
 // ---------- hints, without words. Each puzzle is a list of steps: whose turn (either can do most jobs here, so it is
@@ -166,7 +169,7 @@ function drawHintMarks(c, t) {
 function drawGoalBubble(c, t) { // the picture bubble: what this part is about. It shows on arriving, and again whenever both stand still for a while.
   const icon = game.solved[game.section] ? null : SECTIONS[game.section].goal; if (!icon) return;
   game.goalT = game.goalKey === game.section ? game.goalT : 0; game.goalKey = game.section;
-  const a = game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 5 && bro.idle > 5 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 5) * 2) : 0; if (a <= 0) return;
+  const a = (game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 5 && bro.idle > 5 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 5) * 2) : 0) * (typeof learnOver === 'function' ? 1 - learnOver(sis) : 1); if (a <= 0) return; // it makes room for a key picture over her head
   const x = clamp(sis.x, camX + 90, camX + VW - 90), y = sis.y - sis.standH - (sis.carry ? 214 : 118) + Math.sin(t * 2) * 3;
   c.save(); ell(c, x - 14, y + 62, 7, 7, '#fffbf0', a); ell(c, x - 4, y + 46, 10, 10, '#fffbf0', a); c.globalAlpha = a;
   c.beginPath(); c.ellipse(x, y, 54, 42, 0, 0, TAU); fs(c, '#fffbf0', '#8a6a3a', 3); drawIcon(c, icon, x, y, 1.9); c.restore();
@@ -223,10 +226,10 @@ function frame(now) {
   for (const p of players) { if (p.gone) continue; drawChar(p, t); if (p.carry) p.carry.draw(c, t); }
   for (const o of kit) if (o.drawFront) o.drawFront(c, t);
   if (typeof lifeDrawFront === 'function') lifeDrawFront(c, t);
-  if (!game.done && game.exitT < 0) drawHintMarks(c, t);
+  if (!game.done && game.exitT < 0) { drawHintMarks(c, t); if (typeof learnGhosts === 'function') learnGhosts(c, t); }
   drawMoveFx(c); drawSparks(c);
   drawParkLight(c);
-  if (ZOOM <= 1) { if (!game.done) { drawSigns(c, t); drawGoalBubble(c, t); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
+  if (ZOOM <= 1) { if (!game.done) { drawSigns(c, t); if (typeof learnDraw === 'function') learnDraw(c, t); drawGoalBubble(c, t); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
   requestAnimationFrame(frame);
 }
 
