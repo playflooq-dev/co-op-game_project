@@ -126,8 +126,9 @@ Objects are placed exactly as in the city (see "Placing objects" below): one lin
 Not in the park any more, and kept for later:
 - The **dog** and the **ball** are in `shared/later/dog.js` and `shared/later/ball.js`. No page loads them; each file
   says at the top how to put it into a level (one script line and one line of settings).
-- **Stickers** are still a kind in the object kit (`sticker` in `shared/kit.js`; the city lab uses them). The park
-  places none, and its level code no longer draws a sticker box or counts them.
+- **Stickers** are still a kind in the object kit (`sticker` in `shared/kit.js`), but since 2026-11-24 no level
+  places one, and neither the park's nor the city's level code draws a sticker box or counts them. To bring
+  collecting back, a level needs the box at the top left and the row on the end card again as well.
 
 Section 1 follows three rules of its own (see rule 1 in PROGRESSION.md): only `block` and `log` are placed there, none
 higher than 90; nothing in it can be used, picked up or collected; and the lift is off (`LEARN_SET.liftFrom`).
@@ -193,7 +194,7 @@ names are on.
 | `ladder` | `x, h` | Rolled up on a ledge; used from up there it drops, and then jump climbs it. |
 | `trap` | `x: [from, to], h, by` | A shelf that swings open and drops what is on it. |
 | `tunnel` | `x: [from, to], h, gap` | A low way through that only he fits. |
-| `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. |
+| `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. Not placed anywhere since 2026-11-24. |
 | `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a map piece, the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
 
 The colour language is built into the kit: green things are the sister's job (heavy or high), blue things the

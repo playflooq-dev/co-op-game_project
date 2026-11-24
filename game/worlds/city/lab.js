@@ -40,7 +40,6 @@ setupMovement(world, players, {
 });
 MV.bottom = VH + 260;
 const pads = makeTouchPads(QS.get('touch'));
-const starsGot = () => kit.filter((o) => o.star && o.star.got).length, starsAll = kit.filter((o) => o.star).length;
 const piecesGot = () => game.map.got.filter(Boolean).length;
 
 function fitScreen() { // on touch screens the street is drawn higher, so the buttons sit over the road
@@ -178,29 +177,25 @@ function drawFlyingPieces(c, t) { // the torn pieces on the wind, and a piece ho
   const m = game.map; if (!m.gust) return;
   const spots = kit.filter((o) => o.spot).sort((a, b) => a.piece - b.piece).map((o) => o.spot).concat([[m.from[0] + 1900, 240]]);
   spots.forEach(([x, y], i) => { if (m.landed(i) || m.t <= 0) return; const u = clamp01(m.t / (1.5 + i * 0.3)); drawPiece(c, lerp(m.from[0], x, u), lerp(m.from[1], y, u) - Math.sin(u * Math.PI) * 260, u * 9 + i, MAP.pictures[i], 1.2); });
-  if (m.took) { const u = ease(clamp01(m.took.t / 0.9)); drawPiece(c, lerp(m.took.x, camX + 60 + m.took.i * 44, u), lerp(m.took.y, game.lift + 110, u) - Math.sin(u * Math.PI) * 120, u * 6, MAP.pictures[m.took.i], lerp(1.6, 1, u)); }
+  if (m.took) { const u = ease(clamp01(m.took.t / 0.9)); drawPiece(c, lerp(m.took.x, camX + 60 + m.took.i * 44, u), lerp(m.took.y, game.lift + 48, u) - Math.sin(u * Math.PI) * 120, u * 6, MAP.pictures[m.took.i], lerp(1.6, 1, u)); }
 }
-function drawHud(c, top) { // pictures only: the map pieces found, and the stars
+function drawHud(c, top) { // pictures only: the pieces of the map found so far (nothing else is collected)
   const x = camX + 22, m = game.map;
-  c.save(); rrect(c, x, top + 20, 26 + starsAll * 42, 52, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
-  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = o.star.got ? 1 : 0.2; const pop = o.star.got ? 1 + Math.max(0, 0.5 - o.star.t) * 0.9 : 1; drawIcon(c, o.star.icon, x + 34 + i * 42, top + 47, 1.05 * pop); });
-  c.globalAlpha = 1;
+  c.save();
   if (m.gust && m.t > 1) { // four places for the pieces of the map
-    rrect(c, x, top + 82, 204, 56, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
-    m.got.forEach((g, i) => { const px = x + 38 + i * 44, py = top + 110; if (g && !(m.took && m.took.i === i)) drawPiece(c, px, py, 0.15 * (i - 1.5), MAP.pictures[i], 1); else if (!g) { rrect(c, px - 15, py - 14, 30, 28, 4); c.strokeStyle = '#b9a07a'; c.setLineDash([4, 4]); c.lineWidth = 2; c.stroke(); c.setLineDash([]); } });
+    rrect(c, x, top + 20, 204, 56, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
+    m.got.forEach((g, i) => { const px = x + 38 + i * 44, py = top + 48; if (g && !(m.took && m.took.i === i)) drawPiece(c, px, py, 0.15 * (i - 1.5), MAP.pictures[i], 1); else if (!g) { rrect(c, px - 15, py - 14, 30, 28, 4); c.strokeStyle = '#b9a07a'; c.setLineDash([4, 4]); c.lineWidth = 2; c.stroke(); c.setLineDash([]); } });
   }
   c.restore();
 }
-function drawEnd(c, t, top) { // the end card: pictures and numbers only
+function drawEnd(c, t, top) { // the end card, in pictures: the map put together, the time on a clock, and an arrow (jump goes on)
   const a = Math.min(1, game.endT); c.fillStyle = `rgba(28,18,10,${a * 0.8})`; c.fillRect(camX - 10, 0, VW + 20, VH + top + 40);
-  c.save(); c.globalAlpha = a; const w = 620, h = 370, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40; parchment(c, x, y, w, h);
-  game.map.got.forEach((g, i) => drawPiece(c, x + w / 2 - 99 + i * 66, y + 78, 0.12 * (i - 1.5), MAP.pictures[i], 1.7));
+  c.save(); c.globalAlpha = a; const w = 520, h = 300, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40, cx = x + w / 2; parchment(c, x, y, w, h);
+  game.map.got.forEach((g, i) => drawPiece(c, cx - 99 + i * 66, y + 82, 0.12 * (i - 1.5), MAP.pictures[i], 1.7));
   const secs = Math.floor(game.finished || game.time), time = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
-  c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
-  kit.filter((o) => o.star).forEach((o, i) => { c.globalAlpha = a * (o.star.got ? 1 : 0.2); drawIcon(c, o.star.icon, x + w / 2 - (starsAll - 1) * 27 + i * 54, y + 158, 1.5); }); c.globalAlpha = a;
-  drawIcon(c, 'star', x + 120, y + 238, 1.7); c.fillText(starsGot() + ' / ' + starsAll, x + 160, y + 240);
-  c.beginPath(); circ(c, x + 370, y + 238, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 370, y + 222); c.lineTo(x + 370, y + 238); c.lineTo(x + 382, y + 245); c.stroke(); c.fillStyle = INK; c.fillText(time, x + 410, y + 240);
-  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', x + w / 2, y + h - 48, 1.5, '#6d9b45'); } // "press jump to go on"
+  c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; const lx = cx - (52 + 14 + c.measureText(time).width) / 2 + 26;
+  c.beginPath(); circ(c, lx, y + 176, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(lx, y + 160); c.lineTo(lx, y + 176); c.lineTo(lx + 12, y + 183); c.stroke(); c.fillStyle = INK; c.fillText(time, lx + 40, y + 178);
+  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', cx, y + h - 48, 1.5, '#6d9b45'); } // "press jump to go on"
   c.restore(); c.textBaseline = 'alphabetic';
 }
 function drawDebug(c, t, top) {
@@ -214,7 +209,7 @@ function drawDebug(c, t, top) {
   const tag = (s, x, y, col = '#fff6dc') => { c.fillStyle = 'rgba(20,12,6,.78)'; c.fillRect(x, y, c.measureText(s).width + 16, 25); c.fillStyle = col; c.fillText(s, x + 8, y + 3); };
   STATIONS.forEach((s, n) => { c.strokeStyle = 'rgba(120,200,255,.8)'; c.setLineDash([14, 10]); c.beginPath(); c.moveTo(s.x[0], 0); c.lineTo(s.x[0], VH); c.stroke(); c.setLineDash([]); tag('station ' + s.name, s.x[0] + 8, top + 150, '#bfe2ff'); });
   for (const id in KIT_AT) tag(id + (KIT_SIG[id] ? ' ON' : ' off'), KIT_AT[id].x - 30, FEET + 60, KIT_SIG[id] ? '#ffe27a' : '#b9b0a4');
-  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   station ${game.station}   map ${piecesGot()}/4   stars ${starsGot()}/${starsAll}   time ${game.time.toFixed(0)} s`,
+  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   station ${game.station}   map ${piecesGot()}/4   time ${game.time.toFixed(0)} s`,
     ...players.map((p) => `${p.who.padEnd(7)} x ${p.x.toFixed(0).padStart(5)}  y ${(FEET - p.y).toFixed(0).padStart(4)} up  vx ${p.vx.toFixed(0).padStart(5)} vy ${p.vy.toFixed(0).padStart(5)}  ${p.gone ? 'gone' : p.held ? 'held' : p.climb ? 'climb' : p.grounded ? 'ground' : 'air'}${p.crawl ? ' crawl' : ''}${p.carry ? ' carry' : ''}${p.holding ? ' holding' : ''}  on ${p.on ? (p.on.isBody ? 'box' : p.on.isLedge ? 'ledge' : 'solid') : '-'}  load ${world.load(p)}`),
     `duo ${MV.duo.state || '-'}   jump ${(MOVE.jumpHeight * broHeight()).toFixed(0)} units in ${MOVE.jumpTime}s   gravity ${moveGravity().toFixed(0)}`];
   lines.forEach((s, i) => tag(s, camX + 250, top + 22 + i * 26));

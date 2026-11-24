@@ -140,7 +140,7 @@
     check('he carries the light box to the shelf', await carry(bro, box0, shelf.x[0] - 60, 1), `box at ${box0.x.toFixed(0)}`);
     await go(bro, box0.x); await hop(bro); check('he hops onto the box', bro.on === box0);
     await leap(bro, bro.x - 5); check('and from the box onto the shelf', near(up(bro), shelf.h, 3), `height ${up(bro).toFixed(0)}`);
-    await go(bro, 1660); check('the sticker on the shelf', of('sticker')[0].star.got);
+    await go(bro, 1660);
     await go(sis, 2380); await go(bro, 2330);
     check('the bar lets them through', sis.x > 1900 && bro.x > 1900);
     const gate0 = inStation(0, 'gate')[0], finds = of('find');
@@ -243,7 +243,8 @@
     // ================= how long each station took
     const ends = game.entered.slice(1).concat([game.finished || game.time]);
     STATIONS.forEach((s, n) => n >= FROM && log(`time  station ${s.name.split(':')[0]}: ${(ends[n] - game.entered[n]).toFixed(0)} s`));
-    log(`time  whole city: ${(game.finished || game.time).toFixed(0)} s   map pieces ${piecesGot()}/4   stars ${starsGot()}/${starsAll}`);
+    check('nothing to collect: no sticker anywhere in the city', !kit.some((o) => o.star || o.def.kind === 'sticker' || o.def.kind === 'star') && typeof starsGot === 'undefined');
+    log(`time  whole city: ${(game.finished || game.time).toFixed(0)} s   map pieces ${piecesGot()}/4`);
     log(`frame rate: ${game.fps.toFixed(0)} a second, slowest frame ${game.slow.toFixed(0)} ms, canvas ${cv.width}x${cv.height}`);
     log(fails ? `PLAY FAILED ${fails} check${fails > 1 ? 's' : ''}` : 'PLAY PASSED');
   } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }

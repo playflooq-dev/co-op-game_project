@@ -96,7 +96,8 @@ when lifted, she looks proud when he has the balloon, and they wave to each othe
 standing still.
 
 TAKEN OUT ON 2026-11-24
-The three stickers (they confused more than they added; they come back once the base game is set),
+The three stickers (they confused more than they added; they come back once the base game is set;
+the city lab's eight went the same day),
 and the dog and the ball (fun, but too much while learning to move; their code is saved for a
 later level in shared/later/). worlds/park/REVIEW.md goes through everything else in the level
 that could distract a first-time player, with a recommendation for each.
@@ -181,10 +182,12 @@ happens for a while, the thing to use next starts to sparkle (after about 20 sec
 arrow points at it (40 seconds), then a faint ghost of the sibling whose job it is shows where
 to stand and what to press (60 seconds). The ghost is green for her and blue for him.
 
-STICKERS
-Eight stickers are hidden along the way. None is needed. Two can only be reached from her
-shoulders, one only he can get to, one is for petting the puppy and one for ringing the bell.
-The card at the end shows the map, the stickers found and the time, in pictures and numbers.
+NOTHING TO COLLECT
+The eight stickers that were hidden along the way were taken out on 2026-11-24, as in Level 1
+(collecting confused more than it added; it comes back once the base game is set). The four
+pieces of the map are not stickers: finding them is the puzzle of stations 0 and 2, and the box
+at the top left shows them once the map is torn.
+The card at the end shows the map put together and the time, in pictures and numbers.
 
 FOR TESTING (add to the address)
 city.html?station=5    starts at station 5 (0 to 7)

@@ -74,7 +74,7 @@ other; and where they laugh. Try each with a parent and a child, two children, a
 - Are 20, 40 and 60 seconds the right waits? (They are `HINT_TIMES` in `game/worlds/city/settings.js`.)
 - Does one player alone, with both hands, manage every station? The bridge and the lift need two keys held at once.
 - On a tablet held by two people: are four buttons each reachable, and is the picture big enough?
-- Do they notice the stickers, and do the two that need the lift get found?
+- (The lab's eight stickers were taken out on 2026-11-24; see "Saved for a later level" below.)
 - Is the brother's part as much fun as the sister's? He is carried, tossed and launched; she does more of the lifting.
 - The first city level had the siblings talking in speech bubbles. The lab has no words at all. Do we miss their voices?
 - If the lab is approved, the house (reading a chalked code, no jumping) no longer fits. Rebuild it the same way?
@@ -136,7 +136,8 @@ still learning the controls, so they are not in Level 1 at all any more. Their c
 in `game/shared/later/dog.js` and `game/shared/later/ball.js`; no page loads them. Each file says at the top how to
 put it into a level (one script line and one line of settings). Open: which level gets them back, and whether the
 dog should then do something for a puzzle or stay a friend that only tags along. The stickers (taken out of Level 1
-the same day) stay in the object kit, `shared/kit.js`, and come back once the base game is set.
+the same day, and out of the city lab too) stay in the object kit, `shared/kit.js`, and come back once the base game
+is set. Open for then: what collecting is for, and how to show it without it looking like a task.
 
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
