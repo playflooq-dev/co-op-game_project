@@ -118,6 +118,13 @@ then four very small puzzles, a calm moment in between, and a finale together. N
 - After the park the game goes on to the city lab, which is much harder. That jump is known and stays until Level 2
   (the see-saw) is built.
 
+**Saved for a later level (2026-11-24).** The client found the dog and the ball fun, but too much while players are
+still learning the controls, so they are not in Level 1 at all any more. Their code and drawings are kept, unchanged,
+in `game/shared/later/dog.js` and `game/shared/later/ball.js`; no page loads them. Each file says at the top how to
+put it into a level (one script line and one line of settings). Open: which level gets them back, and whether the
+dog should then do something for a puzzle or stay a friend that only tags along. The stickers (taken out of Level 1
+the same day) stay in the object kit, `shared/kit.js`, and come back once the base game is set.
+
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
   puzzles, and is easy to keep in sync online.

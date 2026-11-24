@@ -124,23 +124,19 @@
     if (FROM <= 0) { // ================= section 1: learn to move. Nothing to solve.
       let top = 0; key('KeyW', true); for (let i = 0; i < 80; i++) { await frame(); if (i === 2) key('KeyW', false); top = Math.max(top, up(sis)); if (i > 6 && sis.grounded) break; }
       check(`a jump is ${MOVE.jumpHeight} brother-heights`, near(top, H, H * 0.03), `wanted ${H.toFixed(0)}, got ${top.toFixed(0)}`);
-      const ball = inSection(0, 'ball'), puddle = inSection(0, 'puddle'), log1 = inSection(0, 'log').def;
-      const dog = inSection(0, 'dog'), flock = inSection(0, 'birds'), patch = inSection(0, 'flowers');
-      check('the dog waits by the path, and the birds sit on the grass', dog.state.mode === 'wait' && flock.birds.every((b) => b.mode === 'sit'));
-      await go(bro, dog.def.x - 70); check('the dog comes up to him', dog.state.mode === 'follow' && (await until(() => !dog.state.run, 2500)) && Math.abs(dog.state.x - bro.x) < 130);
-      await face(bro, 1); await tap('ArrowDown'); check('he pets it', dog.state.pats === 1);
+      const puddle = inSection(0, 'puddle'), log1 = inSection(0, 'log').def;
+      const flock = inSection(0, 'birds'), patch = inSection(0, 'flowers');
+      check('the birds sit on the grass', flock.birds.every((b) => b.mode === 'sit'));
       check('she gets up and down the steps', (await go(sis, 1500)) && up(sis) < 3);
       check('the birds flew up as she ran past', flock.state.flown > 0 && flock.birds.every((b) => b.mode !== 'sit'));
       check('the flowers bounced', patch.state.bounced > 0, `${patch.state.bounced} times`);
       check('he gets over them too', (await go(bro, 1460)) && up(bro) < 3);
-      const b0 = ball.state.x; await go(bro, 1760); check('the ball rolls away when he runs into it', Math.abs(ball.state.x - b0) > 40, `it moved ${(ball.state.x - b0).toFixed(0)}`);
+      await go(bro, 1760);
       check('both hop the low fence', (await go(sis, 2080)) && (await go(bro, 2030)));
       const fx0 = MV.fx.length; await go(sis, puddle.def.x); check('the puddle splashes', MV.fx.length > fx0 || puddle.state.t < 1);
       await go(bro, log1.x); check('he hops onto the log', near(up(bro), log1.h, 3), `he is ${up(bro).toFixed(0)} up`);
       check('nothing in section 1 needs a hint', !hint.step && game.section === 0);
-      check('the dog has come along, over the steps, the fence and the log', dog.state.x > 2400 && Math.min(Math.abs(dog.state.x - sis.x), Math.abs(dog.state.x - bro.x)) < 200, `dog at ${dog.state.x.toFixed(0)}`);
       check('over the log, into section 2', (await go(sis, 3400)) && (await go(bro, 3480)) && game.section === 1, `section ${game.section + 1}`);
-      check('the dog stays at the end of its stretch', dog.state.x <= dog.def.to + 1, `dog at ${dog.state.x.toFixed(0)}`);
     }
     if (FROM <= 1) { // ================= section 2: plate and gate (teach)
       const g = gate1.def.x;
@@ -205,6 +201,7 @@
     const ends = game.entered.slice(1).concat([game.finished || game.time]);
     SECTIONS.forEach((s, n) => { if (n < FROM) return; const m = moved[n] || { sister: 0, brother: 0 }; log(`time  section ${s.name}: ${(ends[n] - game.entered[n]).toFixed(0)} s   (she walked ${m.sister.toFixed(0)}, he walked ${m.brother.toFixed(0)})`); });
     [1, 2, 4, 5].forEach((n) => { if (n >= FROM) { const m = moved[n] || { sister: 0, brother: 0 }; check(`neither only waits in section ${n + 1}`, m.sister > 200 && m.brother > 200); } });
+    check('no dog and no ball anywhere in the park', !kit.some((o) => o.def.kind === 'dog' || o.def.kind === 'ball') && !KIT.dog && !KIT.ball && typeof drawParkDog === 'undefined');
     check('nothing to collect: no sticker anywhere in the park', !kit.some((o) => o.star || o.def.kind === 'sticker' || o.def.kind === 'star') && typeof stickers === 'undefined' && !KIT_SIG.petted && !KIT_SIG.splashed);
     log(`time  whole park: ${(game.finished || game.time).toFixed(0)} s`);
     log(`frame rate: ${game.fps.toFixed(0)} a second, slowest frame ${game.slow.toFixed(0)} ms, canvas ${cv.width}x${cv.height}`);

@@ -2,7 +2,7 @@
 // Settings for the Park: Level 1, the gentle first level (see PROGRESSION.md). Change a number here and refresh.
 // Positions are in scene units: the screen is always 1080 units tall, and the path runs left to right along x.
 // What runs it: level.js (the level), scenery.js (sky, town, trees, grass and path), things.js (the park's own
-// objects), life.js (everything that reacts: birds, flowers, the cat, the dog, the ducks) and, shared with other
+// objects), life.js (everything that reacts: birds, flowers, the cat, the ducks) and, shared with other
 // worlds, shared/kit.js (boxes, plates, gates), shared/movement.js and shared/physics.js.
 // The park has no art of its own: it borrows from the forest (trees, bushes, flowers, grass, logs, clouds) and from
 // the city (the far skyline, lamps, benches, the park gate).
@@ -32,23 +32,22 @@ const HINT_TIMES = [10, 20, 35];
 
 // ---------- THE SECTIONS, left to right. Level 1 may only use: walking, jumping, small blue plates, gates, one light
 // box, and the lift. Each line in `things` places one object: kinds from shared/kit.js (block, plate, bar),
-// the park's own from things.js (hurdle, log, puddle, ball, parkgate, parkbox, pond, balloon) and the ones that only
-// react from life.js (dog, birds, flowers). x is the place along the path ([from, to] for long
+// the park's own from things.js (hurdle, log, puddle, parkgate, parkbox, pond, balloon) and the ones that only
+// react from life.js (birds, flowers). x is the place along the path ([from, to] for long
 // things), h the height above the path. `view` is the stretch the camera holds still on while both are inside it;
 // `goal` is the picture in the thought bubble. park.html?section=3 starts at section 3.
-// There is nothing to collect in Level 1 (the three stickers were taken out on 2026-11-24; the kit still has them).
+// There is nothing to collect in Level 1 (the three stickers were taken out on 2026-11-24; the kit still has them),
+// and no dog and no ball (saved for a later level in shared/later/).
 // For scale: a jump rises about 226; he is 188 tall and she 222; she reaches 284 up (370 standing on a box), he 232,
 // and 404 from her shoulders. Things can be taken from 8 below, and only with feet on something, not in a jump.
 const SECTIONS = [
   { name: '1 Learn to move', x: [150, 3300], start: [360, 500], things: [
-    // nothing to solve: two small steps up and down, a low fence, a puddle and a log to hop over, a ball to kick
+    // nothing to solve: two small steps up and down, a low fence, a puddle and a log to hop over
     { kind: 'block', x: [1000, 1100], h: 55 }, { kind: 'block', x: [1100, 1290], h: 110 }, { kind: 'block', x: [1290, 1390], h: 55 },
-    { kind: 'ball', x: 1620 },
     { kind: 'hurdle', x: 1900, h: 82 },
     { kind: 'puddle', x: 2260, w: 210 },
     { kind: 'log', x: 2640, h: 84 },
-    // a friendly dog tags along as far as the first gate; birds; flowers that bounce
-    { kind: 'dog', x: 810, to: 3220 },
+    // birds; flowers that bounce
     { kind: 'birds', x: 950, n: 3 }, { kind: 'birds', x: 2450, n: 2 },
     { kind: 'flowers', x: [520, 960], n: 5 }, { kind: 'flowers', x: [1420, 1570], n: 2 }, { kind: 'flowers', x: [2820, 3260], n: 5 },
   ] },

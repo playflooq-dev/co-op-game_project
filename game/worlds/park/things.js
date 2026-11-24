@@ -4,12 +4,12 @@
 //   hurdle    { x, h }               a low wooden fence across the path, to hop over
 //   log       { x, h }               a log lying on the path: hop over it, or stand on it
 //   puddle    { x, w }               nothing happens in a puddle except a splash
-//   ball      { x }                  a ball that rolls and bounces when somebody runs into it
 //   parkgate  { x, by, any, latch }  the kit's gate, drawn as a green iron park gate
 //   parkbox   { x }                  the kit's light box (life.js puts a cat on it)
 //   pond      { x: [from, to] }      a duck pond behind the path, to splash in
 //   balloon   { x, h }               a red balloon caught on a branch; whoever reaches it carries it along
-// Things that only react (birds, flowers, the cat, the dog, the ducks) are in life.js.
+// Things that only react (birds, flowers, the cat, the ducks) are in life.js.
+// The ball and the dog of the first version are saved for a later level, in shared/later/.
 const PARK_GREEN = '#2f6a45', PARK_GREEN_DARK = '#1e4630';
 
 KIT.hurdle = (world, d, ground) => {
@@ -45,30 +45,6 @@ KIT.puddle = (world, d, ground) => {
       c.beginPath(); c.ellipse(x, ground + 16, w / 2, 17, 0, 0, TAU); fs(c, lg(c, x - w / 2, 0, x + w / 2, 0, '#8fc0d6', '#bfe0ee', '#86b8d0'), 'rgba(70,110,130,.5)', 2);
       c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2;
       for (let i = 0; i < 2; i++) { const u = (t * 0.5 + i / 2) % 1; c.globalAlpha = 1 - u; c.beginPath(); c.ellipse(x + (i ? 40 : -46), ground + 16, 10 + u * 32, 2 + u * 6, 0, 0, TAU); c.stroke(); } c.globalAlpha = 1;
-    } };
-};
-
-KIT.ball = (world, d, ground) => {
-  const r = 30, st = { x: d.x, y: ground - r, vx: 0, vy: 0, rot: 0, rest: 0 }, lo = d.x - 420, hi = d.x + 260;
-  return { state: st,
-    after(dt) {
-      for (const p of [MV.sis, MV.bro]) { // a nudge from whoever runs or jumps into it
-        if (p.gone || Math.abs(p.x - st.x) > p.w / 2 + r || st.y + r < p.y - p.h || st.y - r > p.y) continue;
-        const push = Math.sign(st.x - p.x) || p.dir;
-        if (st.rest <= 0 && (Math.abs(p.vx) > 40 || !p.grounded)) { st.vx = push * (220 + Math.abs(p.vx) * 0.9); st.vy = -360 - Math.random() * 120; st.rest = 0.25; snd('land'); }
-      }
-      st.rest = Math.max(0, st.rest - dt);
-      st.vy += 1900 * dt; st.x += st.vx * dt; st.y += st.vy * dt; st.rot += st.vx * dt / r;
-      if (st.y > ground - r) { st.y = ground - r; if (st.vy > 120) { st.vy *= -0.55; puff(st.x, ground, 2); } else st.vy = 0; st.vx *= 1 - Math.min(1, dt * 1.6); }
-      if (st.x < lo) { st.x = lo; st.vx = Math.abs(st.vx) * 0.6; } if (st.x > hi) { st.x = hi; st.vx = -Math.abs(st.vx) * 0.6; }
-    },
-    draw(c) {
-      soft(c, st.x, ground + 4, r * (1 - (ground - r - st.y) / 400), 6, '#2a1a0e', 0.28);
-      c.save(); c.translate(st.x, st.y); c.rotate(st.rot);
-      c.beginPath(); circ(c, 0, 0, r); fs(c, '#fffbf0', INK, 2.5); c.save(); c.clip();
-      for (let i = 0; i < 6; i += 2) { c.beginPath(); c.moveTo(0, 0); c.arc(0, 0, r + 2, i * TAU / 6, (i + 1) * TAU / 6); c.closePath(); c.fillStyle = ['#d9534a', '#f2c94e', '#4b86b8'][i / 2]; c.fill(); }
-      c.restore(); c.beginPath(); circ(c, 0, 0, r); c.strokeStyle = INK; c.lineWidth = 2.5; c.stroke(); ell(c, 0, 0, 6, 6, '#fffbf0');
-      c.restore(); ell(c, st.x - 9, st.y - 11, 7, 5, '#fff', 0.5);
     } };
 };
 
