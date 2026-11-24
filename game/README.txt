@@ -8,10 +8,13 @@ Use an up-to-date Chrome, Edge, Firefox or Safari.
 
 THE PAGES
 index.html    Starts the game: it passes straight on to park.html.
-park.html     LEVEL 1, "The Park" (since 2026-11-23). A gentle first level of about five minutes for
-              parents playing with children of about 5 to 10, or two children together: first only
-              walking and jumping, then four very small puzzles. Nothing in it needs reading.
-              It is waiting for feedback and is not approved yet. Its end card leads on to the city.
+park.html     LEVEL 1, "The Park" (since 2026-11-23; made plainer on 2026-11-24). A gentle first level
+              of about five minutes for parents playing with children of about 5 to 10, or two
+              children together. It is made for somebody who has never seen the game: first only
+              learning to walk and jump, with the keys shown as pictures, then four very small
+              puzzles. Nothing in it needs reading and there is nothing to collect.
+              It is waiting for feedback on difficulty and is not approved yet.
+              Its end card leads on to the city.
 city.html     The city. Since 2026-11-21 it is a TEST LEVEL ("the lab"): eight stations that each
               try one idea with new movement (jumping, carrying, the lift and the toss). It was found
               far too hard as a first level; it stays as the place where ideas are tried.
@@ -32,25 +35,40 @@ LEVEL 1: THE PARK
 CONTROLS (two players on one keyboard, or one player with both hands)
 Sister:   A / D walk     W jump     S grab
 Brother:  Left / Right walk     Up jump     Down grab
-The keys are shown as pictures at the bottom of the screen. M switches the sound off and on.
+M switches the sound off and on.
+
+Nobody has to know these beforehand. The game shows them, one move at a time:
+- At the start each sibling has their own two walking keys next to them, as big pictures in their
+  colour (green for her, blue for him). A picture fades once that player has walked that way.
+- Then the jump key shows over the head, and fades with the first jump. If somebody later stands
+  stuck in front of a step, it comes back for a moment.
+- A player who stands still for four seconds with a picture showing sees a faint, glittering ghost
+  of their own sibling do the move.
+- The grab key is shown only where it is first needed: over whoever stands at the box (section 3),
+  and once more at the plate, for putting the box down. A player who has not used it by then is
+  shown it at the pond or under the balloon.
+- The row of keys at the bottom of the screen starts empty and fills up as each move is learned.
+These pictures and timings are in worlds/park/learn.js and LEARN_SET in worlds/park/settings.js.
 
 "Grab" does whatever fits where they stand:
 - next to the box: pick it up. Again: put it down in front.
-- next to something to use or to play with (the balloon, the pond, the dog): use it.
+- next to something to use (the balloon, the pond): use it.
 - next to each other, with nothing else in reach: she lifts him onto her shoulders.
-  Grab again, or jump: he gets down. (There is no toss in Level 1.)
+  Grab again, or jump: he gets down. (There is no toss in Level 1, and no lift in section 1.)
 - both at the same moment: a high five.
 A little sign over a head shows what grab would do: a hand (pick up or use), and from the balloon
 tree on, two hands (the lift).
 
 On a tablet or phone, hold it sideways. Each player gets four buttons in their bottom corner:
-the sister's on the left, the brother's on the right.
+the sister's on the left, the brother's on the right. There the button to press pulses, the picture
+next to the sibling is a small copy of that button, and buttons for later moves are faint at first.
 
 Nobody can get hurt or lose. There is nothing to fall into and nothing to fall off.
 
 THE SECTIONS
-1  Learn to move. No puzzle: two small steps, a low fence, a puddle and a log to hop over,
-   a ball to kick. A dog comes along as far as the first gate.
+1  Learn to move. No puzzle, nobody else about, nothing to collect: a long flat path, one very low
+   step, three low steps up and down, one low log. Each needs a jump, so nobody reaches the first
+   puzzle without having walked and jumped. If one player is still practising, the other can wait.
 2  Plate and gate. The gate is open while somebody stands on a blue plate. One holds it open,
    the other walks through and holds the plate on the far side, and the first one follows.
 3  Box on plate. This gate has only one plate, but there is a box behind it. One holds the plate,
@@ -60,8 +78,8 @@ THE SECTIONS
    it, and the little gate opens for whoever carries a balloon.
 6  The way out. Two plates side by side: both stand on one at the same time, the gate opens for
    good, confetti, a high five. Walk to the big park gate together to finish.
-The card at the end shows the stickers found and the time. Jump goes on to the next level
-(for now, the city lab).
+The card at the end shows a high five and the time. Jump goes on to the next level
+(for now, the city lab, which is much harder).
 
 STUCK?
 A thought bubble over the sister shows a picture of what the section is about (a gate, the
@@ -70,16 +88,18 @@ sparkle (after about 10 seconds), then an arrow points at it (20 seconds), then 
 ghost of a sibling shows where to stand and what to do (35 seconds). The ghost is green for her
 and blue for him. These times are HINT_TIMES in worlds/park/settings.js.
 
-STICKERS
-Three, none of them needed: an apple for standing on the log, a paw for petting the dog, a drop
-for splashing at the pond.
+THINGS THAT REACT (none is needed, and none is in section 1)
+Birds fly up when somebody jumps or runs close, and come back. Some flowers and grass bounce when
+walked through. A cat sits on the box; it hops off when the box is picked up and goes back when it
+is left alone. The ducks swim away from a splash. The siblings cheer when a gate opens, he giggles
+when lifted, she looks proud when he has the balloon, and they wave to each other when apart and
+standing still.
 
-THINGS THAT REACT (none is needed)
-Birds fly up when somebody jumps or runs close, and come back. Flowers and grass bounce when
-walked through. The puddle splashes. The ball rolls and bounces. The dog hops, yips and wags.
-A cat sits on the box; it hops off when the box is picked up and goes back when it is left alone.
-The ducks swim away from a splash. The siblings cheer when a gate opens, he giggles when lifted,
-she looks proud when he has the balloon, and they wave to each other when apart and standing still.
+TAKEN OUT ON 2026-11-24
+The three stickers (they confused more than they added; they come back once the base game is set),
+and the dog and the ball (fun, but too much while learning to move; their code is saved for a
+later level in shared/later/). worlds/park/REVIEW.md goes through everything else in the level
+that could distract a first-time player, with a recommendation for each.
 
 FOR TESTING (add to the address; index.html passes these on)
 park.html?section=3    starts at section 3 (1 to 6)
@@ -204,9 +224,10 @@ Browsers only allow sound after the first key press or tap.
 WHAT IS IN THE FOLDER
 index.html, park.html, city.html, house.html, forest.html   the pages; open index.html to start
 worlds/        one folder per world (park, house, city, forest): its art, its settings and its
-               code. worlds/README.md explains how to change or replace any of it, and how to
+               code. worlds/park/REVIEW.md is the first-time player review of Level 1. worlds/README.md explains how to change or replace any of it, and how to
                place objects in the park and the city. worlds/city/LAB_PLAN.md is the story of
                the city lab.
 shared/        what more than one world uses: the two characters, the sounds, and for worlds with
-               jumping the physics, the movement and the object kit
+               jumping the physics, the movement and the object kit. shared/later/ holds things
+               saved for a later level (the dog, the ball); no page loads them.
 tools/         developer tools used to create the artwork and test the game; not needed to play
