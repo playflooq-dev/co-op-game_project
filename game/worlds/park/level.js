@@ -33,7 +33,6 @@ setupMovement(world, players, {
 });
 MV.bottom = VH + 260;
 const pads = makeTouchPads(QS.get('touch'));
-const stickers = kit.filter((o) => o.star), stickersGot = () => stickers.filter((o) => o.star.got).length;
 const balloon = kitIn(4, 'balloon'), exitGate = kitIn(5, 'parkgate');
 if (FROM > 4) balloon.give(bro); // starting after the balloon tree: he already has it
 
@@ -172,21 +171,16 @@ function drawGoalBubble(c, t) { // the picture bubble: what this part is about. 
   c.save(); ell(c, x - 14, y + 62, 7, 7, '#fffbf0', a); ell(c, x - 4, y + 46, 10, 10, '#fffbf0', a); c.globalAlpha = a;
   c.beginPath(); c.ellipse(x, y, 54, 42, 0, 0, TAU); fs(c, '#fffbf0', '#8a6a3a', 3); drawIcon(c, icon, x, y, 1.9); c.restore();
 }
-function drawHud(c, top) { // pictures only: the stickers
-  const x = camX + 22; if (!stickers.length) return;
-  c.save(); rrect(c, x, top + 20, 26 + stickers.length * 46, 54, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
-  stickers.forEach((o, i) => { c.globalAlpha = o.star.got ? 1 : 0.2; const pop = o.star.got ? 1 + Math.max(0, 0.5 - o.star.t) * 0.9 : 1; drawIcon(c, o.star.icon, x + 36 + i * 46, top + 48, 1.15 * pop); });
-  c.restore();
-}
-function drawEnd(c, t, top) { // the end card: pictures and numbers only
+function drawEnd(c, t, top) { // the end card, in pictures: a high five, the time on a clock, and an arrow (jump goes on)
   const a = Math.min(1, game.endT); c.fillStyle = `rgba(28,18,10,${a * 0.75})`; c.fillRect(camX - 10, 0, VW + 20, VH + top + 40);
-  c.save(); c.globalAlpha = a; const w = 560, h = 330, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40; parchment(c, x, y, w, h);
-  stickers.forEach((o, i) => { c.globalAlpha = a * (o.star.got ? 1 : 0.2); drawIcon(c, o.star.icon, x + w / 2 - (stickers.length - 1) * 38 + i * 76, y + 84, 2.1); }); c.globalAlpha = a;
+  c.save(); c.globalAlpha = a; const w = 460, h = 330, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40, cx = x + w / 2; parchment(c, x, y, w, h);
+  const clap = Math.pow(Math.abs(Math.sin(t * 2.6)), 6) * 10; // two hands meeting: hers with a green cuff, his with a blue one
+  for (const [side, col] of [[-1, sis.col], [1, bro.col]]) { c.save(); c.translate(cx + side * (40 - clap), y + 96); c.scale(side, 1); rrect(c, -22, 22, 44, 20, 6); fs(c, col, INK, 3); drawIcon(c, 'hand', 0, 0, 2.3); c.restore(); }
+  for (let k = 0; k < 5; k++) star(c, cx + Math.cos(-Math.PI / 2 + (k - 2) * 0.62) * 118, y + 112 + Math.sin(-Math.PI / 2 + (k - 2) * 0.62) * 84, 12 + Math.sin(t * 5 + k * 1.7) * 5, t + k, a * 0.95);
   const secs = Math.floor(game.finished || game.time), time = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
-  c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
-  drawIcon(c, 'star', x + 96, y + 178, 1.7); c.fillStyle = INK; c.fillText(stickersGot() + ' / ' + stickers.length, x + 136, y + 180);
-  c.beginPath(); circ(c, x + 330, y + 178, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 330, y + 162); c.lineTo(x + 330, y + 178); c.lineTo(x + 342, y + 185); c.stroke(); c.fillStyle = INK; c.fillText(time, x + 370, y + 180);
-  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', x + w / 2, y + h - 56, 1.6, '#6d9b45'); } // "press jump to go on to the next level"
+  c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; const tw = c.measureText(time).width, lx = cx - (52 + 14 + tw) / 2 + 26;
+  c.beginPath(); circ(c, lx, y + 200, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(lx, y + 184); c.lineTo(lx, y + 200); c.lineTo(lx + 12, y + 207); c.stroke(); c.fillStyle = INK; c.fillText(time, lx + 40, y + 202);
+  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', cx, y + h - 52, 1.6, '#6d9b45'); } // "press jump to go on to the next level"
   c.restore(); c.textBaseline = 'alphabetic';
 }
 function drawDebug(c, t, top) {
@@ -200,7 +194,7 @@ function drawDebug(c, t, top) {
   const tag = (s, x, y, col = '#fff6dc') => { c.fillStyle = 'rgba(20,12,6,.78)'; c.fillRect(x, y, c.measureText(s).width + 16, 25); c.fillStyle = col; c.fillText(s, x + 8, y + 3); };
   SECTIONS.forEach((s) => { c.strokeStyle = 'rgba(120,200,255,.8)'; c.setLineDash([14, 10]); c.beginPath(); c.moveTo(s.x[0], 0); c.lineTo(s.x[0], VH); c.stroke(); c.setLineDash([]); tag('section ' + s.name, s.x[0] + 8, top + 150, '#bfe2ff'); });
   for (const id in KIT_AT) tag(id + (KIT_SIG[id] ? ' ON' : ' off'), KIT_AT[id].x - 30, FEET + 66, KIT_SIG[id] ? '#ffe27a' : '#b9b0a4');
-  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   section ${game.section + 1}   solved ${Object.keys(game.solved).map((n) => +n + 1).join(' ') || '-'}   stickers ${stickersGot()}/${stickers.length}   time ${game.time.toFixed(0)} s   hint ${hint.step ? hint.t.toFixed(0) + ' s' : '-'}`,
+  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   section ${game.section + 1}   solved ${Object.keys(game.solved).map((n) => +n + 1).join(' ') || '-'}   time ${game.time.toFixed(0)} s   hint ${hint.step ? hint.t.toFixed(0) + ' s' : '-'}`,
     ...players.map((p) => `${p.who.padEnd(7)} x ${p.x.toFixed(0).padStart(5)}  y ${(FEET - p.y).toFixed(0).padStart(4)} up  vx ${p.vx.toFixed(0).padStart(5)} vy ${p.vy.toFixed(0).padStart(5)}  ${p.gone ? 'gone' : p.held ? 'held' : p.grounded ? 'ground' : 'air'}${p.carry ? ' carry' : ''}  on ${p.on ? (p.on.isBody ? 'box' : p.on.isLedge ? 'ledge' : 'solid') : '-'}`),
     `duo ${MV.duo.state || '-'}   jump ${(MOVE.jumpHeight * broHeight()).toFixed(0)} units in ${MOVE.jumpTime}s   coyote ${MOVE.coyote}  buffer ${MOVE.buffer}`];
   lines.forEach((s, i) => tag(s, camX + 250, top + 22 + i * 26));
@@ -232,7 +226,7 @@ function frame(now) {
   if (!game.done && game.exitT < 0) drawHintMarks(c, t);
   drawMoveFx(c); drawSparks(c);
   drawParkLight(c);
-  if (ZOOM <= 1) { if (!game.done) { drawSigns(c, t); drawGoalBubble(c, t); drawHud(c, top); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
+  if (ZOOM <= 1) { if (!game.done) { drawSigns(c, t); drawGoalBubble(c, t); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
   requestAnimationFrame(frame);
 }
 

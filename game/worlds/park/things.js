@@ -116,7 +116,7 @@ KIT.pond = (world, d, ground) => {
   const [a, b] = d.x, cx = (a + b) / 2, cy = ground - 66, rx = (b - a) / 2, st = { splash: 0, at: cx, n: 0 };
   const thing = { get x() { return clamp(MV.sis.x, a + 60, b - 60); }, y: ground - 60,
     canUse: (p) => p.grounded && Math.abs(p.y - ground) < 6 && p.x > a + 30 && p.x < b - 30,
-    use(p) { st.splash = 0.6; st.at = p.x; st.n++; p.reachT = 0.35; snd('splash'); puff(p.x, cy + 4, 12, '#d6ecf6', 2.4); if (!KIT_SIG.splashed) KIT_SIG.splashed = [p.x, cy - 90]; const o = partner(p); if (!o.gone && Math.abs(o.x - p.x) < 260) { o.cheer = 0.6; o.sqv = -3; } } };
+    use(p) { st.splash = 0.6; st.at = p.x; st.n++; p.reachT = 0.35; snd('splash'); puff(p.x, cy + 4, 12, '#d6ecf6', 2.4); const o = partner(p); if (!o.gone && Math.abs(o.x - p.x) < 260) { o.cheer = 0.6; o.sqv = -3; } } };
   return { state: st, thing, pond: { a, b, cx, cy, rx },
     after(dt) { st.splash = Math.max(0, st.splash - dt); },
     draw(c, t) {

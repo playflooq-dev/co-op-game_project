@@ -100,7 +100,7 @@ KIT.dog = (world, d, ground) => {
   const yip = (hop = 0.35) => { st.bark = 1.6; st.hop = hop; snd('bark'); };
   const thing = { get x() { return st.x; }, get y() { return st.y - 40; },
     canUse: (p) => p.grounded && !p.carry && Math.abs(p.x - st.x) < 130 && Math.abs(p.y - st.y) < 50,
-    use(p) { st.mode = 'follow'; st.pats++; st.happy = 1.6; yip(0.5); p.reachT = 0.35; p.dir = Math.sign(st.x - p.x) || p.dir; burst(st.x, st.y - 70, 8); if (!KIT_SIG.petted) KIT_SIG.petted = [st.x, st.y - 100]; } };
+    use(p) { st.mode = 'follow'; st.pats++; st.happy = 1.6; yip(0.5); p.reachT = 0.35; p.dir = Math.sign(st.x - p.x) || p.dir; burst(st.x, st.y - 70, 8); } };
   return { state: st, thing,
     after(dt) {
       st.t += dt; st.bark = Math.max(0, st.bark - dt); st.hop = Math.max(0, st.hop - dt); st.happy = Math.max(0, st.happy - dt);
