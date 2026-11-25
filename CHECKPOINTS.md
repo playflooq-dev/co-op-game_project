@@ -56,6 +56,7 @@ table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `b19e950` | 2026-11-25 | `CLAUDE.md`: the standing rules for every work session (read the documents first, a branch per task, keep the documents true, merge and tag when a version is approved, never rewrite history). |
 | `f037436` | 2026-11-25 | Merge of `level-3/canal` into `main`: the canal (Level 3), the chapter map and save, the fixes and the updated documents. The checkpoint `checkpoint-2026-11-25-chapter-1-approved` is on this commit. |
 | `0a4abf6` | 2026-11-25 | Merge of `level-1/plain` into `main`: the plain park (Level 1), and the city without stickers. |
 | `ab7a86e` | 2026-11-25 | Merge of `level-1/gentle` into `main`: the first version of the park, and the progression rules. |
