@@ -4,7 +4,8 @@ Each place in the game is a **world** with its own folder. A world can be change
 
 | Folder | Chapter | Page |
 |---|---|---|
-| `house/` | Chapter One, "Home Alone" | `index.html` |
+| `park/` | Level 1, "The Park": the gentle first level (since 2026-11-23; see "The park" below) | `park.html` (`index.html` opens it) |
+| `house/` | "Home Alone" | `house.html` (it was `index.html` until 2026-11-23) |
 | `city/` | The city: since 2026-11-21 a test level, "the lab" (see "The city" below) | `city.html` |
 | `forest/` | The Forest Trail (a later chapter will be built here) | `forest.html` |
 
@@ -15,8 +16,9 @@ Every world folder has the same parts:
 | `assets/` | The world's pictures, one PNG per item, in sub-folders. |
 | `assets/manifest.js` | The list of those pictures: size and ground point of each one. |
 | `settings.js` | The numbers you may want to change: where things are, how fast things move, timings. Change a number, refresh, and see it. |
-| `level.js` (house), `scene.js` (forest), `lab.js` (city) | The code that runs the world. |
-| `street.js`, `things.js` (city only) | The city's scenery, and the city's own objects: see "The city" below. |
+| `level.js` (house, park), `scene.js` (forest), `lab.js` (city) | The code that runs the world. |
+| `street.js`, `things.js` (city) | The city's scenery, and the city's own objects: see "The city" below. |
+| `scenery.js`, `things.js`, `life.js` (park) | The park's scenery, its own objects, and everything that only reacts: see "The park" below. The park has no `assets/` folder: all its pictures are borrowed. |
 | `generate.js` | The drawing code that painted the PNGs. The game does not use it; see "Repainting" below. |
 
 What worlds share is in `../shared/`:
@@ -30,7 +32,7 @@ What worlds share is in `../shared/`:
 - `shared/sounds/`: recorded sound effects (Kenney, CC0; see `CREDITS.txt` there). The `SAMPLES` list in
   `shared/sound.js` says which files each sound uses and how loud; `shared/movement.js` adds the ones for jumping
   and carrying. Sounds without files are made by code.
-- Only for worlds with jumping (today: the city). The house and the forest do not load these.
+- Only for worlds with jumping (today: the park and the city). The house and the forest do not load these.
   - `shared/physics.js`: gravity, floors and walls, things to stand on, weight.
   - `shared/movement.js`: how the siblings walk, jump, carry, lift and toss. Every number that shapes the feel is in
     `MOVE` at the top of it.
@@ -45,6 +47,7 @@ says where each came from.
 | Where | Piece | File |
 |---|---|---|
 | The house | `home` | `house/assets/music/apple-cider.mp3` ("Apple Cider") |
+| The park | `park` | borrows `city/assets/music/quaint-town.mp3` ("Quaint Town") |
 | City streets | `street` | `city/assets/music/quaint-town.mp3` ("Quaint Town") |
 | (was the metro; not used by the lab) | `under` | `city/assets/music/hot-springs-town.mp3` ("Hot Springs Town") |
 | Old Town and the Old Bridge | `evening` | `city/assets/music/magic-town.mp3` ("Magic Town") |
@@ -67,6 +70,9 @@ A world can use another world's pictures without copying them. Each page lists t
 So if you replace a forest tree, the street trees in the city change too. To give the city its own trees instead, add
 them to `worlds/city/assets/` and take `trees` off that list.
 
+The park goes furthest: it has no pictures of its own. `park.html` borrows trees, bushes, flowers, grass, rocks, logs
+and clouds from the forest, and the far skyline, the lamp, the bench and the park gate from the city.
+
 ## Replacing a picture
 
 1. Make your new picture as a **PNG with a transparent background**.
@@ -82,6 +88,45 @@ picture's top-left corner. All four are in scene units, where the whole screen i
 
 To add more variety, add another file to a group in `manifest.js` (for example a fifth car in `car`). Where the game
 picks between pictures of a group, it will start using it.
+
+## The park (`park/`)
+
+Level 1 since 2026-11-23: a gentle first level built to the rules in [PROGRESSION.md](../../PROGRESSION.md). It is
+waiting for feedback and is not approved. It may only use walking, jumping, small blue plates, gates, one light box
+and the lift.
+
+| File | What it holds |
+|---|---|
+| `settings.js` | The six `SECTIONS` (every object, one line each), the trees, lamps and benches, how the jump feels in this level (`PARK_MOVE`), and when hints appear (`HINT_TIMES`: 10, 20 and 35 seconds). |
+| `level.js` | Runs the level: builds the sections, the camera, when a puzzle counts as solved, the hints (`HINTS`), the end card. |
+| `scenery.js` | Draws what cannot be touched: sky, the town far away, hills, trees, grass, the path, the park gate at the end. |
+| `things.js` | The park's own objects (table below). |
+| `life.js` | Everything that only reacts: birds, bouncing flowers, the dog, the cat on the box, the ducks, and what the siblings do themselves (cheer, giggle, the proud look, the wave). Taking a line out of `settings.js` removes that animal; nothing depends on them. |
+
+Objects are placed exactly as in the city (see "Placing objects" below): one line in a section's `things` list.
+`x` is the place along the path, `h` the height above it. Besides the kit's `block`, `plate`, `bar` and `sticker`,
+the park has:
+
+| Kind | Settings | What it is |
+|---|---|---|
+| `hurdle` | `x, h` | A low white fence across the path, to hop over. |
+| `log` | `x, h` | A log lying on the path: hop over it or stand on it. |
+| `puddle` | `x, w` | Splashes. Nothing else happens. |
+| `ball` | `x` | Rolls and bounces when somebody runs into it. |
+| `parkgate` | `x, by: [ids], any, latch` | The kit's gate, drawn as a green iron park gate. `any: true` opens for any one of its plates (the kit's gate needs all of them). `by: ['balloon']` opens for whoever carries the balloon. |
+| `parkbox` | `x` | The kit's light box, with a cat on it; it squashes and puffs dust when it lands. |
+| `pond` | `x: [from, to]` | A duck pond behind the path. Grab makes a splash; the ducks swim away from it. |
+| `balloon` | `x, h` | A balloon caught on a branch. Whoever reaches it carries it along. At `h: 392` only he can reach it, from her shoulders. |
+| `birds` | `x, n, h` | A few birds that fly up when somebody jumps or runs close, and come back. |
+| `flowers` | `x: [from, to], n` | Flowers and grass that bounce when walked through. |
+| `dog` | `x, to` | A dog that tags along from `x` as far as `to`, and can be petted. |
+
+Two rules keep a puzzle from being finished by one sibling alone, and `tools/playtest-park.html?solo=1` checks them:
+a plate is at least 300 from its gate (nobody can step off and dash through), and a `bar` keeps the box in its own
+section. Things can only be taken with feet on something, never in a jump.
+
+How the moves feel in the park is `PARK_MOVE` in `park/settings.js`: a slightly higher jump than the lab, more
+forgiveness at edges and before landing, and no toss. `park.html?tune=1` has sliders.
 
 ## The city (`city/`)
 
@@ -196,10 +241,14 @@ at `http://127.0.0.1:8780/`.
   to set the scene up first.
 - `tools/playtest-house.html?skip=1` plays the house from start to finish with simulated key presses and reports
   PLAY PASSED or PLAY FAILED.
+- `tools/playtest-park.html` plays Level 1 with both siblings (about a minute and a half) and reports the time each
+  section took; `?section=4` starts it at section 4. `tools/playtest-park.html?solo=1` lets one sibling try every puzzle
+  alone and passes when no short cut works. Run both after changing a section. `tools/snap-park.html?section=...`
+  sends a picture of the park to the server log.
 - `tools/playtest-city.html` does the same for the city (all eight stations, about three minutes) and reports the time
   each station took. `tools/playtest-city.html?solo=1` is the other test: it tries the ways one sibling might finish a
   station alone, and passes when none of them works. Run both after changing a station.
 - `tools/check-characters.html` reports a fingerprint of the two characters as the house and the forest draw them. It
   must stay the same after a change to `shared/characters/` or `shared/stage.js`.
 - The pages take options for jumping ahead: the house has `?stage=cupboard`, `bulb`, `lock`, `door`, `open` and `end`;
-  the city has `?station=0` to `7`.
+  the city has `?station=0` to `7`; the park has `?section=1` to `6`.

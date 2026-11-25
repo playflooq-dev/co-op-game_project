@@ -14,7 +14,8 @@
 // The kinds:
 //   plate   { x, id, big }            a pad in the pavement. Small and blue: anybody or any box presses it.
 //                                     big: true is big and green: only the sister or a heavy crate presses it.
-//   gate    { x, h, by: [ids], latch } a shutter that is open only while everything in `by` is on (latch: stays open once up)
+//   gate    { x, h, by: [ids], latch, any } a shutter that is open only while everything in `by` is on (latch: stays
+//                                     open once up; any: true opens while any one of them is on)
 //   lever   { x, h, id, hold, who, once, base }   hold: true is on only while the grab key is held; otherwise each use
 //                                     flips it (once: true stays on for good)
 //   bar     { x, h }                  a height bar: people walk under, a box carried on the head is knocked off.
@@ -284,7 +285,7 @@ KIT.gate = (world, d, ground) => {
   const s = world.solid(x0, top, x1, ground), st = { open: 0, latched: false, moving: false };
   return { state: st, solid: s,
     update(dt) {
-      const want = st.latched || kitOn(by), before = st.open;
+      const want = st.latched || (d.any ? by.some((id) => KIT_SIG[id]) : kitOn(by)), before = st.open; // any: true opens for any one of them
       st.open = clamp(st.open + (want ? dt / (d.opens || 0.6) : -dt / (d.closes || 1)), 0, 1);
       if (d.latch && st.open >= 1 && !st.latched) { st.latched = true; snd('good'); burst(d.x, top + 60, 10); }
       const moving = st.open !== before; if (moving && !st.moving) snd('rattle'); if (!moving && st.moving && st.open === 0) snd('clunk'); st.moving = moving;

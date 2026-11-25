@@ -28,7 +28,8 @@ https://forest-trail-d56.pages.dev. (The folder was called `forest-scene/` until
 
 ## Story and levels
 
-Chapter One, "Home Alone", is [game/index.html](game/index.html). Chapter Two, "Across the City", was [game/city.html](game/city.html)
+Chapter One, "Home Alone", is [game/house.html](game/house.html) (it was `game/index.html` until 2026-11-23, when that
+page became the door to the proposed Level 1 below). Chapter Two, "Across the City", was [game/city.html](game/city.html)
 until 2026-11-21; that page is now the test level described under "Proposed" below, and the level decided here is kept
 at the git tag `checkpoint-2026-11-20-city-music`.
 
@@ -63,6 +64,8 @@ Chapter Two is the first chapter built this way.
 for a new audience: parents playing with children of about 5 to 10, two children together, or one player with both
 characters. The ideas below are being tried there and will be approved, changed or dropped after playtests with
 children. What we want to learn is in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "The city lab".
+Proposals G and H were added on 2026-11-23 and are tried in the park, the gentle Level 1
+([game/park.html](game/park.html)); what to watch for there is in OPEN_QUESTIONS.md, "Level 1 (the park)".
 
 | | Proposal | Notes |
 |---|---|---|
@@ -72,6 +75,8 @@ children. What we want to learn is in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "T
 | D | **A colour language** | Green means the sister's job (heavy or high). Blue means the brother's job (light or small). Plain wood is for either. |
 | E | **Pictures instead of words** | Nothing needs reading. The goal is a picture in a thought bubble. Hints are pictures: the right thing sparkles after about 20 seconds, an arrow points at it after 40, a faint ghost of the right sibling shows the move after 60. Signs over heads are a hand, two hands or an arrow. The end card is pictures and numbers. |
 | F | **Stations** | A chapter is a row of stations, each one idea on one screen, one to two minutes, needing both siblings, with a way of checking by script that one sibling cannot finish it alone. |
+| G | **A slow, soft curve** (proposed 2026-11-23) | The rules in [PROGRESSION.md](PROGRESSION.md), written after the client found the lab far too difficult as a first level: the first one to two minutes are moving only; one new idea per level; every idea is met three times (teach, practise, twist); a calm moment after each harder puzzle; levels grow from about 5 to about 15 minutes; a new level starts easier than the last one ended; every level ends with both at once and a high five. Easy parts are kept interesting by things that react, not by harder puzzles. The planned levels are listed there too. |
+| H | **Level 1 is the park** (proposed 2026-11-23) | [game/park.html](game/park.html), which [game/index.html](game/index.html) now opens: learn to move, plate and gate, box on plate, the pond, the balloon and the lift, the way out together. About five minutes. Only walking, jumping, small plates, gates, one light box and the lift; no toss. A slightly more forgiving jump than the lab and earlier hints (10, 20, 35 seconds). It borrows all its art from the forest and the city. Waiting for feedback: see [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "Level 1 (the park)". |
 
 The proposed abilities:
 
@@ -92,6 +97,10 @@ The proposed abilities:
 - **17** (no jumping; she lifts him instead): jumping comes in. The lift stays, and the toss is added.
 - **19** (the goal says what to do in words, and hints are sentences on the treasure map): pictures replace both.
 
+- **11 to 13** again, if G and H are approved: the game would start in the park, not in the house, and the story's
+  beginning (home alone, the map on the kitchen table) would need a new place. The house is kept, unchanged, at
+  [game/house.html](game/house.html).
+
 Decisions 5 (split information) and 21 to 22 (the map pictures as a code that changes every game) are also not used
 in the lab: with children of 5 to 10 on one screen there are no codes. Whether they return for older players is open.
 
@@ -109,3 +118,4 @@ in the lab: with children of 5 to 10 on one screen there are no codes. Whether t
 | 2026-11-18 | Level 2 is a side-scrolling city level of 15 to 20 minutes, and every world is kept in its own folder (decisions 14 and 15). |
 | 2026-11-19 | Client feedback on Level 2: the look is right, but it was no fun to play. Researched how similar games handle puzzles, agreed the play rules in decisions 16 to 24, and rebuilt the city level on them. |
 | 2026-11-21 | New audience: parents with children of about 5 to 10, and two children together. The city became a test level ("the lab") on the branch `lab/city-v2`. Nothing was approved; the ideas being tried are listed under "Proposed (testing in the city lab)". |
+| 2026-11-23 | Client feedback on the lab: far too difficult as a first level; what matters most is a slow, soft curve. Proposed, not approved: the progression rules in `PROGRESSION.md` and a gentle Level 1, the park, on the branch `level-1/gentle` (proposals G and H). The lab stays as a test level. |

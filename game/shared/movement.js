@@ -53,6 +53,7 @@ const MOVE = {
   liftWalk: 0.6,     // share of her speed while she carries him
   tossRise: 1.75,    // how far a toss sends him up from her shoulders, in brother-heights
   tossForward: 230,  // and how fast forwards
+  toss: true,        // false: no toss in this world yet. Grab while he is up there just sets him down.
   hopOff: 430,       // the little hop when he gets down by himself (take-off speed)
   climbSpeed: 230,   // up a ladder, units a second (hold the jump key)
   // ---- after a fall
@@ -171,7 +172,7 @@ function moveSiblings(dt, frozen) {
 function grabAction(p) {
   const { sis, bro, duo, hooks } = MV;
   if (p.carry) { putDown(p); return; }
-  if (duo.state === 'on') { const up = p === bro && hooks.thing ? hooks.thing(p) : null; if (up) { up.use(p); if (up.hold) p.holding = up; } else toss(); return; }
+  if (duo.state === 'on') { const up = p === bro && hooks.thing ? hooks.thing(p) : null; if (up) { up.use(p); if (up.hold) p.holding = up; } else if (MOVE.toss) toss(); else hopOff(); return; }
   if (duo.state) return;
   const th = hooks.thing ? hooks.thing(p) : null;
   if (th) { th.use(p); if (th.hold) p.holding = th; return; }

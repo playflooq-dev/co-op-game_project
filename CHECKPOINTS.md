@@ -7,6 +7,7 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 
 | Checkpoint (git tag) | Date | What it holds |
 |---|---|---|
+| `checkpoint-2026-11-level-1-gentle` | 2026-11-23 | Level 1, the park, on the branch `level-1/gentle`: a gentle first level of about five minutes (learn to move, four very small puzzles, a calm moment, a finale together), the progression rules in `PROGRESSION.md`, the reactions (dog, cat, birds, ducks, flowers), and its two scripted tests. `game/index.html` opens the park; the house is `game/house.html`. The city lab and the forest are as at the checkpoint below. Nothing in it is approved yet. Not on the live site. |
 | `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city lab, on the branch `lab/city-v2`: the city as a test level of eight stations for children of 5 to 10, with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. Nothing in it is approved yet. The house and the forest are as at the checkpoint below. Not on the live site. |
 | `checkpoint-2026-11-20-city-music` | 2026-11-20 | Chapter Two rebuilt to be fun (new puzzles, Old Town, hints, stickers), recorded CC0 music and sound effects in every chapter, and the puzzle-design research. Same as the live site at https://forest-trail-d56.pages.dev on 2026-11-20. |
 | `checkpoint-2026-11-18-forest-trail` | 2026-11-18 | The approved Forest Trail scene: the art style and the two characters. |
@@ -16,16 +17,24 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 Ask Claude, or run these in `co-op-game_project`:
 
 - See a checkpoint without changing anything: `git switch --detach checkpoint-2026-11-20-city-music` (go back with
-  `git switch lab/city-v2`, or `git switch level-2/city` for the branch without the lab).
+  `git switch level-1/gentle` for the newest work, `git switch lab/city-v2` for the lab without the park, or
+  `git switch level-2/city` for the branch without either).
 - Start new work from a checkpoint: `git switch -c my-new-branch checkpoint-2026-11-20-city-music`.
 
 ## Every commit so far
 
 Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is rebuilt as a test level (the plan is in
-`game/worlds/city/LAB_PLAN.md`). The small commits that only add a row to this table are not listed.
+`game/worlds/city/LAB_PLAN.md`). Commits from `23e48ce` on are on the branch `level-1/gentle`, which starts from the
+lab and adds a gentle first level, the park (the rules it follows are in `PROGRESSION.md`). The small commits that
+only add a row to this table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `387936d` | 2026-11-23 | Level 1, Phase 5: the documents (README files, "Level 1 (the park): waiting for feedback" in OPEN_QUESTIONS.md, proposals G and H in DECISIONS.md). The checkpoint `checkpoint-2026-11-level-1-gentle` is on the commit after this one. |
+| `e19d026` | 2026-11-23 | Level 1, Phase 4: `game/index.html` opens the park and the house moved to `game/house.html`. Two scripted tests for the park: a play-through with the time per section, and a solo test (34 checks; no puzzle can be finished by one sibling alone). The measured times are in `PROGRESSION.md`. |
+| `f3dfad8` | 2026-11-23 | Level 1, Phase 3: the park reacts. Birds, bouncing flowers, a cat on the box, ducks, a dog that tags along; the siblings cheer, giggle, look proud and wave; plates glow, the box squashes, confetti at the way out. |
+| `173ad1d` | 2026-11-23 | Level 1, Phase 2: the park. A new world in `game/worlds/park/` with the page `game/park.html`: six gentle sections (learn to move, plate and gate, box on plate, the pond, the balloon and the lift, the way out together), built from forest and city art. Easier jumping and earlier hints than the lab. Shared code got two switchable additions (no toss; a gate that opens for either of two plates) and three icons. |
+| `23e48ce` | 2026-11-23 | Level 1, Phase 1: `PROGRESSION.md`, the rules for how levels grow (one new mechanic a level, teach, practise, twist) and the planned levels. |
 | `fc106c7` | 2026-11-21 | City lab, Phase 6: the documents (README files, the city lab's open questions, the proposals in DECISIONS.md). The checkpoint `checkpoint-2026-11-lab-city-v2` is on the commit after this one. |
 | `3fe28fe` | 2026-11-21 | City lab, Phase 5: testing. A second scripted test tries 29 ways one sibling might finish a station alone; it found one (dashing through the mill shutter), now closed. Results for the play-through, small screens and what could not be tested are in `LAB_PLAN.md`. |
 | `5832a3b` | 2026-11-21 | City lab, Phase 4: no reading. A picture bubble for the goal, picture hints (sparkle, arrow, ghost of the right sibling), signs over heads, eight stickers in the new stations, an end card of pictures and numbers. |
