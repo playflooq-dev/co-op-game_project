@@ -206,6 +206,7 @@
       const a = STREAM_A[0], b = STREAM_A[1], s0 = game.splashes;
       await run(sis, 1, () => sis.x > b, 2200);
       check('she tries the plank: it creaks and bends, and she steps back (no fall)', sis.x < a + 40 && plank2.state.refused > 0 && game.splashes === s0, `she is at ${sis.x.toFixed(0)}`);
+      await secs(1.2); // (the plank springs back from her step before his is measured)
       let sag = 0; const w = setInterval(() => { sag = Math.max(sag, plank2.state.sag); }, 20);
       check('he walks across: it holds him and bends a little', (await go(bro, b + 60)) && game.splashes === s0); clearInterval(w);
       check('the plank bent under him, but only a little', sag > 2 && sag < 9, `it sagged ${sag.toFixed(1)}`); game.sagLight = sag;
@@ -250,7 +251,8 @@
     }
     if (FROM <= 5) { // ================= section 6: bonus, the see-saw on the ledge
       const g = gate6.def.x;
-      check('she puts the box against the ledge', await carry(sis, box6, step6, 1), `box at ${box6.x.toFixed(0)}, wanted ${step6}`);
+      await carry(sis, box6, step6, 1); // (it need not touch the ledge: anywhere within a short jump of it is a step up)
+      check('she puts the box by the ledge', !box6.held && box6.grounded && box6.x > blk.x[0] - 150 && box6.x < blk.x[0] - 30, `box at ${box6.x.toFixed(0)}, the ledge starts at ${blk.x[0]}`);
       await go(sis, box6.x); await hop(sis); check('she hops onto the box', sis.on === box6);
       await leap(sis, sis.x - 5); check('and from it onto the ledge', near(up(sis), blk.h, 4) && sis.x > blk.x[0], `she is ${up(sis).toFixed(0)} up`);
       await go(sis, blk.x[0] + 60); await go(bro, box6.x); await hop(bro); await leap(bro, bro.x - 5);
@@ -265,8 +267,10 @@
     }
     if (FROM <= 6) { // ================= section 7: the Old Bridge, the end of Chapter 1
       const s0 = game.splashes;
+      await go(sis, nearL.def.x - 15);
       check('he walks over the small boats to the far bank', (await go(bro, farL.def.x - 15, 12000)) && bro.x > RIVER[1] && game.splashes === s0);
-      await go(sis, nearL.def.x - 15); key('KeyS', true); await wait(1200);
+      check('she was not pushed along by the edge of the picture', near(sis.x, nearL.def.x - 15, 30), `she is at ${sis.x.toFixed(0)}`);
+      key('KeyS', true); await wait(1200);
       check('her lever alone does not move the bridge', sis.holding === nearL.thing && bridge7.state.prog === 0);
       key('ArrowDown', true);
       check('both levers held, one on each bank: the bridge comes down', (await until(() => bridge7.state.down, 6000)) && game.solved[6]); key('KeyS', false); key('ArrowDown', false);

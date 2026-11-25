@@ -92,7 +92,7 @@ const SECTIONS = [
     { kind: 'box', x: 8620 },
     { kind: 'block', x: [8840, 9480], h: 230 },
     { kind: 'launcher', x: 9190, half: 170, h: 230, to: [9450, 560], rise: 2.0 },
-    { kind: 'ledge', look: 'balcony', x: [9350, 9620], h: 560 }, { kind: 'lever', id: 'way', x: 9530, h: 710, base: 560, once: true },
+    { kind: 'ledge', look: 'balcony', x: [9350, 9620], h: 560 }, { kind: 'lever', id: 'way', x: 9530, h: 690, base: 560, once: true },
     { kind: 'lockgate', x: 9800, by: ['way'], latch: true },
     { kind: 'bar', x: 9900 },
   ] },
@@ -126,9 +126,10 @@ const PROPS = [
   ['streetLamp', 8440], ['streetLamp', 10400],
 ];
 // The far bank of the river is the edge of the forest, where Chapter 2 begins: [kind, x, scale] (forest art).
+// (The big trees are drawn full size: their picture ends in a straight edge at the top, which must stay above the screen.)
 const FOREST_EDGE = [
-  ['trees', 11790, 0.8], ['bushes', 12010, 0.85], ['bigTrees', 12160, 0.7], ['trees', 12330, 0.9], ['bushes', 12420, 0.9],
-  ['bigTrees', 12600, 0.78], ['trees', 12760, 0.95], ['bigTrees', 12900, 0.8],
+  ['trees', 11790, 0.8], ['bushes', 12010, 0.85], ['trees', 12150, 0.95], ['bigTrees', 12330, 1], ['bushes', 12480, 0.9],
+  ['trees', 12620, 1], ['bigTrees', 12800, 1.05], ['trees', 12930, 0.9],
 ];
 
 // Music: the canal borrows the city's evening piece (CC0, see worlds/city/assets/music/CREDITS.txt).

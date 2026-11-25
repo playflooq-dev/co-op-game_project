@@ -48,7 +48,10 @@ function fitScreen() { // on touch screens the quay is drawn higher, so the butt
 function cameraTarget() { // the middle of the two; or, while both are inside a section's view, the whole view held still
   const mid = (sis.x + bro.x) / 2, v = SECTIONS[game.section].view;
   const hold = v && VW >= v[1] - v[0] && sis.x > v[0] && sis.x < v[1] && bro.x > v[0] && bro.x < v[1];
-  return clamp((hold ? (v[0] + v[1]) / 2 : mid) - VW / 2, 0, Math.max(0, CANAL.length - VW));
+  // The picture never moves so far that it would push the one behind along (in Levels 1 and 2 it does): here that
+  // could push her off the quay into the water. So whoever runs ahead simply stops at the edge of the picture.
+  const want = (hold ? (v[0] + v[1]) / 2 : mid) - VW / 2, lo = Math.min(sis.x, bro.x) - MOVE.edge - 6, hi = Math.max(sis.x, bro.x) + MOVE.edge + 6 - VW;
+  return clamp(clamp(want, Math.min(hi, lo), lo), 0, Math.max(0, CANAL.length - VW));
 }
 
 // ---------- the puzzles: when each counts as solved (for the jingle, the hints and the test)
@@ -137,7 +140,7 @@ const HINTS = (() => {
     [ { who: () => bro, done: () => bro.x > STREAM_A[1] || fb1.state.on, x: midA, y: FEET - 30, gx: STREAM_A[1] + 60 },   // he walks over the plank
       plateStep(pT, () => bro, () => fb1.state.on),                                                                         // and steps on the plate
       { who: () => sis, done: () => past(STREAM_A[1] + 40), x: midA, y: FEET - 30, gx: STREAM_A[1] + 150 } ],               // she walks over the bridge
-    [ { who: () => bro, done: () => (bro.on === saw3.ledge && bro.x > saw3.def.x + 30) || over3() || lev3.state.on, x: saw3.def.x + 125, y: FEET - 60, gx: saw3.def.x + 125, gy: 12 }, // he stands on the blue end
+    [ { who: () => bro, done: () => (bro.on === saw3.ledge && bro.x > saw3.def.x + 30) || over3() || lev3.state.on, x: saw3.def.x + 150, y: FEET - 60, gx: saw3.def.x + 150, gy: 16 }, // he stands on the blue end (its tip is low enough to step onto; anywhere on it can be jumped onto)
       { who: () => sis, icon: 'up', done: () => over3() || lev3.state.on, x: saw3.def.x - 125, y: FEET - 150, gx: saw3.def.x - 125, gy: 100 },                                         // she jumps onto the green end
       { who: () => bro, icon: 'hand', done: () => lev3.state.on, x: lev3.def.x, y: FEET - 150, gx: lev3.def.x - 50 },                                                                 // he pulls the lever
       { who: () => sis, done: () => past(BASIN[1] + 40), x: () => raft.state.x, y: FEET - 70, gx: () => raft.state.x, gy: 15 } ],                                                     // she steps onto the raft
@@ -150,7 +153,7 @@ const HINTS = (() => {
     [ { who: () => box6.carrier || sis, icon: 'hand', carry: () => box6.held, done: () => (!box6.held && box6.grounded && Math.abs(box6.x - step6) < 70) || (onBlock(sis) && onBlock(bro)) || lev6.state.on,
         x: () => (box6.held ? step6 : box6.x), y: () => (box6.held ? FEET - 30 : box6.y - 50), gx: () => (box6.held ? step6 - 100 : box6.x - 84) },                                   // the box goes against the ledge
       { who: () => (onBlock(sis) ? bro : sis), icon: 'up', done: () => (onBlock(sis) && onBlock(bro)) || lev6.state.on, x: blk.x[0] + 90, y: FEET - blk.h - 40, gx: blk.x[0] + 90, gy: blk.h }, // both climb up
-      { who: () => bro, done: () => (bro.on === saw6.ledge && bro.x > saw6.def.x + 30) || high(bro) > shelf6 - 30 || lev6.state.on, x: saw6.def.x + 125, y: FEET - blk.h - 60, gx: saw6.def.x + 125, gy: blk.h + 12 },
+      { who: () => bro, done: () => (bro.on === saw6.ledge && bro.x > saw6.def.x + 30) || high(bro) > shelf6 - 30 || lev6.state.on, x: saw6.def.x + 150, y: FEET - blk.h - 60, gx: saw6.def.x + 150, gy: blk.h + 16 },
       { who: () => sis, icon: 'up', done: () => high(bro) > shelf6 - 30 || lev6.state.on, x: saw6.def.x - 125, y: FEET - blk.h - 150, gx: saw6.def.x - 125, gy: blk.h + 100 },
       { who: () => bro, icon: 'hand', done: () => lev6.state.on, x: lev6.def.x, y: FEET - lev6.def.h, gx: lev6.def.x - 50, gy: shelf6 },
       walk(g6) ],
@@ -187,9 +190,10 @@ function drawHintMarks(c, t) {
   if (ghost) drawGhost(c, who, s, t);
 }
 function drawGoalBubble(c, t) { // the picture bubble: what this part is about. It shows on arriving, and again whenever both stand still for a while.
-  const icon = game.solved[game.section] ? null : SECTIONS[game.section].goal; if (!icon) return;
+  const icon = game.solved[game.section] ? (game.section === 6 ? 'tree' : null) : SECTIONS[game.section].goal; if (!icon) return; // (once the bridge is down: on, into the forest)
+  if (game.section === 6 && game.solved[6] && !game.treeT) { game.treeT = 1; game.goalT = -2.5; } // the forest picture comes up a moment after the celebration
   game.goalT = game.goalKey === game.section ? game.goalT : 0; game.goalKey = game.section;
-  const a = game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 5 && bro.idle > 5 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 5) * 2) : 0; if (a <= 0) return;
+  const a = game.goalT < 0 ? 0 : game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 5 && bro.idle > 5 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 5) * 2) : 0; if (a <= 0) return;
   const x = clamp(sis.x, camX + 90, camX + VW - 90), y = sis.y - sis.standH - (sis.carry ? 214 : 118) + Math.sin(t * 2) * 3;
   c.save(); ell(c, x - 14, y + 62, 7, 7, '#fffbf0', a); ell(c, x - 4, y + 46, 10, 10, '#fffbf0', a); c.globalAlpha = a;
   c.beginPath(); c.ellipse(x, y, 54, 42, 0, 0, TAU); fs(c, '#fffbf0', '#8a6a3a', 3); drawIcon(c, icon, x, y, 1.9); c.restore();
