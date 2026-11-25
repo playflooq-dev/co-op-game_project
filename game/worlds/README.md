@@ -38,6 +38,8 @@ What worlds share is in `../shared/`:
     `MOVE` at the top of it.
   - `shared/kit.js`: the object kit: boxes, plates, gates, levers, the see-saw, the lift and so on.
   - `shared/icons.js`: the little pictures used in place of words.
+- `shared/later/`: things saved for a later level (the dog and the ball that were in the first version of the park).
+  No page loads them; each file says at the top how to use it.
 ## Music
 
 Every world plays music files from its own `assets/music/` folder, listed in `MUSIC_FILES` at the end of its
@@ -93,33 +95,43 @@ picks between pictures of a group, it will start using it.
 
 Level 1 since 2026-11-23: a gentle first level built to the rules in [PROGRESSION.md](../../PROGRESSION.md). It is
 waiting for feedback and is not approved. It may only use walking, jumping, small blue plates, gates, one light box
-and the lift.
+and the lift. On 2026-11-24 it was made plainer after the client's feedback: nothing to collect, no dog and no ball,
+and an opening that is only about learning to move.
 
 | File | What it holds |
 |---|---|
-| `settings.js` | The six `SECTIONS` (every object, one line each), the trees, lamps and benches, how the jump feels in this level (`PARK_MOVE`), and when hints appear (`HINT_TIMES`: 10, 20 and 35 seconds). |
+| `settings.js` | The six `SECTIONS` (every object, one line each), the trees, lamps and benches, how the jump feels in this level (`PARK_MOVE`), when hints appear (`HINT_TIMES`: 10, 20 and 35 seconds), and the numbers for learning the keys (`LEARN_SET`). |
 | `level.js` | Runs the level: builds the sections, the camera, when a puzzle counts as solved, the hints (`HINTS`), the end card. |
+| `learn.js` | Learning to move without words: each player's keys as big pictures next to their own sibling, one move at a time (walk, jump, and grab where it is first needed), the ghost that shows a move to a player who stands still, the pulsing touch buttons, and the row of keys at the bottom that fills up as moves are learned. |
 | `scenery.js` | Draws what cannot be touched: sky, the town far away, hills, trees, grass, the path, the park gate at the end. |
 | `things.js` | The park's own objects (table below). |
-| `life.js` | Everything that only reacts: birds, bouncing flowers, the dog, the cat on the box, the ducks, and what the siblings do themselves (cheer, giggle, the proud look, the wave). Taking a line out of `settings.js` removes that animal; nothing depends on them. |
+| `life.js` | Everything that only reacts: birds, bouncing flowers, the cat on the box, the ducks, and what the siblings do themselves (cheer, giggle, the proud look, the wave). Taking a line out of `settings.js` removes that animal; nothing depends on them. None of it is in section 1. |
+| `REVIEW.md` | The first-time player review of 2026-11-24: every thing in the level that could distract, look usable or need explaining, with a recommendation for each, and which ones were applied. |
 
 Objects are placed exactly as in the city (see "Placing objects" below): one line in a section's `things` list.
-`x` is the place along the path, `h` the height above it. Besides the kit's `block`, `plate`, `bar` and `sticker`,
-the park has:
+`x` is the place along the path, `h` the height above it. Besides the kit's `block`, `plate` and `bar`, the park has:
 
 | Kind | Settings | What it is |
 |---|---|---|
-| `hurdle` | `x, h` | A low white fence across the path, to hop over. |
 | `log` | `x, h` | A log lying on the path: hop over it or stand on it. |
-| `puddle` | `x, w` | Splashes. Nothing else happens. |
-| `ball` | `x` | Rolls and bounces when somebody runs into it. |
 | `parkgate` | `x, by: [ids], any, latch` | The kit's gate, drawn as a green iron park gate. `any: true` opens for any one of its plates (the kit's gate needs all of them). `by: ['balloon']` opens for whoever carries the balloon. |
 | `parkbox` | `x` | The kit's light box, with a cat on it; it squashes and puffs dust when it lands. |
 | `pond` | `x: [from, to]` | A duck pond behind the path. Grab makes a splash; the ducks swim away from it. |
 | `balloon` | `x, h` | A balloon caught on a branch. Whoever reaches it carries it along. At `h: 392` only he can reach it, from her shoulders. |
 | `birds` | `x, n, h` | A few birds that fly up when somebody jumps or runs close, and come back. |
 | `flowers` | `x: [from, to], n` | Flowers and grass that bounce when walked through. |
-| `dog` | `x, to` | A dog that tags along from `x` as far as `to`, and can be petted. |
+| `hurdle` | `x, h` | A low white fence across the path, to hop over. Not placed since 2026-11-24. |
+| `puddle` | `x, w` | Splashes. Nothing else happens. Not placed since 2026-11-24. |
+
+Not in the park any more, and kept for later:
+- The **dog** and the **ball** are in `shared/later/dog.js` and `shared/later/ball.js`. No page loads them; each file
+  says at the top how to put it into a level (one script line and one line of settings).
+- **Stickers** are still a kind in the object kit (`sticker` in `shared/kit.js`), but since 2026-11-24 no level
+  places one, and neither the park's nor the city's level code draws a sticker box or counts them. To bring
+  collecting back, a level needs the box at the top left and the row on the end card again as well.
+
+Section 1 follows three rules of its own (see rule 1 in PROGRESSION.md): only `block` and `log` are placed there, none
+higher than 90; nothing in it can be used, picked up or collected; and the lift is off (`LEARN_SET.liftFrom`).
 
 Two rules keep a puzzle from being finished by one sibling alone, and `tools/playtest-park.html?solo=1` checks them:
 a plate is at least 300 from its gate (nobody can step off and dash through), and a `bar` keeps the box in its own
@@ -182,7 +194,7 @@ names are on.
 | `ladder` | `x, h` | Rolled up on a ledge; used from up there it drops, and then jump climbs it. |
 | `trap` | `x: [from, to], h, by` | A shelf that swings open and drops what is on it. |
 | `tunnel` | `x: [from, to], h, gap` | A low way through that only he fits. |
-| `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. |
+| `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. Not placed anywhere since 2026-11-24. |
 | `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a map piece, the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
 
 The colour language is built into the kit: green things are the sister's job (heavy or high), blue things the
@@ -241,8 +253,8 @@ at `http://127.0.0.1:8780/`.
   to set the scene up first.
 - `tools/playtest-house.html?skip=1` plays the house from start to finish with simulated key presses and reports
   PLAY PASSED or PLAY FAILED.
-- `tools/playtest-park.html` plays Level 1 with both siblings (about a minute and a half) and reports the time each
-  section took; `?section=4` starts it at section 4. `tools/playtest-park.html?solo=1` lets one sibling try every puzzle
+- `tools/playtest-park.html` plays Level 1 with both siblings (just under two minutes), checks that the keys are
+  shown one move at a time in section 1 and that there is no sticker, dog or ball, and reports the time each section took; `?section=4` starts it at section 4. `tools/playtest-park.html?solo=1` lets one sibling try every puzzle
   alone and passes when no short cut works. Run both after changing a section. `tools/snap-park.html?section=...`
   sends a picture of the park to the server log.
 - `tools/playtest-city.html` does the same for the city (all eight stations, about three minutes) and reports the time

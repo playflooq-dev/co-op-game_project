@@ -106,9 +106,10 @@ first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bel
   points at it, after 60 s a faint ghost of that sibling stands in the right place with the sign for the key.
   `city.html?hints=fast` makes them come ten times sooner.
 - Signs over heads: a hand (grab or use), two hands (the lift), an arrow (climb).
-- Eight stickers, none needed: a key (box as a step), a bird and a drop (only from her shoulders), a sock (box as a
-  step), a paw (pet the puppy), a bell (ring the bell game), a boat (only he can stand there), a note (over the
-  parasols). The end card shows the map, the stickers, a count and the time.
+- No stickers since 2026-11-24. There were eight, none needed (a key, a bird, a drop, a sock, a paw, a bell, a boat,
+  a note). The client found, on Level 1, that collecting confuses more than it adds, and asked for them to go here
+  too; they come back once the base game is set. Their places are in the git history (commit `4d44558`). The two
+  shelves they sat on (Maple Street, over the fish stall) are still there. The end card shows the map and the time.
 - Words that remain: the shop names painted on the building art, the loading line, the debug and tuning views.
 
 **Phase 5 is done (2026-11-21).** Two scripted tests, both in `tools/playtest-city.js`:

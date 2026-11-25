@@ -15,6 +15,7 @@
 //   ladder(p)      a ladder this sibling is standing at ({ x, top }), or null: the jump key climbs it
 //   lost(p)        true when the sibling has fallen somewhere they must come back from (into water, say)
 //   canJoin(p, o)  false when coming back next to the partner would be a short cut
+//   canLift()      false where the lift is not to be used yet (a level that teaches it later)
 //   highFive()     called when they high-five
 // Keys: left and right walk, up jumps, down grabs / puts down / uses / lifts / tosses.
 
@@ -231,8 +232,8 @@ function putDown(p, where) { // in front of them, on the first thing below; wher
 
 // ---------- together: the lift, the toss, and getting down
 function canLift() {
-  const { sis, bro, duo, world } = MV;
-  return !duo.state && !sis.gone && !bro.gone && sis.grounded && bro.grounded && !sis.carry && !bro.carry && !bro.crawl
+  const { sis, bro, duo, world, hooks } = MV;
+  return !duo.state && (!hooks.canLift || hooks.canLift()) && !sis.gone && !bro.gone && sis.grounded && bro.grounded && !sis.carry && !bro.carry && !bro.crawl
     && Math.abs(sis.x - bro.x) <= MOVE.liftReach && Math.abs(sis.y - bro.y) <= 110 && world.fits(bro, sis.x, sis.y - MOVE.liftHeight, bro.standH);
 }
 function startLift() {

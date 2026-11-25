@@ -76,7 +76,7 @@ function drawPup(c, x, y, dir, t, run, sit, piece) {
 }
 KIT.puppy = (world, d, ground) => {
   const x = d.x, top = ground - d.h, st = { mode: 'sit', t: 0, x, y: top, dir: -1, bark: 0, hop: 0 };
-  const thing = { get x() { return st.mode === 'sit' ? x : st.x; }, y: top + 8, // up on the awning it gives up the map piece; down on the ground it likes to be petted (once, for a sticker)
+  const thing = { get x() { return st.mode === 'sit' ? x : st.x; }, y: top + 8, // up on the awning it gives up the map piece; down on the ground it likes to be petted (once)
     canUse: (p) => (st.mode === 'sit' ? (p.grounded || p.held) && Math.abs(p.x - x) <= 95 && sibReachY(p) <= top + 14 : st.mode === 'follow' && !KIT_SIG.petted && p.grounded && Math.abs(p.x - st.x) < 100 && Math.abs(p.y - st.y) < 30),
     use(p) { if (st.mode === 'sit') { st.mode = 'jump'; st.t = 0; st.to = x + (p.x < x ? 150 : -150); takePiece(3, p, x, top - 20); } else { st.hop = 0.35; st.bark = 1.6; p.reachT = 0.3; burst(st.x, st.y - 70, 8); KIT_SIG.petted = [st.x, st.y - 90]; } snd('bark'); } };
   return { state: st, thing,

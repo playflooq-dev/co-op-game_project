@@ -74,7 +74,7 @@ other; and where they laugh. Try each with a parent and a child, two children, a
 - Are 20, 40 and 60 seconds the right waits? (They are `HINT_TIMES` in `game/worlds/city/settings.js`.)
 - Does one player alone, with both hands, manage every station? The bridge and the lift need two keys held at once.
 - On a tablet held by two people: are four buttons each reachable, and is the picture big enough?
-- Do they notice the stickers, and do the two that need the lift get found?
+- (The lab's eight stickers were taken out on 2026-11-24; see "Saved for a later level" below.)
 - Is the brother's part as much fun as the sister's? He is carried, tossed and launched; she does more of the lifting.
 - The first city level had the siblings talking in speech bubbles. The lab has no words at all. Do we miss their voices?
 - If the lab is approved, the house (reading a chalked code, no jumping) no longer fits. Rebuild it the same way?
@@ -82,41 +82,62 @@ other; and where they laugh. Try each with a parent and a child, two children, a
 **Not built in the lab:** the metro ride between stations (cut, it could return as a calm ride with no choices), the
 ladder on wheels, split screens and pings for playing online, lighter music files for the web.
 
-## 1d. Level 1 (the park): waiting for feedback
+## 1d. Level 1: waiting for feedback on difficulty
 
-Built on 2026-11-23 on the branch `level-1/gentle`, after the client found the city lab far too difficult as a first
-level. `game/index.html` now opens it. It follows the rules in [PROGRESSION.md](PROGRESSION.md): first only moving,
-then four very small puzzles, a calm moment in between, and a finale together. Nothing in it is approved (see
-"Proposed" in [DECISIONS.md](DECISIONS.md)). The controls and how to open one section are in `game/README.txt`.
+The park was built on 2026-11-23 (branch `level-1/gentle`) after the client found the city lab far too difficult as
+a first level. The client played it and said on 2026-11-24:
+- the stickers confuse more than they add (they come back later, once the base game is set);
+- the dog and the ball are fun, but too much in the first 15 seconds, while players are still learning the controls;
+- because of them the difficulty could not be judged: even this level felt difficult.
 
-**While children of 5 to 10 play, watch for three things above all:**
-- **Where do they stand still for more than 10 seconds?** That is where the level is unclear or too hard. Note the
-  section, and which hint got them going again: the sparkle (10 s), the arrow (20 s) or the ghost (35 s).
-- **Where do they laugh?** The dog, the cat on the box, the ducks, the birds, the puddle, being lifted. More of what
-  works goes into the next levels; what nobody notices can go.
-- **Does anybody only wait?** Each puzzle is built so that both walk and both do something. Watch the one who holds
-  the plate in sections 2 and 3: is waving enough to do, or do they get bored?
+Agreed direction: **Level 1 is an extremely plain, simple and intuitive intro**, for somebody who has never seen the
+game and does not know how to move. So on 2026-11-24 (branch `level-1/plain`) the stickers, the dog and the ball
+were taken out, and the opening became only about learning to move: each player's keys are shown as pictures next to
+their own sibling, one move at a time. **The four puzzles and their tuning are unchanged**, so that the client can
+now judge their difficulty. Nothing is approved (see "Proposed" in [DECISIONS.md](DECISIONS.md)). The controls and
+how to open one section are in `game/README.txt`.
+
+**The question for this round: is it easy enough, and where is it not?** While somebody plays for the first time,
+watch for:
+- **The first minute.** Do they find their own keys from the pictures next to the siblings? Do they need the ghost
+  that shows the move (it comes after four seconds of standing still)? On a tablet: do they see that the pulsing
+  button belongs to the picture?
+- **Where do they stand still for more than 10 seconds** once the puzzles begin? Note the section, and which hint got
+  them going again: the sparkle (10 s), the arrow (20 s) or the ghost (35 s).
+- **Does anybody only wait?** Each puzzle is built so that both walk and both do something.
 
 | Section | What we want to learn |
 |---|---|
-| 1 Learn to move | Do they play (ball, puddle, log, dog), or run straight through? Is one to two minutes without a puzzle welcome, or too long? Is the jump comfortable (it is a little higher and more forgiving than in the lab)? Do they find that the dog can be petted? |
+| 1 Learn to move | Is the long plain path welcome, or too long and too empty? Is one move at a time the right pace? Is the jump comfortable? Does it matter that whoever runs ahead is stopped at the edge of the screen? |
 | 2 Plate and gate | Do they connect the plate, the lit cable and the gate without help? Does the second one think of the plate on the far side, or does the first stay stuck behind the gate? |
-| 3 Box on plate | The one harder step. Do they see that the box can hold the plate? Who thinks of it, the child or the parent? Is carrying (grab, walk, grab) found without being told? Does the cat make them want to pick the box up, or keep them from it? |
-| 4 The pond | Do they stop here at all? Do they find the splash? Is a calm moment after the harder puzzle felt as a rest? |
-| 5 The balloon | Do they discover the lift by themselves, from the two-hands sign, or only from the ghost? Is "grab to be lifted, grab again to take it" clear? Is being lifted funny? |
+| 3 Box on plate | The one harder step. Do they see that the box can hold the plate? Is the grab key found from its picture at the box, and "the same key puts it down" at the plate? Does the cat on the box help or get in the way? |
+| 4 The pond | Do they look for a puzzle here? Is a calm moment after the harder puzzle felt as a rest? |
+| 5 The balloon | Do they discover the lift by themselves, from the two-hands sign, or only from the ghost? Is "grab to be lifted, grab again to take it" clear? |
 | 6 The way out | Do they understand "both at the same time" at once? Does the confetti and the high five feel like an ending? |
 
+**Waiting for your decision:** [game/worlds/park/REVIEW.md](game/worlds/park/REVIEW.md) lists every thing in the level
+that could distract a first-time player, with a recommendation for each. Only what was clearly needed in the opening
+was applied. The five to decide first: the cat on the box, the birds inside the two gate puzzles, whether the lift
+should stay off until the balloon tree, the edge of the screen stopping whoever runs ahead, and the pond.
+
 **Questions about the whole level**
-- How long does it take? The plan is about five minutes; the script needs a minute and a half without thinking.
+- How long does it take? The script needs just under two minutes without thinking; my guess for first-time players
+  is five to seven minutes.
 - Is it too easy for a ten-year-old, and does that matter in a first level?
 - Section 3 puts the box behind the gate, so that one sibling cannot do it alone. Is that one step too many for the
   very first box? The simpler version (box and plate on the same side) could be solved by one child.
-- The ghost was mistaken for a blurry third child in the lab. In the park it glitters, fades in and out, and carries
-  what it should carry. Is it understood now?
 - Does one player alone, with both hands, manage the level? Only the last plates need both at once.
-- Is the end card understood without words (stickers, a clock, an arrow to go on)?
+- Is the end card understood without words (two hands, a clock, an arrow to go on)? Should the time go too?
 - After the park the game goes on to the city lab, which is much harder. That jump is known and stays until Level 2
-  (the see-saw) is built.
+  (the see-saw) is built. For a test of Level 1, stop at the end card.
+
+**Saved for a later level (2026-11-24).** The client found the dog and the ball fun, but too much while players are
+still learning the controls, so they are not in Level 1 at all any more. Their code and drawings are kept, unchanged,
+in `game/shared/later/dog.js` and `game/shared/later/ball.js`; no page loads them. Each file says at the top how to
+put it into a level (one script line and one line of settings). Open: which level gets them back, and whether the
+dog should then do something for a puzzle or stay a friend that only tags along. The stickers (taken out of Level 1
+the same day, and out of the city lab too) stay in the object kit, `shared/kit.js`, and come back once the base game
+is set. Open for then: what collecting is for, and how to show it without it looking like a task.
 
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking

@@ -7,6 +7,7 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 
 | Checkpoint (git tag) | Date | What it holds |
 |---|---|---|
+| `checkpoint-2026-11-level-1-plain` | 2026-11-24 | Level 1, the park, made plain after the client's feedback, on the branch `level-1/plain`: no stickers, no dog and no ball (the dog and the ball are saved in `game/shared/later/`); an opening that is only about learning to move, with each player's keys shown as pictures next to their own sibling, one move at a time; the first-time player review in `game/worlds/park/REVIEW.md`. The four puzzles are as at the checkpoint below. Nothing in it is approved yet. Not on the live site. |
 | `checkpoint-2026-11-level-1-gentle` | 2026-11-23 | Level 1, the park, on the branch `level-1/gentle`: a gentle first level of about five minutes (learn to move, four very small puzzles, a calm moment, a finale together), the progression rules in `PROGRESSION.md`, the reactions (dog, cat, birds, ducks, flowers), and its two scripted tests. `game/index.html` opens the park; the house is `game/house.html`. The city lab and the forest are as at the checkpoint below. Nothing in it is approved yet. Not on the live site. |
 | `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city lab, on the branch `lab/city-v2`: the city as a test level of eight stations for children of 5 to 10, with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. Nothing in it is approved yet. The house and the forest are as at the checkpoint below. Not on the live site. |
 | `checkpoint-2026-11-20-city-music` | 2026-11-20 | Chapter Two rebuilt to be fun (new puzzles, Old Town, hints, stickers), recorded CC0 music and sound effects in every chapter, and the puzzle-design research. Same as the live site at https://forest-trail-d56.pages.dev on 2026-11-20. |
@@ -17,7 +18,8 @@ go wrong. The newest is at the top. Every commit so far is listed below the chec
 Ask Claude, or run these in `co-op-game_project`:
 
 - See a checkpoint without changing anything: `git switch --detach checkpoint-2026-11-20-city-music` (go back with
-  `git switch level-1/gentle` for the newest work, `git switch lab/city-v2` for the lab without the park, or
+  `git switch level-1/plain` for the newest work, `git switch level-1/gentle` for the first version of the park (with
+  the stickers, the dog and the ball), `git switch lab/city-v2` for the lab without the park, or
   `git switch level-2/city` for the branch without either).
 - Start new work from a checkpoint: `git switch -c my-new-branch checkpoint-2026-11-20-city-music`.
 
@@ -25,11 +27,18 @@ Ask Claude, or run these in `co-op-game_project`:
 
 Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is rebuilt as a test level (the plan is in
 `game/worlds/city/LAB_PLAN.md`). Commits from `23e48ce` on are on the branch `level-1/gentle`, which starts from the
-lab and adds a gentle first level, the park (the rules it follows are in `PROGRESSION.md`). The small commits that
-only add a row to this table are not listed.
+lab and adds a gentle first level, the park (the rules it follows are in `PROGRESSION.md`). Commits from `17d66aa` on
+are on the branch `level-1/plain`, which starts from there and makes Level 1 plain. The small commits that only add a
+row to this table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `75278d1` | 2026-11-24 | No stickers in the city lab either: its eight stickers, the sticker box at the top left and the count on the end card are gone (the end card shows the map and the time). The stations and the map pieces are unchanged. This is after the checkpoint `checkpoint-2026-11-level-1-plain`. |
+| `49f4e48` | 2026-11-24 | Level 1 plain, Step 5: tests and documents. The park passes its play-through at computer, tablet and phone sizes and its solo test (37 checks); the city lab, the house and the forest are unchanged. The checkpoint `checkpoint-2026-11-level-1-plain` is on the commit after this one. |
+| `bb55c0a` | 2026-11-24 | Level 1 plain, Step 4: the first-time player review, `game/worlds/park/REVIEW.md`: every thing in the level that could distract or need explaining, with a recommendation for each (29 items). Only what the opening clearly needed was applied. |
+| `571fddd` | 2026-11-24 | Level 1 plain, Step 3: the opening is only about learning to move. Each player's keys are shown as big pictures next to their own sibling, one move at a time (walk, then jump; grab only at the first box); a ghost shows the move to a player who stands still; on touch screens the button pulses. A longer, plainer path with a few very low steps and one log. No lift in section 1. The puzzles are unchanged. |
+| `adf246d` | 2026-11-24 | Level 1 plain, Step 2: the dog and the ball are out of Level 1. Their code is saved, unchanged, in `game/shared/later/`. |
+| `17d66aa` | 2026-11-24 | Level 1 plain, Step 1: the three stickers are out of Level 1, with the sticker box at the top left and the count on the end card. The end card shows a high five and the time. |
 | `387936d` | 2026-11-23 | Level 1, Phase 5: the documents (README files, "Level 1 (the park): waiting for feedback" in OPEN_QUESTIONS.md, proposals G and H in DECISIONS.md). The checkpoint `checkpoint-2026-11-level-1-gentle` is on the commit after this one. |
 | `e19d026` | 2026-11-23 | Level 1, Phase 4: `game/index.html` opens the park and the house moved to `game/house.html`. Two scripted tests for the park: a play-through with the time per section, and a solo test (34 checks; no puzzle can be finished by one sibling alone). The measured times are in `PROGRESSION.md`. |
 | `f3dfad8` | 2026-11-23 | Level 1, Phase 3: the park reacts. Birds, bouncing flowers, a cat on the box, ducks, a dog that tags along; the siblings cheer, giggle, look proud and wave; plates glow, the box squashes, confetti at the way out. |
