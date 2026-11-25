@@ -222,6 +222,7 @@
       check('to the way out', (await go(sis, PARK.exit - 30, 14000)) && (await go(bro, PARK.exit + 30, 14000)));
       check('the end card', await until(() => game.done, 6000));
       check('the end card leads on to a page that is there: ' + PARK.next, (await fetch(PARK.next, { method: 'HEAD' })).ok);
+      check('the park is saved as finished, and the end card leads to the chapter map', CHAPTER.done('park') && PARK.next === 'map.html?from=park');
     }
     clearInterval(watch);
     // ================= how long each section took, and how far each sibling walked in it

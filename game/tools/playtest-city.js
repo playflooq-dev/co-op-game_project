@@ -244,6 +244,7 @@
     const ends = game.entered.slice(1).concat([game.finished || game.time]);
     STATIONS.forEach((s, n) => n >= FROM && log(`time  station ${s.name.split(':')[0]}: ${(ends[n] - game.entered[n]).toFixed(0)} s`));
     check('nothing to collect: no sticker anywhere in the city', !kit.some((o) => o.star || o.def.kind === 'sticker' || o.def.kind === 'star') && typeof starsGot === 'undefined');
+    check('the city is saved as finished for the chapter', typeof CHAPTER !== 'undefined' && CHAPTER.done('city'));
     log(`time  whole city: ${(game.finished || game.time).toFixed(0)} s   map pieces ${piecesGot()}/4`);
     log(`frame rate: ${game.fps.toFixed(0)} a second, slowest frame ${game.slow.toFixed(0)} ms, canvas ${cv.width}x${cv.height}`);
     log(fails ? `PLAY FAILED ${fails} check${fails > 1 ? 's' : ''}` : 'PLAY PASSED');

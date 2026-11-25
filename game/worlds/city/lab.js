@@ -70,13 +70,13 @@ function update(dt) {
   game.shake = Math.max(0, game.shake - dt * 2.5);
   // which station they are in: the furthest one both have reached
   const back = Math.min(sis.x, bro.x); let n = game.station; while (n + 1 < STATIONS.length && back >= STATIONS[n + 1].x[0]) n++;
-  if (n !== game.station) { game.station = n; if (game.entered[n] === null) game.entered[n] = game.time; }
+  if (n !== game.station) { game.station = n; if (game.entered[n] === null) game.entered[n] = game.time; if (typeof CHAPTER !== 'undefined') CHAPTER.note('city', n); } // (the chapter remembers how far they got)
   camX += (cameraTarget() - camX) * Math.min(1, dt * 4);
   updateHints(dt); game.goalT = (game.goalT || 0) + dt;
   // the end: over the bridge and both at the park gate
   if (KIT_SIG.bridge && !ending && players.every((p) => !p.gone && Math.abs(p.x - PARK_GATE) < 120)) { game.exitT = 0; game.finished = game.time; }
-  if (ending) { game.exitT += dt; const u = Math.min(1, game.exitT / 1.6); for (const p of players) { p.x += (PARK_GATE - p.x) * Math.min(1, dt * 1.5); p.alpha = 1 - u; } if (game.exitT > 1.8 && !game.done) { game.done = true; snd('great'); } }
-  if (game.done) { game.endT += dt; if (game.endT > 1.2 && ['KeyW', 'ArrowUp', 'Enter', 'Space'].some((k) => hit(k) || TAPS[k])) location.href = 'forest.html'; }
+  if (ending) { game.exitT += dt; const u = Math.min(1, game.exitT / 1.6); for (const p of players) { p.x += (PARK_GATE - p.x) * Math.min(1, dt * 1.5); p.alpha = 1 - u; } if (game.exitT > 1.8 && !game.done) { game.done = true; snd('great'); if (typeof CHAPTER !== 'undefined') CHAPTER.mark('city'); } }
+  if (game.done) { game.endT += dt; if (game.endT > 1.2 && ['KeyW', 'ArrowUp', 'Enter', 'Space'].some((k) => hit(k) || TAPS[k])) location.href = 'map.html?from=city'; } // on to the chapter map, and from there to Level 3 (the canal)
   if (typeof musicArea === 'function') musicArea(game.station >= 5 ? 'evening' : 'street');
   endInput();
 }

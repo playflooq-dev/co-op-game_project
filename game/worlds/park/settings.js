@@ -12,7 +12,7 @@ const PARK = {
   walk: [150, 10900],    // furthest left and right the siblings can walk
   feet: 935,             // where feet stand on the path
   exit: 10760,           // the park gate at the far end: the level ends when both are there
-  next: 'city.html',     // where the end card leads on to (the city lab, until there is a Level 2)
+  next: 'map.html?from=park', // where the end card leads on to: the chapter map, which goes on to Level 2 (the city)
 };
 
 // How moving feels in Level 1: a little more forgiving than the lab. These replace the same numbers in MOVE
