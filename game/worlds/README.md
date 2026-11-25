@@ -178,6 +178,10 @@ Rules that keep it fair, all checked by `tools/playtest-canal.html?solo=1`:
   a second jump off the see-saw. There is no toss in this level.
 - A `bar` keeps each box in its own section.
 - After a splash a sibling comes back next to the other one only if both are on the same bank.
+- No dead ends: wherever somebody can get to, they can get back from, or the way on is already open for both. A drop
+  that cannot be jumped back up gets a low step (the far side of the ledge in section 6). The same was done in the
+  city: a ladder that is always down on the far side of the wall at Fountain Square. When adding a wall, a ledge or
+  a one-way drop to any level, ask what happens if one sibling, or both, go over it too early.
 
 ## The chapter (`../shared/chapter.js`, `../shared/chaptermap.js`, `../map.html`)
 

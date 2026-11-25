@@ -117,6 +117,9 @@ const STATIONS = [
     { kind: 'seesaw', x: 8090, half: 170 },
     { kind: 'block', look: 'wall', x: [8560, 8640], h: 520 }, { kind: 'ledge', look: 'balcony', x: [8180, 8800], h: 520 },
     { kind: 'ladder', x: 8470, h: 520 },
+    // No dead end: a ladder that is always down on the far side of the wall. If he hops down there before letting the
+    // rolled-up ladder down for her, he can climb back up to the balcony. (She cannot get to it: it is behind the wall.)
+    { kind: 'ladder', x: 8730, h: 520, out: true },
   ] },
   { name: '4 The canal: light feet only', goal: 'boat', x: [9120, 10440], start: [9160, 9230], view: [9130, 10420], things: [
     // the small blue boats hold him and sink under her. He crosses, and his lever on the far bank sends the ferry for her.

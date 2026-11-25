@@ -124,6 +124,17 @@
       const box5 = inStation(5, 'box')[0].body, bar5 = inStation(5, 'bar')[0].def;
       put(box5, bar5.x - 260); await set(bar5.x - 600, bar5.x - 345); await tap('ArrowDown'); await until(() => box5.liftT >= 1, 2000); await go(bro, bar5.x + 200);
       check('7: and no box gets past the bar at the end of Old Town to stand on', !bro.carry && box5.x < bar5.x, `box at ${box5.x.toFixed(0)}`);
+      { // ---- no dead end at station 3: if he hops down the far side of the wall before letting the ladder down, he can get back up
+        const wall3 = inStation(3, 'block')[0].def, lads = of('ladder'), roll = lads[0], backUp = lads.find((o) => o.def.out), bal = inStation(3, 'ledge')[0].def;
+        await set(7900, wall3.x[1] + 70);
+        check('3: no dead end: he is on the far side of the wall and the ladder is still rolled up', !!backUp && roll.state.out === 0 && bro.x > wall3.x[1] && up(bro) < 20);
+        await go(bro, backUp.def.x, 4000); key('ArrowUp', true); const climbed = await until(() => bro.grounded && near(up(bro), bal.h, 4), 7000); key('ArrowUp', false);
+        check('3: he climbs the ladder on the far side back up to the balcony', climbed, `he is ${up(bro).toFixed(0)} up`);
+        await go(bro, roll.def.x + 40, 5000); await tap('ArrowDown');
+        check('3: and can let the ladder down for her after all', await until(() => roll.state.out >= 1, 2500));
+        await set(7900, 7980);
+        check('3: she cannot get to that ladder from her side of the wall', !(await go(sis, backUp.def.x, 3500)) && sis.x < wall3.x[0], `she is at ${sis.x.toFixed(0)}`);
+      }
       check('nobody was needed twice: the map, the gates and the bridge are as they were', !m.got.some(Boolean) && !bridge.state.down && gate0.state.open === 0);
       log(fails ? `PLAY FAILED ${fails} short cut${fails > 1 ? 's' : ''} worked` : 'PLAY PASSED');
     } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }

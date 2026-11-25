@@ -129,7 +129,7 @@ const HINTS = (() => {
   // 5: the box over the plank
   const box5 = kitIn(4, 'box').body, p5 = kitIn(4, 'plate'), lad5 = kitIn(4, 'dropladder').def, lock = kitIn(4, 'lever'), g5 = kitIn(4, 'lockgate').def.x, shelf5 = kitIn(4, 'ledge').def.h;
   // 6: the see-saw on the ledge
-  const box6 = kitIn(5, 'box').body, blk = kitIn(5, 'block').def, saw6 = kitIn(5, 'launcher'), lev6 = kitIn(5, 'lever'), g6 = kitIn(5, 'lockgate').def.x, shelf6 = kitIn(5, 'ledge').def.h;
+  const box6 = kitIn(5, 'box').body, blk = kitIn(5, 'block').def, back6 = kitIn(5, 'block', 1).def, far6 = (p) => p.x > blk.x[1] && high(p) < blk.h - 20, saw6 = kitIn(5, 'launcher'), lev6 = kitIn(5, 'lever'), g6 = kitIn(5, 'lockgate').def.x, shelf6 = kitIn(5, 'ledge').def.h;
   const onBlock = (p) => high(p) > blk.h - 20 && p.x > blk.x[0] && p.x < blk.x[1] + 200, step6 = blk.x[0] - 43;
   // 7: the Old Bridge
   const near = kitIn(6, 'lever', 0), far = kitIn(6, 'lever', 1);
@@ -150,9 +150,10 @@ const HINTS = (() => {
       { who: () => sis, icon: 'up', done: () => high(sis) > shelf5 - 20 || lock.state.on, x: lad5.x, y: FEET - 170, gx: lad5.x },                                                    // she climbs the ladder
       { who: () => sis, icon: 'hand', done: () => lock.state.on, x: lock.def.x, y: FEET - lock.def.h, gx: lock.def.x - 40, gy: shelf5 },                                             // and pulls the high lever
       walk(g5) ],
-    [ { who: () => box6.carrier || sis, icon: 'hand', carry: () => box6.held, done: () => (!box6.held && box6.grounded && Math.abs(box6.x - step6) < 70) || (onBlock(sis) && onBlock(bro)) || lev6.state.on,
+    [ { who: () => box6.carrier || sis, icon: 'hand', carry: () => box6.held, done: () => (!box6.held && box6.grounded && box6.x > blk.x[0] - 150 && box6.x < blk.x[0] - 30) || (onBlock(sis) && onBlock(bro)) || far6(sis) || far6(bro) || lev6.state.on,
         x: () => (box6.held ? step6 : box6.x), y: () => (box6.held ? FEET - 30 : box6.y - 50), gx: () => (box6.held ? step6 - 100 : box6.x - 84) },                                   // the box goes against the ledge
-      { who: () => (onBlock(sis) ? bro : sis), icon: 'up', done: () => (onBlock(sis) && onBlock(bro)) || lev6.state.on, x: blk.x[0] + 90, y: FEET - blk.h - 40, gx: blk.x[0] + 90, gy: blk.h }, // both climb up
+      { who: () => (onBlock(sis) ? bro : sis), icon: 'up', done: () => (onBlock(sis) && onBlock(bro)) || lev6.state.on, // both climb up: over the box, or, for one who hopped down on the far side, back up the low step there
+        x: () => (far6(onBlock(sis) ? bro : sis) ? back6.x[0] + 60 : blk.x[0] + 90), y: () => (far6(onBlock(sis) ? bro : sis) ? FEET - back6.h - 40 : FEET - blk.h - 40), gx: () => (far6(onBlock(sis) ? bro : sis) ? back6.x[0] + 60 : blk.x[0] + 90), gy: () => (far6(onBlock(sis) ? bro : sis) ? back6.h : blk.h) },
       { who: () => bro, done: () => (bro.on === saw6.ledge && bro.x > saw6.def.x + 30) || high(bro) > shelf6 - 30 || lev6.state.on, x: saw6.def.x + 150, y: FEET - blk.h - 60, gx: saw6.def.x + 150, gy: blk.h + 16 },
       { who: () => sis, icon: 'up', done: () => high(bro) > shelf6 - 30 || lev6.state.on, x: saw6.def.x - 125, y: FEET - blk.h - 150, gx: saw6.def.x - 125, gy: blk.h + 100 },
       { who: () => bro, icon: 'hand', done: () => lev6.state.on, x: lev6.def.x, y: FEET - lev6.def.h, gx: lev6.def.x - 50, gy: shelf6 },

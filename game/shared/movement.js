@@ -240,7 +240,19 @@ function startLift() {
   const { sis, bro, duo } = MV;
   duo.state = 'up'; duo.t = 0; duo.x0 = bro.x; duo.y0 = bro.y; bro.held = true; bro.vx = bro.vy = 0; bro.on = null; bro.grounded = false; bro.dir = sis.dir; sis.extra = bro.weight; snd('hop');
 }
-function endRide() { const { sis, bro, duo } = MV; duo.state = null; bro.held = false; bro.grounded = false; bro.on = null; sis.extra = 0; }
+function endRide() {
+  const { sis, bro, duo, world } = MV; duo.state = null; bro.held = false; bro.grounded = false; bro.on = null; sis.extra = 0;
+  // Up there he sways a little from side to side. With her standing right against a wall, that sway could have him a
+  // hair inside it at the moment he lets go, and then he hopped into the wall. He always lets go from a spot that is free.
+  if (!world.fits(bro, bro.x, bro.y, bro.standH) && world.fits(bro, sis.x, bro.y, bro.standH)) bro.x = sis.x;
+}
+// A safety net: no sibling is ever left inside a wall. Whoever is (however it happened) is moved to the nearest free
+// spot, first trying the side they came from.
+function inWall(p) { const hw = p.w / 2; return MV.world.solids.some((s) => !s.off && !(s.skip && s.skip(p)) && p.x + hw > s.x0 + 4 && p.x - hw < s.x1 - 4 && p.y > s.y0 + 4 && p.y - p.h < s.y1 - 4); }
+function outOfWall(p) {
+  const first = p.px < p.x ? -1 : 1;
+  for (let d = 4; d <= 600; d += 4) for (const s of [first, -first]) if (MV.world.fits(p, p.x + s * d, p.y)) { p.x += s * d; p.vx = 0; MV.freed = (MV.freed || 0) + 1; puff(p.x, p.y - p.h / 2, 4); return; }
+}
 function toss() {
   const { sis, bro, duo } = MV; if (duo.state !== 'on') return;
   const d = (down[bro.keys.right] ? 1 : 0) - (down[bro.keys.left] ? 1 : 0) || (down[sis.keys.right] ? 1 : 0) - (down[sis.keys.left] ? 1 : 0) || sis.dir;
@@ -288,6 +300,7 @@ function settleSiblings(dt) {
   for (const p of [sis, bro]) {
     const o = partner(p), q = p.pose, riding = p === bro && !!duo.state;
     if (p.gone) { p.gone.t += dt; if (p.gone.t >= MOVE.returnTime) comeBack(p); continue; }
+    if (!p.held && inWall(p)) outOfWall(p);
     // landing
     if (p.grounded && !p.wasGrounded && !p.held) {
       if (p.impact > 200) { p.sqv -= Math.min(9, p.impact / 150); snd(p.impact > 1150 ? 'thump' : 'land'); puff(p.x, p.y, p.impact > 900 ? 8 : 4); }

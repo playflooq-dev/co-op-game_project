@@ -91,6 +91,9 @@ const SECTIONS = [
     // where the lever opens the way to the bridge.
     { kind: 'box', x: 8620 },
     { kind: 'block', x: [8840, 9480], h: 230 },
+    // No dead end: a low step on the far side. Whoever hops down there before the lever is pulled can climb back up.
+    // (It is no way round the puzzle: the far side can only be reached over the top, and the shelf is far too high from it.)
+    { kind: 'block', x: [9480, 9600], h: 115 },
     { kind: 'launcher', x: 9190, half: 170, h: 230, to: [9450, 560], rise: 2.0 },
     { kind: 'ledge', look: 'balcony', x: [9350, 9620], h: 560 }, { kind: 'lever', id: 'way', x: 9530, h: 690, base: 560, once: true },
     { kind: 'lockgate', x: 9800, by: ['way'], latch: true },

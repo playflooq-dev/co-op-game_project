@@ -77,7 +77,7 @@
     const bunny = async (p, cond, max = 6000) => { // run right and jump again the moment the feet touch anything
       const t0 = performance.now(); key(p.keys.right, true);
       while (!cond() && performance.now() - t0 < max) { key(p.keys.up, true); await frame(); await frame(); key(p.keys.up, false); await frame(); }
-      key(p.keys.right, false); key(p.keys.up, false); await until(() => !p.gone && p.grounded, 3000); await frames(3);
+      key(p.keys.right, false); key(p.keys.up, false); await secs(1.8); await until(() => !p.gone && p.grounded, 3000); await frames(3); // (long enough for a boat to sink under her and for her to come back)
     };
     try {
       for (const p of players) { // ---- section 1: plate and gate
@@ -165,6 +165,21 @@
         await set(blk.x[0] + 150, blk.x[0] + 200, blk.h, blk.h); const up7 = await liftUp(); await run(sis, 1, () => sis.x > shelf6.x[0] + 30 || sis.hitSide === 1, 3000); const h6 = await highest(bro, async () => { await tap('ArrowUp'); await until(() => bro.grounded, 3000); });
         check('6: and a lift on the ledge does not reach it', up7 && h6 < shelf6.h - 10 && !lev6.state.on, `highest ${h6.toFixed(0)}`);
         check('6: the way to the bridge is still shut', gate6.state.open === 0);
+        // no dead end: hopping down on the far side of the ledge before the lever is pulled used to leave them stuck there
+        await set(blk.x[1] + 170, blk.x[1] + 250);
+        check('6: no dead end: from the far side of the ledge she can climb back up', (await go(sis, blk.x[1] - 45, 7000)) && near(up(sis), blk.h, 4), `she is at ${sis.x.toFixed(0)}, ${up(sis).toFixed(0)} up`);
+        check('6: and so can he', (await go(bro, blk.x[1] - 85, 7000)) && near(up(bro), blk.h, 4) && gate6.state.open === 0, `he is at ${bro.x.toFixed(0)}, ${up(bro).toFixed(0)} up`);
+        const back = inSection(5, 'block', 1).def; await place(bro, (back.x[0] + back.x[1]) / 2, rest, back.h); const h7 = await highest(bro, async () => { await hop(bro); });
+        check('6: the low step on the far side is no way up to the shelf', h7 < shelf6.h - 100 && !lev6.state.on, `highest ${h7.toFixed(0)}, the shelf is at ${shelf6.h}`);
+        // nobody ends up inside a wall: she stands right against the ledge with him on her shoulders, and he hops off
+        // towards it. (Up there he sways a little; before the fix that put him inside the wall in about four tries of ten.)
+        let clean = true, where = '', lifted = 0; put(box6, blk.x[0] - 420);
+        for (let i = 0; i < 10 && clean; i++) {
+          await set(blk.x[0] - 190, blk.x[0] - 140); if (await liftUp()) lifted++; await run(sis, 1, () => sis.hitSide === 1, 2500); await secs(0.04 * i);
+          key('ArrowRight', true); await frames(2); key('ArrowRight', false); await tap('ArrowUp'); await until(() => !MV.duo.state && bro.grounded, 3000); await frames(4);
+          clean = world.fits(bro) && !inWall(bro) && !(bro.x + bro.w / 2 > blk.x[0] + 2 && up(bro) < blk.h - 30); where = `try ${i + 1}: he is at ${bro.x.toFixed(0)}, ${up(bro).toFixed(0)} up; the wall starts at ${blk.x[0]}`;
+        }
+        check('6: hopping off her shoulders towards a wall never puts him inside it (ten tries)', clean && lifted === 10 && !MV.freed, `${where}; lifted ${lifted} times; pulled out of a wall by the safety net ${MV.freed || 0} times`);
         put(box6, home);
       }
       { // ---- section 7: the Old Bridge
