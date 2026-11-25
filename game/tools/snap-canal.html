@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Test page: the canal (the same scripts as canal.html) with tools/snap.js, which sends a picture of the game to the dev server log. -->
+<html lang="en"><head><meta charset="utf-8"><base href="../">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Canal</title>
+<style>
+  html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
+  canvas{display:block}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="load">The Canal</div>
+<script>addEventListener('error', (e) => fetch('/log', { method: 'POST', body: 'PLAY FAILED error: ' + e.message + ' (' + String(e.filename).split('/').pop() + ' line ' + e.lineno + ')' }));</script>
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/city/assets/manifest.js"></script>
+<script src="worlds/canal/settings.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script src="shared/sound.js"></script>
+<script src="shared/stage.js"></script>
+<script src="shared/physics.js"></script>
+<script src="shared/icons.js"></script>
+<script src="shared/movement.js"></script>
+<script src="shared/kit.js"></script>
+<script src="shared/chapter.js"></script>
+<script>const LOAD = { title: 'The Canal', script: ['worlds/canal/scenery.js', 'worlds/city/things.js', 'worlds/canal/things.js', 'worlds/canal/react.js', 'worlds/canal/level.js'], sets: [
+  { assets: CITY_ASSETS, base: 'worlds/city/assets/', only: ['skylineFar', 'skylineNear', 'cobbles', 'stone', 'townhouseCream', 'townhouseBrick', 'cafe', 'bakery', 'bookshop', 'apartment', 'cornerShop', 'streetLamp', 'bench', 'bridgeDeck', 'bridgeHut'] }, // borrowed from the city
+  { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'trees', 'bigTrees', 'bushes', 'grassTexture', 'pathTexture'] }, // and from the forest
+] };</script>
+<script src="shared/loader.js"></script>
+<script src="tools/snap.js"></script>
+</body></html>

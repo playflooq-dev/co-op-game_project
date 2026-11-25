@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Chapter 1</title>
+<style>
+  html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
+  canvas{display:block;cursor:pointer}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  /* a phone held upright is too narrow for the map: a picture asks for it to be turned */
+  #turn{position:fixed;inset:0;display:none;place-items:center;background:#1c120aee;z-index:9}#turn svg{width:44vw;max-width:260px;animation:turn 2.4s ease-in-out infinite}
+  @keyframes turn{0%,25%{transform:rotate(0)}60%,100%{transform:rotate(90deg)}}@media (orientation:portrait) and (pointer:coarse){#turn{display:grid}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="load">Chapter 1</div>
+<div id="turn"><svg viewBox="0 0 60 100"><rect x="8" y="4" width="44" height="92" rx="8" fill="none" stroke="#e9c98a" stroke-width="5"/><circle cx="30" cy="86" r="3.5" fill="#e9c98a"/></svg></div>
+<!-- The chapter map: three stops on a picture of the city, one for each level of Chapter 1 (the park, the city, the
+     canal), with no words. It is drawn by shared/chaptermap.js; what has been finished is kept by shared/chapter.js
+     in this browser. map.html?reset=1 forgets it. index.html opens this page once a game has been started. -->
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script src="shared/sound.js"></script>
+<script src="shared/stage.js"></script>
+<script src="shared/physics.js"></script>
+<script src="shared/icons.js"></script>
+<script src="shared/chapter.js"></script>
+<script>const LOAD = { title: 'Chapter 1', script: ['shared/chaptermap.js'], sets: [
+  { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['trees', 'bigTrees'] }, // the forest on the far bank: where Chapter 2 will be
+] };</script>
+<script src="shared/loader.js"></script>
+</body></html>

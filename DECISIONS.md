@@ -1,108 +1,97 @@
 # Approved Decisions
 
-Things we have agreed on and will build from. Only move an item here once it is approved.
-Open items live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md).
+Things we have agreed on and build from. An item is only moved here once it is approved.
+Open items live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md). Where the game stands today is in
+[PROJECT_STATUS.md](PROJECT_STATUS.md).
+
+Decisions keep their numbers for good. When a decision is replaced by a later one it is not deleted: it stays in
+its table, marked **Replaced**, so the history can be followed.
 
 ## Core concept
 
 | # | Decision | Notes |
 |---|---|---|
 | 1 | **Genre: co-op puzzle game** | Chosen over action, survival and party games. |
-| 2 | **Exactly 2 players** | Made to play with a friend or partner. |
-| 3 | **Online multiplayer** | Players are on their own devices and connect over the internet. |
-| 4 | **Split abilities** | Each player can do different things, so both are needed to solve puzzles. |
-| 5 | **Split information** | Each player knows or sees things the other doesn't, so they have to communicate. |
+| 2 | **Exactly 2 characters, played together** | There are always two siblings on screen and every puzzle needs both. *The original note, "made to play with a friend or partner", was **replaced on 2026-11-25 by decision 25** (who the game is for).* |
+| 3 | ~~Online multiplayer~~ | *Players on their own devices, connected over the internet.* **Replaced on 2026-11-25 by decision 26**: both players share one screen. Whether the game is ever played online is an open question. |
+| 4 | **Split abilities** | Each sibling can do different things, so both are needed to solve puzzles. The abilities are in decision 28. |
+| 5 | **Split information** | Each player knows or sees things the other does not. **Not used in Chapter 1**: on one shared screen, with children of 5 to 10, there are no hidden clues and no codes. Whether it returns is an open question. |
+| 25 | **Who the game is for** (approved 2026-11-25) | Parents playing with children of about 5 to 10, two children playing together, or one player controlling both siblings. It is released for a mixed audience: families, children and adults together, not children alone. |
+| 26 | **Two players on one screen** (approved 2026-11-25) | Both play on the same device: one keyboard (the sister on A, D, W, S; the brother on the arrow keys), or one tablet or phone held sideways with four touch buttons each. One player can also play both siblings. |
 
 ## Art and characters
 
-The approved look is the **Forest Trail** scene in [game/forest.html](game/forest.html), or the public copy at
-https://forest-trail-d56.pages.dev. (The folder was called `forest-scene/` until 2026-11-18.)
+The approved look is the **Forest Trail** scene in [game/forest.html](game/forest.html). (The folder was called
+`forest-scene/` until 2026-11-18.)
 
 | # | Decision | Notes |
 |---|---|---|
-| 6 | **Art style: 2D storybook illustration** | Warm, cozy forest look: soft sunlight, layered depth with haze in the distance, detailed leafy trees, flowers and props. |
+| 6 | **Art style: 2D storybook illustration** | Warm and cozy: soft sunlight, layered depth with haze in the distance, detailed trees, flowers and props. |
 | 7 | **The two characters** | The **hooded traveller** (green hooded coat, backpack with bedroll, green eyes, freckles) and the **lantern bearer** (blue cap with a red feather, blue tunic, red cape and scarf, plaster on the nose). Neither carries anything in their hands (staff and lantern removed 2026-11-18). |
-| 8 | **Expressive characters** | Faces react to the game: worried when the partner is far away, happy and giggling when together, sleepy when idle, a cheer emote. |
-| 9 | **Art kept as separate assets** | Scenery is one file per item, so any piece can be redrawn or replaced later, for example with painted art. See `game/worlds/README.md`. |
-| 14 | **Each world is kept separate** | Every world (house, city, forest, and later ones) has its own folder in `game/worlds/` with its own art, settings and code, so one world can change without touching the others. Art that suits more than one world is borrowed from the world that owns it, not copied. The characters and the shared play code live in `game/shared/`. |
+| 8 | **Expressive characters** | Faces react to the game: worried when the other one is far away, happy and giggling when together, sleepy when idle, a cheer. |
+| 9 | **Art kept as separate assets** | Scenery is one file per item, so any piece can be redrawn or replaced later. See [game/worlds/README.md](game/worlds/README.md). |
+| 14 | **Each world is kept separate** | Every world (park, city, canal, house, forest, and later ones) has its own folder in `game/worlds/` with its own art, settings and code, so one world can change without touching the others. Art that suits more than one world is borrowed from the world that owns it, not copied. The characters and the shared play code live in `game/shared/`. |
+| 24 | **Sound** | Recorded CC0 music for each place and recorded CC0 sound effects (Kenney), chosen 2026-11-19. M switches all sound off and on. A few sounds with no good recording (barks, splashes, quacks) are made by code. |
 
 ## Story and levels
-
-Chapter One, "Home Alone", is [game/house.html](game/house.html) (it was `game/index.html` until 2026-11-23, when that
-page became the door to the proposed Level 1 below). Chapter Two, "Across the City", was [game/city.html](game/city.html)
-until 2026-11-21; that page is now the test level described under "Proposed" below, and the level decided here is kept
-at the git tag `checkpoint-2026-11-20-city-music`.
 
 | # | Decision | Notes |
 |---|---|---|
 | 10 | **The two characters are brother and sister** | The hooded traveller is the **older sister** (taller, calm, careful). The lantern bearer is the **younger brother** (small, curious, quick). |
-| 11 | **How the story starts** | The siblings are home alone and locked in while their parents are in town. A treasure map is already on the kitchen table when the game begins. Getting out of the house is the first puzzle; the treasure hunt then leads into the **city**, which is Level 2. The view outside the house is the city. |
-| 12 | **Level 1 is a side cutaway of the house** | Two floors, like a dollhouse with the front wall removed, in the approved art style. Walking and stairs, no jumping. |
-| 13 | **Level 1 puzzle: the hidden spare key** | The front door is locked. Only the sister can reach Dad's locked box on top of the tall bookcase. Only the brother fits in the dark cupboard under the stairs, where he pulls the cord of a light bulb and finds the box code chalked on the wall. He tells her the code, she opens the box, and the spare key inside opens the door. |
-| 15 | **Level 2 is the city** | A side-scrolling journey across the city, like the Forest Trail, aimed at 15 to 20 minutes. Rebuilt on 2026-11-19 after the first draft was "no fun to play": see "How the game plays" below and [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md). Playable in [game/city.html](game/city.html). |
+| 11 | ~~How the story starts: home alone~~ | *The siblings are locked in the house; a treasure map is on the kitchen table; getting out is the first puzzle and the hunt leads into the city.* **Replaced on 2026-11-25 by decision 33**: the game now starts in the park. How the story begins, and whether there is a treasure map at all, is an open question. |
+| 12 | ~~Level 1 is a side cutaway of the house~~ | *Two floors, walking and stairs, no jumping.* **Replaced on 2026-11-25 by decision 34** (Level 1 is the park). The house level is kept, unchanged, at [game/house.html](game/house.html); its future is an open question. |
+| 13 | ~~Level 1 puzzle: the hidden spare key~~ | *He finds a code chalked in the cupboard, she opens Dad's box with it.* **Replaced on 2026-11-25 by decisions 31 and 34**: no puzzle needs reading, and Level 1 is the park. |
+| 15 | ~~Level 2 is the city, 15 to 20 minutes~~ | *The first city level, rebuilt on 2026-11-19 with road crossings, the metro, buses and codes.* **Replaced on 2026-11-25 by decision 35**. That older level is kept at the git tag `checkpoint-2026-11-20-city-music`. |
+| 33 | **Chapter 1 is three levels in the city** (approved 2026-11-25) | Level 1 the park, Level 2 the city (the see-saw level, which ends at the Old Bridge), Level 3 the canal. After each level comes the chapter map (decision 38). Chapter 2 will be the forest. |
+| 34 | **Level 1 is the park** (approved 2026-11-25) | [game/park.html](game/park.html). An extremely plain first level for somebody who has never seen the game: first only learning to walk and jump, with each player's keys shown as pictures next to their own sibling, one move at a time; then four very small puzzles (plate and gate, box on plate, the lift for a balloon, two plates at once) with a calm moment at a pond. Only walking, jumping, small plates, gates, one light box and the lift. About 5 minutes. |
+| 35 | **Level 2 is the city, to the Old Bridge** (approved 2026-11-25) | [game/city.html](game/city.html), the see-saw level. Eight stations, each one idea on one screen: jump and carry and three lamps; the heavy crate and the green plate; a box as a step; the see-saw; small boats and a ferry; the pulley lift; the toss; two levers at once at the Old Bridge. About 10 minutes. It was built on 2026-11-21 as a test level ("the city lab") and is still called that in some file names. |
+| 36 | **Level 3 is the canal, and its one new idea is light-only surfaces** (approved 2026-11-25) | [game/canal.html](game/canal.html). Thin blue planks and small blue boats hold the brother and a light box. Under the sister a plank creaks, bends and sends her back; a boat sinks. She can never cross one. Taught alone first, then used in combinations (decision 37). Seven sections, ending the chapter at the Old Bridge with the forest on the far bank. No toss, no pulley and no heavy crate in this level. About 8 minutes. |
 
 ## How the game plays
 
-Agreed on 2026-11-19, from the research in [reports/Puzzle design in story platformers.md](reports/Puzzle%20design%20in%20story%20platformers.md).
-Chapter Two is the first chapter built this way.
+Decisions 16 to 24 were agreed on 2026-11-19, from the research in
+[reports/Puzzle design in story platformers.md](reports/Puzzle%20design%20in%20story%20platformers.md), for the first city
+level. Decisions 27 to 39 were approved on 2026-11-25, after the playtests of the city, the park and the canal.
 
 | # | Decision | Notes |
 |---|---|---|
-| 16 | **The siblings' abilities stay the same all game** | She is tall and reaches high things; he is small and light and fits through gaps. Each chapter adds new things in the world (the city: buttons, boats, a ferry, trains) instead of new powers. |
-| 17 | **No jumping. She can lift him up instead** | Where something is too high for both, they stand under it and she lifts him onto her shoulders (the "boost"). |
-| 18 | **Every puzzle needs both of them** | No puzzle can be finished by one sibling alone, and neither one only waits: where one holds something, the other is doing something. The second road crossing was removed because it was only waiting. |
-| 19 | **The goal says what to do, not how** | Working out how is the puzzle. Hints for the current goal appear on the treasure map one at a time (after 25, 55 and 90 seconds), from a nudge to the answer. |
-| 20 | **Failing is quick, gentle and funny** | No lives and no game over. A car honks and bumps a sibling back to the kerb; a wrong bus or train costs a little time; a boat that is not held steady just cannot be walked on. |
-| 21 | **The treasure map is the key object** | It shows the goal, holds the hints, and its four pieces each carry a little picture. The four pictures are the code for the bridge at the end of Chapter Two. |
-| 22 | **Answers change every game** | The way to solve a puzzle stays the same, but the values change: the map pictures and the bus numbers are shuffled each game. |
-| 23 | **Places to rest and play, and stickers** | Each chapter has a calm place with toys that do not have to be used (Fountain Square: the fountain, the bell game). Eight hidden stickers reward looking around; none is needed to finish. **Stickers are switched off since 2026-11-24** (no level places any): the client found that collecting confuses more than it adds, and it comes back once the base game is set. The places to rest and play stay. |
-| 24 | **Sound** | Recorded CC0 music for each place (house, city streets, metro, Old Town, forest) and recorded CC0 sound effects (Kenney), chosen 2026-11-19 after the music made by code was "not good enough". The pieces cross-fade between places; M switches all sound off and on. Code-made sounds remain only as a fallback and for sounds with no good recording (barks, honks, splashes). |
+| 16 | ~~The siblings' abilities: tall, and small and light~~ | *She is tall and reaches high things; he is small and light and fits through gaps.* **Replaced on 2026-11-25 by decision 28**, a longer list. One part stays: the abilities are the same for the whole game, and each level adds new things in the world, not new powers. |
+| 17 | ~~No jumping. She can lift him up instead~~ | **Replaced on 2026-11-25 by decision 27**: both jump. The lift stays. |
+| 18 | **Every puzzle needs both of them** | No puzzle can be finished by one sibling alone, and neither one only waits: where one holds something, the other is doing something. Each level has a scripted test that tries every short cut with one sibling alone. |
+| 19 | ~~The goal says what to do, in words; hints are sentences on the treasure map~~ | **Replaced on 2026-11-25 by decision 31**: pictures, not words. One part stays: the goal says what, not how; working out how is the puzzle. |
+| 20 | **Failing is quick, gentle and funny** | No lives and no game over. *The examples from the first city level (a car honks, a wrong bus) went with that level;* how it works now is in decision 27. |
+| 21 | ~~The treasure map is the key object~~ | *It showed the goal, held the hints, and its four pieces carried the code for the bridge.* **Replaced on 2026-11-25 by decision 31**. The torn map and its pieces were taken out of Level 2 on 2026-11-25: only the puzzles are left. |
+| 22 | **Answers change every game** | The way to solve a puzzle stays the same, but values (codes, numbers) are shuffled. **Not used in Chapter 1**: there are no codes. Whether it returns is an open question. |
+| 23 | **Places to rest and play** | Each level has a calm place where nothing has to be done (the pond in the park, Fountain Square in the city, the ducks and the rowing boat at the canal). *The second half of this decision, eight hidden stickers, was **replaced on 2026-11-25 by decision 39**.* |
+| 27 | **Movement: jumping, with no death pits** (approved 2026-11-25) | Both siblings walk and jump. A jump is always the same height (1.1 brother-heights; 1.2 in Level 1), with a little forgiveness at edges and just before landing. Light boxes can be carried by either, the heavy crate only by her. She lifts him onto her shoulders; in Level 2 she can also toss him up from there. Weight matters: she is heavy, he is light. No lives, no game over, no fall damage, no timed jumps over hazards. Whoever falls into water or out of the picture is back within a second, with a splash. No dead ends: wherever somebody can get to, they can get back from. |
+| 28 | **What each sibling can do** (approved 2026-11-25) | The table below. The same for the whole game. |
+| 29 | **The object kit** (approved 2026-11-25) | Puzzles are built from a small set of objects placed by settings, in `game/shared/kit.js`: light box, heavy crate, small blue and big green plates, gates, levers, see-saw, pulley lift, thin planks, small boats, a ferry, a rope ladder, a height bar that keeps boxes in their own part of a level. A level adds its own objects on top (the canal: a sliding footbridge, a raft that fetches her by itself). |
+| 30 | **The colour language** (approved 2026-11-25) | Green means the sister's job (heavy or high). Blue means the brother's job (light or small). Plain wood is for either. |
+| 31 | **Pictures instead of words: nothing needs reading** (approved 2026-11-25) | The goal of each part is a picture in a thought bubble. Hints are pictures: the thing to use sparkles, then an arrow points at it, then a faint, glittering ghost of the right sibling shows the move (after 10, 20 and 35 seconds in Level 1; 20, 40 and 60 in Levels 2 and 3). A small sign over a head shows what the grab key would do. End cards and the chapter map are pictures and numbers. Words remain only on the shop signs painted into the art, the loading line, and the developer views. |
+| 32 | **The progression rules** (approved 2026-11-25) | [PROGRESSION.md](PROGRESSION.md): a slow, soft curve. Level 1 starts with moving only; one new idea per level; every idea is taught, practised, then given a twist; a calm moment after each harder puzzle; a new level starts easier than the last one ended; every level ends with both at once. |
+| 37 | **Levels feel like progress by combining known tools** (approved 2026-11-25) | From Level 3 on: combinations of tools the players already know, at most two steps, both visible on one screen, with at most the level's one new idea in them. The rules and the ideas not used yet are in [PROGRESSION.md](PROGRESSION.md), "Combinations". |
+| 38 | **A chapter map and a local save** (approved 2026-11-25) | After each level's end card comes a picture-only map of the city, [game/map.html](game/map.html), with a stop for each level: a tick on finished stops, a padlock on later ones, the siblings walking on to the next. Any finished stop can be played again. After Level 3 a card celebrates the end of the chapter, and the forest appears across the river with a padlock. The browser remembers, on that device only, which levels are finished and how far into an unfinished one the players got: no accounts, no personal data, nothing sent anywhere. [game/index.html](game/index.html) opens Level 1 the first time and the map afterwards. |
+| 39 | **Stickers, the dog and the ball are saved for later levels** (approved 2026-11-25) | Nothing is collected in Chapter 1, and there is no dog and no ball. The client found that collecting confuses more than it adds, and that the dog and the ball are fun but too much while players are learning. The sticker object stays in the kit (`game/shared/kit.js`); the dog and the ball are kept in `game/shared/later/`. When and how they come back is an open question. |
 
-## Proposed (testing in the city lab)
+What each sibling can do (decision 28):
 
-**None of this is approved.** Since 2026-11-21 the city ([game/city.html](game/city.html)) is a test level, "the lab",
-for a new audience: parents playing with children of about 5 to 10, two children together, or one player with both
-characters. The ideas below are being tried there and will be approved, changed or dropped after playtests with
-children. What we want to learn is in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "The city lab".
-Proposals G and H were added on 2026-11-23 and are tried in the park, the gentle Level 1
-([game/park.html](game/park.html)); what to watch for there is in OPEN_QUESTIONS.md, "Level 1 (the park)".
+| | Sister (tall, strong, heavy; green) | Brother (small, light; blue) |
+|---|---|---|
+| Walk and jump | Yes | Yes, a little faster |
+| Carry | Light boxes and the heavy crate | Light boxes only |
+| Weight | Presses the big green plates. Thin planks bend and send her back; small boats sink under her | Walks on thin planks and small boats |
+| Size | Reaches high levers and signs | Ducks into low gaps by himself; his hand fits small hatches and drains |
+| Together | Lifts him onto her shoulders; in Level 2, tosses him up from there | Rides on her shoulders and reaches higher still |
+| See-saw | Her landing sends him flying | Too light to send her anywhere |
+
+## Proposed (not approved)
+
+Ideas that are built or written down but that nobody has approved yet.
 
 | | Proposal | Notes |
 |---|---|---|
-| A | **Jumping, with no death pits** | Both siblings walk and jump. The jump is always the same height (now 1.1 brother-heights, lowered once after a first feel test), with a little forgiveness at edges and before landing. No lives, no game over, no fall damage, no timed jumps over hazards. Whoever falls out of the picture or into water is back within a second, with a splash or a puff. |
-| B | **The new abilities** (table below) | Carrying, weight and size, and three moves together: the lift, the toss and the see-saw. |
-| C | **An object kit** | Puzzles are built from a small set of objects placed by settings: light box, heavy crate, small blue and big green plates, gates, levers, a two-switch door, see-saw, pulley lift, thin planks, small boats and branches, a ferry, a rope ladder, a height bar. |
-| D | **A colour language** | Green means the sister's job (heavy or high). Blue means the brother's job (light or small). Plain wood is for either. |
-| E | **Pictures instead of words** | Nothing needs reading. The goal is a picture in a thought bubble. Hints are pictures: the right thing sparkles after about 20 seconds, an arrow points at it after 40, a faint ghost of the right sibling shows the move after 60. Signs over heads are a hand, two hands or an arrow. The end card is pictures and numbers. |
-| F | **Stations** | A chapter is a row of stations, each one idea on one screen, one to two minutes, needing both siblings, with a way of checking by script that one sibling cannot finish it alone. |
-| G | **A slow, soft curve** (proposed 2026-11-23) | The rules in [PROGRESSION.md](PROGRESSION.md), written after the client found the lab far too difficult as a first level: the first one to two minutes are moving only; one new idea per level; every idea is met three times (teach, practise, twist); a calm moment after each harder puzzle; levels grow from about 5 to about 15 minutes; a new level starts easier than the last one ended; every level ends with both at once and a high five. Easy parts are kept interesting by things that react, not by harder puzzles. The planned levels are listed there too. |
-| H | **Level 1 is the park** (proposed 2026-11-23) | [game/park.html](game/park.html), which [game/index.html](game/index.html) now opens: learn to move, plate and gate, box on plate, the pond, the balloon and the lift, the way out together. About five minutes. Only walking, jumping, small plates, gates, one light box and the lift; no toss. A slightly more forgiving jump than the lab and earlier hints (10, 20, 35 seconds). It borrows all its art from the forest and the city. **Made plainer on 2026-11-24** after the client's feedback (branch `level-1/plain`): no stickers, no dog and no ball; the opening is only about learning to move, with each player's keys shown as pictures next to their sibling, one move at a time; the four puzzles are unchanged. Waiting for feedback on difficulty: see [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "Level 1: waiting for feedback on difficulty", and the first-time player review in [game/worlds/park/REVIEW.md](game/worlds/park/REVIEW.md). |
-
-The proposed abilities:
-
-| | Sister (tall, strong, heavy) | Brother (small, light) |
-|---|---|---|
-| Walk and jump | Yes | Yes |
-| Carry | Heavy crates and light boxes | Light boxes only |
-| Weight | Presses the big green plates; thin planks, small boats and branches give way under her | Walks on thin planks, small boats and branches |
-| Size | Reaches high levers and signs | Ducks into low gaps by himself (no crawl button); his hand fits small hatches and drains |
-| Together | Lifts him onto her shoulders; from there tosses him up to a ledge | Rides on her shoulders and reaches higher still |
-| See-saw | Her landing sends him flying | Too light to send her anywhere |
-
-**If these are approved, earlier decisions change:**
-- **12** (Level 1 is a side cutaway of the house: "walking and stairs, no jumping") and **13** (the hidden spare key,
-  solved by reading a chalked code): the house would need jumping, and a puzzle without reading.
-- **16** (the siblings' abilities stay the same all game): the abilities table above replaces "tall" and "small and
-  light" with a longer list; they would still stay fixed for the whole game.
-- **17** (no jumping; she lifts him instead): jumping comes in. The lift stays, and the toss is added.
-- **19** (the goal says what to do in words, and hints are sentences on the treasure map): pictures replace both.
-
-- **11 to 13** again, if G and H are approved: the game would start in the park, not in the house, and the story's
-  beginning (home alone, the map on the kitchen table) would need a new place. The house is kept, unchanged, at
-  [game/house.html](game/house.html).
-
-Decisions 5 (split information) and 21 to 22 (the map pictures as a code that changes every game) are also not used
-in the lab: with children of 5 to 10 on one screen there are no codes. Whether they return for older players is open.
+| F | **Stations** (proposed 2026-11-21) | A level is a row of stations or sections, each one idea on one screen, one to two minutes, with a scripted check that one sibling cannot finish it alone. All three levels are built this way; it has not been approved as a rule for later chapters. |
+| M | **Open points from the level reviews** (2026-11-24 and 2026-11-25) | The first-time player reviews list things to decide in the park ([game/worlds/park/REVIEW.md](game/worlds/park/REVIEW.md)) and the canal ([game/worlds/canal/REVIEW.md](game/worlds/canal/REVIEW.md)): for example the cat on the box, the birds inside two puzzles, the edge of the picture stopping whoever runs ahead, and that Levels 2 and 3 both use small boats and the Old Bridge. They are gathered in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md). |
 
 ## Decision log
 
@@ -114,9 +103,11 @@ in the lab: with children of 5 to 10 on one screen there are no codes. Whether t
 | 2026-11-15 | Earlier prototypes removed. The design is settled here before any building starts. |
 | 2026-11-18 | Forest Trail scene approved as the graphics and characters for the game (decisions 6 to 9). |
 | 2026-11-18 | Story start and Level 1 chosen: brother and sister, home alone, escape the house with the hidden spare key (decisions 10 to 13). |
-| 2026-11-18 | Client feedback on Level 1: the siblings carry nothing (no staff, no lantern; the cupboard got a pull-cord light), and Level 2 is the city, so the house now looks out on a city (decisions 7, 11, 13 updated). |
+| 2026-11-18 | Client feedback on Level 1: the siblings carry nothing (no staff, no lantern), and Level 2 is the city (decisions 7, 11, 13 updated). |
 | 2026-11-18 | Level 2 is a side-scrolling city level of 15 to 20 minutes, and every world is kept in its own folder (decisions 14 and 15). |
 | 2026-11-19 | Client feedback on Level 2: the look is right, but it was no fun to play. Researched how similar games handle puzzles, agreed the play rules in decisions 16 to 24, and rebuilt the city level on them. |
-| 2026-11-21 | New audience: parents with children of about 5 to 10, and two children together. The city became a test level ("the lab") on the branch `lab/city-v2`. Nothing was approved; the ideas being tried are listed under "Proposed (testing in the city lab)". |
-| 2026-11-23 | Client feedback on the lab: far too difficult as a first level; what matters most is a slow, soft curve. Proposed, not approved: the progression rules in `PROGRESSION.md` and a gentle Level 1, the park, on the branch `level-1/gentle` (proposals G and H). The lab stays as a test level. |
-| 2026-11-24 | Client feedback on the park: the stickers confuse more than they add, and the dog and the ball are fun but too much while players are still learning the controls, so the difficulty could not be judged. Agreed direction: Level 1 is an extremely plain, simple and intuitive intro. On the branch `level-1/plain`: stickers, dog and ball taken out of Level 1 (dog and ball saved in `game/shared/later/`; stickers stay in the kit and come back once the base game is set); the opening shows each player's keys as pictures, one move at a time; the puzzles are unchanged. Still proposed, not approved. Later the same day, at the user's request: the city lab's eight stickers taken out as well (its stations are unchanged). |
+| 2026-11-21 | New audience: parents with children of about 5 to 10, and two children together. The city became a test level ("the lab") with jumping, carrying, the lift, the toss and an object kit. Nothing was approved yet. |
+| 2026-11-23 | Client feedback on the lab: far too difficult as a first level; what matters most is a slow, soft curve. The progression rules were written (`PROGRESSION.md`) and a gentle Level 1, the park, was built. Proposed, not yet approved. |
+| 2026-11-24 | Client feedback on the park: the stickers confuse more than they add, and the dog and the ball are fun but too much while players are learning the controls. Agreed direction: Level 1 is an extremely plain, simple and intuitive intro. Stickers, dog and ball taken out; the opening shows each player's keys as pictures, one move at a time. The city's eight stickers taken out as well. |
+| 2026-11-25 | Level 3 "The Canal", the chapter map and the local save built. After the first plays: two dead ends removed (one in the canal, one in the city), the brother can no longer end up inside a wall, the torn map taken out of the city, the log in the park drawn where it is stood on. |
+| 2026-11-25 | **Approved by the user and the client: Chapter 1** (the park, the city, the canal) and everything it is built on. New decisions 25 to 39: the audience, two players on one screen, the movement, the abilities, the object kit, the colour language, pictures instead of words, the progression rules, the three levels, light-only surfaces, combinations, the chapter map and local save, and stickers, dog and ball saved for later. Replaced: decisions 3, 11, 12, 13, 15, 16, 17, 19 and 21, and parts of 2, 20 and 23. Not used in Chapter 1: decisions 5 and 22. |

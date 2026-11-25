@@ -1,5 +1,10 @@
 # City lab plan (branch `lab/city-v2`)
 
+**Status (2026-11-25): historical.** This is the plan and the record of how the city was rebuilt as a test level in
+November 2026. That level was approved as **Level 2** on 2026-11-25. The stations it describes are still the level,
+except that the stickers and the torn map were taken out. For the level as it is now, see `game/README.txt` and
+[PROGRESSION.md](../../../PROGRESSION.md); for what is decided, [DECISIONS.md](../../../DECISIONS.md).
+
 The city is now a test level. This page says how it is being rebuilt. It was written on 2026-11-21, before Phase 1,
 from the checkpoint `checkpoint-2026-11-20-city-music` (`level-2/city` had no newer commits).
 
@@ -109,7 +114,10 @@ first level's `level.js` and `play.js` are deleted, and its puppy, fountain, bel
 - No stickers since 2026-11-24. There were eight, none needed (a key, a bird, a drop, a sock, a paw, a bell, a boat,
   a note). The client found, on Level 1, that collecting confuses more than it adds, and asked for them to go here
   too; they come back once the base game is set. Their places are in the git history (commit `4d44558`). The two
-  shelves they sat on (Maple Street, over the fish stall) are still there. The end card shows the map and the time.
+  shelves they sat on (Maple Street, over the fish stall) are still there. The end card shows a high five and the time.
+- No torn map since 2026-11-25 (the user: "only puzzles are good"). The gust, the flying pieces, the box of pieces
+  and the map on the end card are gone. The puzzles stay: the three places at Maple Street are lamps with a cable to
+  the gate (green hers, blue his, plain for the lift), and the puppy is helped down from the awning.
 - Words that remain: the shop names painted on the building art, the loading line, the debug and tuning views.
 
 **Phase 5 is done (2026-11-21).** Two scripted tests, both in `tools/playtest-city.js`:

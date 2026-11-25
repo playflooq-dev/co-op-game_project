@@ -76,12 +76,12 @@ function update(dt) {
   for (const n in PUZZLES) if (!game.solved[n] && PUZZLES[n]()) solve(+n);
   // which section they are in: the furthest one both have reached
   const back = Math.min(sis.x, bro.x); let n = game.section; while (n + 1 < SECTIONS.length && back >= SECTIONS[n + 1].x[0]) n++;
-  if (n !== game.section) { game.section = n; if (game.entered[n] === null) game.entered[n] = game.time; }
+  if (n !== game.section) { game.section = n; if (game.entered[n] === null) game.entered[n] = game.time; if (typeof CHAPTER !== 'undefined') CHAPTER.note('park', n); } // (the chapter remembers how far they got)
   camX += (cameraTarget() - camX) * Math.min(1, dt * 4);
   updateHints(dt); game.goalT = (game.goalT || 0) + dt;
   // the end: through the last gate, and both at the way out
   if (game.solved[5] && !ending && players.every((p) => !p.gone && Math.abs(p.x - PARK.exit) < 130)) { game.exitT = 0; game.finished = game.time; }
-  if (ending) { game.exitT += dt; const u = Math.min(1, game.exitT / 1.6); for (const p of players) { p.x += (PARK.exit - p.x) * Math.min(1, dt * 1.5); p.alpha = 1 - u; } if (game.exitT > 1.8 && !game.done) { game.done = true; snd('fanfare'); } }
+  if (ending) { game.exitT += dt; const u = Math.min(1, game.exitT / 1.6); for (const p of players) { p.x += (PARK.exit - p.x) * Math.min(1, dt * 1.5); p.alpha = 1 - u; } if (game.exitT > 1.8 && !game.done) { game.done = true; snd('fanfare'); if (typeof CHAPTER !== 'undefined') CHAPTER.mark('park'); } }
   if (game.done) { game.endT += dt; if (game.endT > 1.2 && ['KeyW', 'ArrowUp', 'Enter', 'Space'].some((k) => hit(k))) location.href = PARK.next; }
   if (typeof musicArea === 'function') musicArea('park');
   endInput();

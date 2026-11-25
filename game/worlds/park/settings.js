@@ -12,7 +12,7 @@ const PARK = {
   walk: [150, 10900],    // furthest left and right the siblings can walk
   feet: 935,             // where feet stand on the path
   exit: 10760,           // the park gate at the far end: the level ends when both are there
-  next: 'city.html',     // where the end card leads on to (the city lab, until there is a Level 2)
+  next: 'map.html?from=park', // where the end card leads on to: the chapter map, which goes on to Level 2 (the city)
 };
 
 // How moving feels in Level 1: a little more forgiving than the lab. These replace the same numbers in MOVE
@@ -60,7 +60,7 @@ const SECTIONS = [
     // walked and jumped. (learn.js shows the keys; the numbers for it are in LEARN_SET above.)
     { kind: 'block', x: [1700, 2000], h: 44 },
     { kind: 'block', x: [2500, 2620], h: 44 }, { kind: 'block', x: [2620, 2820], h: 88 }, { kind: 'block', x: [2820, 2940], h: 44 },
-    { kind: 'log', x: 3560, h: 84 },
+    { kind: 'log', x: 3560, h: 54 },  // h is where feet stand on it; the picture is scaled to fit (things.js)
   ] },
   { name: '2 Plate and gate (teach)', goal: 'gate', x: [4500, 5900], start: [4580, 4670], view: [4520, 5880], things: [
     // the gate is open while somebody stands on either plate: one holds it, the other walks through and holds it

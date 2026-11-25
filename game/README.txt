@@ -2,32 +2,87 @@ TREASURE HUNT - game prototype
 ==============================
 
 HOW TO OPEN
-Double-click index.html. It opens in your web browser and starts Level 1, the park.
+Double-click index.html. It opens in your web browser and starts Chapter 1: the first time with
+Level 1, the park; after that with the chapter map, where players go on from where they stopped.
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
+CHAPTER 1: THREE LEVELS IN THE CITY
+Level 1  park.html    The park: learning to move, then four very small puzzles. About 5 minutes.
+Level 2  city.html    Across the city to the Old Bridge: eight stations (carrying, the lift, the
+                      see-saw, boats, the pulley, the toss). About 10 minutes.
+Level 3  canal.html   The canal (since 2026-11-25): thin planks and small boats that only hold the
+                      brother, combined with what the first two levels taught. About 8 minutes.
+                      It ends the chapter at the Old Bridge, with the forest on the far bank.
+Each level's end card leads to the chapter map, and the map leads to the next level.
+Chapter 1 was approved on 2026-11-25.
+
+CONTROLS (the same in all three levels)
+Two players on one keyboard, or one player with both hands:
+  Sister:   A / D walk     W jump     S grab
+  Brother:  Left / Right walk     Up jump     Down grab
+  M switches the sound off and on. Jump, held at a ladder, climbs it.
+On a tablet or phone, held sideways: each player has four buttons in their bottom corner, the
+sister's on the left and the brother's on the right (two to walk, one to jump, one to grab).
+On the chapter map: jump, Enter or a tap starts a level; left and right choose one.
+Nobody has to know the keys beforehand: Level 1 shows them as pictures, one move at a time.
+
+WHAT EACH SIBLING CAN DO
+The sister is tall, strong and heavy (her colour is green). She reaches high levers, carries the
+heavy crate as well as light boxes, presses the big green plates, lifts the brother onto her
+shoulders, and her jump onto a see-saw sends him flying. Thin planks and small boats do not
+hold her.
+The brother is small and light (his colour is blue). He walks on thin planks and small boats,
+ducks into low gaps, his hand fits small hatches and drains, and from her shoulders he reaches
+higher than either alone.
+Every puzzle needs both of them. Nobody can get hurt, lose, or get stuck.
+
+ADDRESS OPTIONS FOR TESTING (add to the address of a level page)
+  park.html?section=3     start at section 3 of the park (1 to 6)
+  city.html?station=5     start at station 5 of the city (0 to 7)
+  canal.html?section=3    start at section 3 of the canal (1 to 7)
+  ?debug=1                show what is solid, what is switched on, the frame rate
+  ?hints=fast             the picture hints come ten times sooner
+  ?touch=1                show the touch buttons on a computer
+  ?fps=30                 draw only 30 frames a second, to feel a slow device
+  ?tune=1                 sliders for how the jump and the running feel
+  map.html?reset=1        forget what has been played
+They can be joined with "&": canal.html?section=5&debug=1
+
 THE PAGES
-index.html    Starts the game: it passes straight on to park.html.
-park.html     LEVEL 1, "The Park" (since 2026-11-23; made plainer on 2026-11-24). A gentle first level
-              of about five minutes for parents playing with children of about 5 to 10, or two
-              children together. It is made for somebody who has never seen the game: first only
+index.html    Starts the game: Level 1 the first time, the chapter map once a game has been started.
+map.html      The chapter map, in pictures: three stops on a map of the city. A finished stop has a
+              green tick, the next one to play pulses under an arrow, later ones have a padlock.
+              Jump, Enter or a tap starts the stop the siblings stand at; left and right, or a tap,
+              choose any finished stop to play it again. After the third level a card celebrates
+              the end of the chapter, and then the mist lifts from the forest across the river:
+              where Chapter 2 will be (it has a padlock).
+park.html     LEVEL 1, "The Park". Made for somebody who has never seen the game: first only
               learning to walk and jump, with the keys shown as pictures, then four very small
               puzzles. Nothing in it needs reading and there is nothing to collect.
-              It is waiting for feedback on difficulty and is not approved yet.
-              Its end card leads on to the city.
-city.html     The city. Since 2026-11-21 it is a TEST LEVEL ("the lab"): eight stations that each
-              try one idea with new movement (jumping, carrying, the lift and the toss). It was found
-              far too hard as a first level; it stays as the place where ideas are tried.
-              It ends at Forest Park.
-house.html    "Home Alone" (this was index.html until 2026-11-23): the brother and sister are locked
-              in the house and must find the spare key. Getting out leads on to the city.
-forest.html   The Forest Trail (the first art scene; a later chapter will be built here).
+city.html     LEVEL 2, the city: the see-saw level. Eight stations, each one idea (jumping and
+              carrying, the heavy crate, a box as a step, the see-saw, boats, the pulley, the
+              toss). It ends at the Old Bridge. It was built on 2026-11-21 as a test level and is
+              still called "the city lab" in some file names: the lab and Level 2 are the same page.
+canal.html    LEVEL 3, "The Canal". See its own part below.
 
-The park and the city lab play the new way: jumping, pictures in place of words. The house and the
-forest still play the old way: walking, no jumping, and words on the screen.
+OTHER PAGES (not part of Chapter 1)
+house.html    "Home Alone", the first level ever built (it was index.html until 2026-11-23): the
+              brother and sister are locked in the house and must find the spare key. It plays the
+              old way: walking only, words on the screen. Its future is an open question.
+forest.html   The Forest Trail: the approved art scene. Chapter 2 will be built here.
+
+WHAT IS REMEMBERED
+The browser keeps, on this device only, which of the three levels are finished, how far into an
+unfinished level the players got, and whether the chapter's ending has been shown. Nothing else:
+no names, no accounts, and nothing is sent anywhere. In a private window, or if the browser will
+not store anything, the game simply starts from the beginning each time.
+map.html?reset=1 forgets everything.
+
+The three levels play the new way: jumping, pictures in place of words. The house and the forest
+still play the old way: walking, no jumping, and words on the screen.
 How the levels are meant to get harder, one small step at a time, is in PROGRESSION.md (one folder up).
-What follows is in three parts: the park, the city lab, then the house and the forest.
-
+What follows is in four parts: the park, the canal, the city, then the house and the forest.
 
 LEVEL 1: THE PARK
 =================
@@ -78,8 +133,8 @@ THE SECTIONS
    it, and the little gate opens for whoever carries a balloon.
 6  The way out. Two plates side by side: both stand on one at the same time, the gate opens for
    good, confetti, a high five. Walk to the big park gate together to finish.
-The card at the end shows a high five and the time. Jump goes on to the next level
-(for now, the city lab, which is much harder).
+The card at the end shows a high five and the time. Jump goes on to the chapter map, and from
+there to Level 2, the city.
 
 STUCK?
 A thought bubble over the sister shows a picture of what the section is about (a gate, the
@@ -112,8 +167,65 @@ park.html?fps=30       draws only 30 frames a second, to feel a slow device
 They can be joined with "&": park.html?section=5&debug=1
 
 
-THE CITY LAB
-============
+LEVEL 3: THE CANAL
+==================
+
+CONTROLS (the same keys as in the park and the city)
+Sister:   A / D walk     W jump     S grab
+Brother:  Left / Right walk     Up jump     Down grab
+M switches the sound off and on. Jump, held at a ladder, climbs it.
+On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
+
+THE ONE NEW IDEA: LIGHT FEET ONLY
+Thin blue planks and small blue boats hold the brother, and a light box. Under the sister a plank
+creaks, bends and walks her back to her bank; a boat sinks under her. She can never cross one.
+Everything else is known from Levels 1 and 2: plates and gates, carrying a light box, the lift,
+levers and the see-saw. There is no toss, no pulley and no heavy crate in this level.
+
+Nobody can get hurt or lose. Falling into the water is a splash and a duck's quack; a moment later
+that sibling is back: next to the other one if both are on the same bank, otherwise on the bank
+they came from.
+
+THE SECTIONS
+1  Warm-up. Plate and gate, as in the park: one holds the gate open, the other walks through and
+   holds it from the far side. Nothing else is on the first screen.
+2  The thin plank. He walks over the stream on it. On the far side he steps on a plate, and a
+   sturdy bridge slides out for her and stays.
+3  The see-saw and the boats. The middle boat is too far to jump to. He stands on the blue end of
+   the see-saw, she jumps onto the green end, and he flies over to it (no steering needed). He goes
+   on over the raft to the far quay and pulls the lever: the raft fetches her by itself.
+4  A calm moment. Ducks, and a rowing boat tied up at the quay. Nothing has to be done.
+5  The box over the plank. He carries the light box over a thin plank and puts it on the plate.
+   That lets a ladder down on her side. She climbs up to the high green lever, which slides the
+   lock bridge out and opens the lock gate, for both.
+6  The see-saw on the ledge. The ledge is too high to jump onto: the box goes against it as a
+   step. Up there he stands on the blue end, she jumps onto the green end, and he flies up to
+   the high shelf, where a lever opens the way to the bridge.
+7  The Old Bridge. He walks over the small boats to the far bank. Each holds a lever, one on
+   each bank, at the same time: the bridge comes down. She walks over to him: a high five, and
+   the forest is ahead.
+The card at the end shows a high five and the time. Jump goes on to the chapter map.
+
+STUCK?
+As in the city: a thought bubble shows a picture of what the section is about; then the thing to
+use sparkles (after about 20 seconds), an arrow points at it (40 seconds), and a faint, glittering
+ghost of a sibling shows where to stand (60 seconds). These times are HINT_TIMES in
+worlds/canal/settings.js.
+
+FOR TESTING (add to the address)
+canal.html?section=3   starts at section 3 (1 to 7)
+canal.html?debug=1     shows what is solid, what is switched on, the section names, the frame rate
+canal.html?hints=fast  the hints come ten times sooner
+canal.html?touch=1     shows the touch buttons on a computer
+canal.html?fps=30      draws only 30 frames a second, to feel a slow device
+canal.html?tune=1      sliders for how the jump and the running feel
+map.html?reset=1       forgets what has been played
+worlds/canal/REVIEW.md is the first-time player review of this level.
+
+
+LEVEL 2: THE CITY
+=================
+(The see-saw level. Built as a test level, "the city lab"; approved as Level 2 on 2026-11-25.)
 
 CONTROLS (the same keys as in the park; the lab adds the toss, levers and ladders)
 Sister:   A / D walk     W jump     S grab
@@ -122,7 +234,7 @@ The keys are shown as pictures at the bottom of the screen. M switches the sound
 
 "Grab" does whatever fits where they stand:
 - next to a box: pick it up. Again: put it down in front (on a pile, it goes on top).
-- next to something to use (a lever, a map piece, a bell): use it. Some levers and the rope
+- next to something to use (a lever, a lamp, a bell): use it. Some levers and the rope
   only work while the key is held down.
 - next to each other, with nothing else in reach: she lifts him onto her shoulders.
   Grab again: she tosses him up and forwards. Jump while he is up there: he hops down.
@@ -156,14 +268,14 @@ back on the bank.
 THE STATIONS
 Each is one idea on one screen, and needs both of them.
 0  Maple Street. Steps and a low wall to jump; a box to carry, and a shelf it helps to reach.
-   Then the wind tears the map into four pieces. One lands on a shop sign (she reaches it), one
-   in a drain (only his hand fits), one in a window box (too high for both: she lifts him).
-   The gate opens when all three are found.
+   Then three lamps to switch on, each with a cable to the gate: one on a shop sign (she reaches
+   it), one in a drain (only his hand fits), one in a window box (too high for both: she lifts
+   him). The gate opens when all three are lit.
 1  The flour mill. The shutter stays open only while the big green plate is held down. The heavy
    crate would do it, but it is up on the hoist: he works the low hatch that lets it down, and
    she carries it onto the plate.
-2  The market. The puppy has the last piece, up on a high awning. Bring the box under it; she
-   stands on the box and lifts him.
+2  The market. The puppy is up on a high awning and cannot get down. Bring the box under it; she
+   stands on the box and lifts him, and he helps it down. That opens the market gate.
 3  Fountain Square. He stands on the blue end of the see-saw, she jumps onto the green end, and
    he flies up to the balcony. Up there he lets the rope ladder down for her. The fountain and
    the bell game are only there to play with.
@@ -184,10 +296,11 @@ to stand and what to press (60 seconds). The ghost is green for her and blue for
 
 NOTHING TO COLLECT
 The eight stickers that were hidden along the way were taken out on 2026-11-24, as in Level 1
-(collecting confused more than it added; it comes back once the base game is set). The four
-pieces of the map are not stickers: finding them is the puzzle of stations 0 and 2, and the box
-at the top left shows them once the map is torn.
-The card at the end shows the map put together and the time, in pictures and numbers.
+(collecting confused more than it added; it comes back once the base game is set). The torn map
+went on 2026-11-25: no gust of wind, no pieces flying about, no box of pieces at the top left.
+Only the puzzles are left (the three lamps, the puppy).
+The card at the end shows a high five and the time.
+Jump goes on to the chapter map, and from there to Level 3, the canal.
 
 FOR TESTING (add to the address)
 city.html?station=5    starts at station 5 (0 to 7)
@@ -225,12 +338,14 @@ city's daytime music. A few animal sounds are made by code.
 Browsers only allow sound after the first key press or tap.
 
 WHAT IS IN THE FOLDER
-index.html, park.html, city.html, house.html, forest.html   the pages; open index.html to start
-worlds/        one folder per world (park, house, city, forest): its art, its settings and its
+index.html, map.html, park.html, city.html, canal.html, house.html, forest.html
+               the pages; open index.html to start
+worlds/        one folder per world (park, city, canal, house, forest): its art, its settings and its
                code. worlds/park/REVIEW.md is the first-time player review of Level 1. worlds/README.md explains how to change or replace any of it, and how to
                place objects in the park and the city. worlds/city/LAB_PLAN.md is the story of
                the city lab.
 shared/        what more than one world uses: the two characters, the sounds, and for worlds with
-               jumping the physics, the movement and the object kit. shared/later/ holds things
+               jumping the physics, the movement and the object kit; chapter.js and chaptermap.js
+               (the chapter, what is remembered, and the map). shared/later/ holds things
                saved for a later level (the dog, the ball); no page loads them.
 tools/         developer tools used to create the artwork and test the game; not needed to play

@@ -156,6 +156,8 @@
       check('he jumps onto the step', (await go(bro, (step1.x[0] + step1.x[1]) / 2)) && near(up(bro), step1.h, 3) && shown(bro) === 'none', `he is ${up(bro).toFixed(0)} up`);
       check('both get over the three steps', (await go(sis, (stairs.x[0] + stairs.x[1]) / 2)) && near(up(sis), stairs.h, 3) && (await go(sis, stairs.x[1] + 320)) && (await go(bro, stairs.x[1] + 400)) && up(sis) < 3 && up(bro) < 3);
       await go(bro, log1.x); check('he hops onto the log', near(up(bro), log1.h, 3), `he is ${up(bro).toFixed(0)} up`);
+      { const lg1 = inSection(0, 'log'), art = SP.logs[0], barkY = FEET + 10 - (art.ay - 80) * lg1.scale; // where the top of the bark is drawn
+        check('his feet are on the bark that is drawn, not in the air above it', Math.abs(bro.y - barkY) < 3 && bro.x > lg1.span[0] && bro.x < lg1.span[1], `feet at ${bro.y.toFixed(0)}, bark drawn at ${barkY.toFixed(0)}`); }
       check('nothing in section 1 needs a hint, and no puzzle has begun', !hint.step && game.section === 0 && !SECTIONS[0].goal);
       check('over the log and along the last flat stretch, into section 2', (await go(sis, at(1)[0] + 20)) && (await go(bro, at(1)[1] + 10)) && game.section === 1, `section ${game.section + 1}`);
       check('neither has been shown the grab key yet', players.every((q) => !LEARN[q.who].met && !LEARN[q.who].grab));
@@ -222,6 +224,7 @@
       check('to the way out', (await go(sis, PARK.exit - 30, 14000)) && (await go(bro, PARK.exit + 30, 14000)));
       check('the end card', await until(() => game.done, 6000));
       check('the end card leads on to a page that is there: ' + PARK.next, (await fetch(PARK.next, { method: 'HEAD' })).ok);
+      check('the park is saved as finished, and the end card leads to the chapter map', CHAPTER.done('park') && PARK.next === 'map.html?from=park');
     }
     clearInterval(watch);
     // ================= how long each section took, and how far each sibling walked in it

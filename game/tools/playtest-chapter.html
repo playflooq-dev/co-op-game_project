@@ -1,0 +1,10 @@
+<!doctype html>
+<!-- Test page: the chapter flow. tools/playtest-chapter.js opens index.html and map.html in a frame with different
+     things saved, presses keys and taps stops, and checks where each leads. It also checks the save itself. -->
+<html lang="en"><head><meta charset="utf-8"><title>Chapter flow test</title>
+<style>html,body{margin:0;background:#1c120a}iframe{width:1280px;height:720px;border:0;display:block}</style></head>
+<body>
+<script>addEventListener('error', (e) => fetch('/log', { method: 'POST', body: 'PLAY FAILED error: ' + e.message + ' (line ' + e.lineno + ')' }));</script>
+<script src="../shared/chapter.js"></script>
+<script src="playtest-chapter.js"></script>
+</body></html>

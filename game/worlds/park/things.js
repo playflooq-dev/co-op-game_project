@@ -25,9 +25,17 @@ KIT.hurdle = (world, d, ground) => {
   } };
 };
 
+// The log is drawn to fit what can be stood on, not the other way round: the picture is scaled so that the top of its
+// bark is exactly h above the path, and the solid part is as long as the bark. (Until 2026-11-25 the picture was
+// drawn at a fixed size, lower than the solid part, and the siblings stood in the air above it.)
+// Measured from the picture, forest props/log-1.png, 340 by 160: the bark's top edge is 80 down, the bark runs from
+// 29 to 296 across, and everything above the bark is leaves.
+const LOG_ART = { barkTop: 80, left: 29, right: 296, sits: 10 }; // sits: how far below the feet line the picture's ground point is put
 KIT.log = (world, d, ground) => {
-  const x = d.x, top = ground - d.h, art = SP.logs[0], sc = 0.86; world.solid(x - 132, top, x + 132, ground);
-  return { draw(c) { soft(c, x, ground + 10, 160, 12, '#2a1a0e', 0.28); putFast(c, art, x, ground + 24, sc); } };
+  const x = d.x, art = SP.logs[0], sc = (d.h + LOG_ART.sits) / (art.ay - LOG_ART.barkTop);
+  const a = x + (LOG_ART.left - art.ax) * sc + 14, b = x + (LOG_ART.right - art.ax) * sc - 14; // a little in from its rounded ends
+  world.solid(a, ground - d.h, b, ground);
+  return { span: [a, b], scale: sc, draw(c) { soft(c, (a + b) / 2, ground + 14, (b - a) * 0.58, 12, '#2a1a0e', 0.28); putFast(c, art, x, ground + LOG_ART.sits, sc); } };
 };
 
 KIT.puddle = (world, d, ground) => {

@@ -4,10 +4,14 @@ Each place in the game is a **world** with its own folder. A world can be change
 
 | Folder | Chapter | Page |
 |---|---|---|
-| `park/` | Level 1, "The Park": the gentle first level (since 2026-11-23; see "The park" below) | `park.html` (`index.html` opens it) |
-| `house/` | "Home Alone" | `house.html` (it was `index.html` until 2026-11-23) |
-| `city/` | The city: since 2026-11-21 a test level, "the lab" (see "The city" below) | `city.html` |
-| `forest/` | The Forest Trail (a later chapter will be built here) | `forest.html` |
+| `park/` | **Level 1**, "The Park": the plain first level (see "The park" below). Approved 2026-11-25. | `park.html` |
+| `city/` | **Level 2**, the city: the see-saw level, eight stations to the Old Bridge (see "The city" below). It began as a test level, "the city lab", and its files still carry that name: the lab and Level 2 are the same world. Approved 2026-11-25. | `city.html` |
+| `canal/` | **Level 3**, "The Canal": light-only planks and boats, and combinations (see "The canal" below). Approved 2026-11-25. | `canal.html` |
+| `house/` | "Home Alone", the first level ever built. It plays the old way (walking only, words on the screen) and is not part of Chapter 1; its future is an open question. | `house.html` |
+| `forest/` | The Forest Trail: the approved art scene. Chapter 2 will be built here. | `forest.html` |
+
+`index.html` starts Chapter 1 (Level 1 the first time, the chapter map `map.html` afterwards). The three levels and
+the map are tied together by `../shared/chapter.js`: see "The chapter" below.
 
 Every world folder has the same parts:
 
@@ -16,7 +20,7 @@ Every world folder has the same parts:
 | `assets/` | The world's pictures, one PNG per item, in sub-folders. |
 | `assets/manifest.js` | The list of those pictures: size and ground point of each one. |
 | `settings.js` | The numbers you may want to change: where things are, how fast things move, timings. Change a number, refresh, and see it. |
-| `level.js` (house, park), `scene.js` (forest), `lab.js` (city) | The code that runs the world. |
+| `level.js` (park, canal, house), `lab.js` (city), `scene.js` (forest) | The code that runs the world. |
 | `street.js`, `things.js` (city) | The city's scenery, and the city's own objects: see "The city" below. |
 | `scenery.js`, `things.js`, `life.js` (park) | The park's scenery, its own objects, and everything that only reacts: see "The park" below. The park has no `assets/` folder: all its pictures are borrowed. |
 | `generate.js` | The drawing code that painted the PNGs. The game does not use it; see "Repainting" below. |
@@ -32,7 +36,7 @@ What worlds share is in `../shared/`:
 - `shared/sounds/`: recorded sound effects (Kenney, CC0; see `CREDITS.txt` there). The `SAMPLES` list in
   `shared/sound.js` says which files each sound uses and how loud; `shared/movement.js` adds the ones for jumping
   and carrying. Sounds without files are made by code.
-- Only for worlds with jumping (today: the park and the city). The house and the forest do not load these.
+- Only for worlds with jumping (the park, the city and the canal). The house and the forest do not load these.
   - `shared/physics.js`: gravity, floors and walls, things to stand on, weight.
   - `shared/movement.js`: how the siblings walk, jump, carry, lift and toss. Every number that shapes the feel is in
     `MOVE` at the top of it.
@@ -93,8 +97,8 @@ picks between pictures of a group, it will start using it.
 
 ## The park (`park/`)
 
-Level 1 since 2026-11-23: a gentle first level built to the rules in [PROGRESSION.md](../../PROGRESSION.md). It is
-waiting for feedback and is not approved. It may only use walking, jumping, small blue plates, gates, one light box
+Level 1 since 2026-11-23, approved on 2026-11-25: a plain first level built to the rules in
+[PROGRESSION.md](../../PROGRESSION.md). It may only use walking, jumping, small blue plates, gates, one light box
 and the lift. On 2026-11-24 it was made plainer after the client's feedback: nothing to collect, no dog and no ball,
 and an opening that is only about learning to move.
 
@@ -113,7 +117,7 @@ Objects are placed exactly as in the city (see "Placing objects" below): one lin
 
 | Kind | Settings | What it is |
 |---|---|---|
-| `log` | `x, h` | A log lying on the path: hop over it or stand on it. |
+| `log` | `x, h` | A log lying on the path: hop over it or stand on it. `h` is where feet stand; the picture is scaled so that the top of its bark is exactly there, and the solid part is as long as the bark. |
 | `parkgate` | `x, by: [ids], any, latch` | The kit's gate, drawn as a green iron park gate. `any: true` opens for any one of its plates (the kit's gate needs all of them). `by: ['balloon']` opens for whoever carries the balloon. |
 | `parkbox` | `x` | The kit's light box, with a cat on it; it squashes and puffs dust when it lands. |
 | `pond` | `x: [from, to]` | A duck pond behind the path. Grab makes a splash; the ducks swim away from it. |
@@ -140,17 +144,72 @@ section. Things can only be taken with feet on something, never in a jump.
 How the moves feel in the park is `PARK_MOVE` in `park/settings.js`: a slightly higher jump than the lab, more
 forgiveness at edges and before landing, and no toss. `park.html?tune=1` has sliders.
 
+## The canal (`canal/`)
+
+Level 3 since 2026-11-25, the last level of Chapter 1, approved the same day: built to the rules in
+[PROGRESSION.md](../../PROGRESSION.md) ("Combinations"). Its one new idea is light-only surfaces; everything
+else is known from the park and the city. It has no art of its own: the houses, lamps, bench and the Old Bridge are
+the city's, the trees on the far bank the forest's.
+
+| File | What it holds |
+|---|---|
+| `settings.js` | The seven `SECTIONS` (every object, one line each), where the water is (`WATERS`), the houses and lamps, the forest edge, hint times (as in the city: 20, 40 and 60 seconds), and `CANAL_MOVE` (no toss). |
+| `level.js` | Runs the level: builds the sections, the camera, when a puzzle counts as solved, the hints (`HINTS`), the end card. |
+| `scenery.js` | Draws what cannot be touched: sky, the far town, the row of houses, the quay, the canal in front, the side canals, the forest on the far bank. |
+| `things.js` | The canal's own objects (table below). Most are a kit object with one thing added. |
+| `react.js` | Small reactions: boats dip, gates wobble, a quack after a splash, confetti when the bridge comes down. |
+| `REVIEW.md` | The first-time player review of 2026-11-25, with what was applied and what waits for a decision. |
+
+Objects are placed as in the park and the city: one line in a section's `things` list. Besides the kit's `block`,
+`ledge`, `box`, `plate`, `lever` and `bar`, and the city's `bridge`, the canal has:
+
+| Kind | Settings | What it is |
+|---|---|---|
+| `thinplank` | `x: [from, to], h` | The new idea. A thin blue plank: holds him and a light box, and bends a little (more with the box). Under her it creaks, bends deep and walks her back; a jump onto it springs her back to the bank she last stood on. It never breaks. |
+| `footbridge` | `x: [from, to], by` | A sturdy bridge with a green edge. It slides out over the water once its id comes on, and stays. |
+| `lightboat` | `x, w` | The kit's small blue boat. It dips under him; under her it sinks, and she cannot jump off it. |
+| `launcher` | `x, half, h, to: [x, h], rise` | The kit's see-saw (standing `h` above the quay if asked). Whoever it flings is carried to the place `to`, so nobody has to steer. `rise` is how high, in brother-heights. |
+| `raft` | `x: [her dock, home], by` | The kit's ferry. Once its lever is pulled it goes over to her side by itself, and brings back whoever steps on. |
+| `dropladder` | `x, h, by` | The kit's rope ladder, let down while its id is on and rolled up again when it goes off. |
+| `lockgate` | `x, by, any, latch` | The kit's gate; it wobbles as it opens. |
+| `ducks` | `x: [from, to], n` | Ducks on the canal in front of the quay. Only to look at. |
+| `moored` | `x` | A brown rowing boat tied up at the quay. Only to look at (blue would say "his boat"). |
+
+Rules that keep it fair, all checked by `tools/playtest-canal.html?solo=1`:
+- A stream is at least 340 wide and the gap to the middle boat 320: a jump carries about 190.
+- Nobody too heavy can jump off a light-only surface, not even in the moment of landing on it.
+- The high lever in section 5 is out of his reach, and the high shelf in section 6 out of reach of a jump, a lift, or
+  a second jump off the see-saw. There is no toss in this level.
+- A `bar` keeps each box in its own section.
+- After a splash a sibling comes back next to the other one only if both are on the same bank.
+- No dead ends: wherever somebody can get to, they can get back from, or the way on is already open for both. A drop
+  that cannot be jumped back up gets a low step (the far side of the ledge in section 6). The same was done in the
+  city: a ladder that is always down on the far side of the wall at Fountain Square. When adding a wall, a ledge or
+  a one-way drop to any level, ask what happens if one sibling, or both, go over it too early.
+
+## The chapter (`../shared/chapter.js`, `../shared/chaptermap.js`, `../map.html`)
+
+Chapter 1 is three levels: the park, the city, the canal. `shared/chapter.js` lists them in order (`CHAPTER.LEVELS`:
+id, page, the picture for its stop, and how to open it part-way) and keeps what the browser remembers. Each level's
+page loads it, calls `CHAPTER.note(id, n)` when a new section is reached and `CHAPTER.mark(id)` when its end card
+comes up, and its end card leads to `map.html?from=<id>`. `shared/chaptermap.js` draws the map. To add a level to a
+chapter: one line in `CHAPTER.LEVELS`, those two calls in its level code, and its end card's address.
+
 ## The city (`city/`)
 
-Since 2026-11-21 the city is a **test level, "the lab"**: a row of stations that each try one idea with jumping,
-carrying, the lift and the toss. Everything in it may change. Its story is in [city/LAB_PLAN.md](city/LAB_PLAN.md).
+**Level 2** of Chapter 1, the see-saw level, approved on 2026-11-25: a row of eight stations that each bring one idea
+(jumping and carrying, the heavy crate, a box as a step, the see-saw, small boats and a ferry, the pulley lift, the
+toss, two levers at once). It was built on 2026-11-21 as a test level, "the city lab", which is why its main file is
+`lab.js`; the lab and Level 2 are the same thing. How it was built is told in [city/LAB_PLAN.md](city/LAB_PLAN.md)
+(historical). The level that was here before, with road crossings and the metro, is kept at the git tag
+`checkpoint-2026-11-20-city-music`.
 
 | File | What it holds |
 |---|---|
 | `settings.js` | The street (buildings, lamps, stalls, where the water is) and the `STATIONS`: every object, one line each. |
-| `lab.js` | Runs the level: builds the stations, the camera, the map pieces, the hints (`HINTS`), the end card. |
+| `lab.js` | Runs the level: builds the stations, the camera, the hints (`HINTS`), the end card. |
 | `street.js` | Draws the scenery: sky, skyline, buildings, pavement, the side street, canal and river, pigeons, leaves. |
-| `things.js` | The city's own objects: map pieces, the puppy, the fountain, the bell game, water jets, parasols, the bridge. |
+| `things.js` | The city's own objects: the three lamps, the puppy, the fountain, the bell game, water jets, parasols, the bridge. |
 
 The art folders: `assets/background/` (the far skyline), `ground/` (pavement, road, cobbles, canal stone),
 `buildings/` (the fronts along the street; the flour mill is `warehouse.png` with see-through holes, and
@@ -195,7 +254,7 @@ names are on.
 | `trap` | `x: [from, to], h, by` | A shelf that swings open and drops what is on it. |
 | `tunnel` | `x: [from, to], h, gap` | A low way through that only he fits. |
 | `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. Not placed anywhere since 2026-11-24. |
-| `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a map piece, the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
+| `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a lamp to switch on (it was a piece of a torn map until 2026-11-25), the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
 
 The colour language is built into the kit: green things are the sister's job (heavy or high), blue things the
 brother's (light or small), plain wood is for either.
@@ -257,6 +316,10 @@ at `http://127.0.0.1:8780/`.
   shown one move at a time in section 1 and that there is no sticker, dog or ball, and reports the time each section took; `?section=4` starts it at section 4. `tools/playtest-park.html?solo=1` lets one sibling try every puzzle
   alone and passes when no short cut works. Run both after changing a section. `tools/snap-park.html?section=...`
   sends a picture of the park to the server log.
+- `tools/playtest-canal.html` plays Level 3 (about a minute and three quarters) and reports the time each section took;
+  `?solo=1` tries every short cut with one sibling alone (45 checks). `tools/snap-canal.html?section=...` sends a
+  picture. `tools/playtest-chapter.html` checks the chapter: what `index.html` opens, the map's stops, the save
+  (30 checks). `tools/snap-map.html?done=park,city` sends a picture of the map in a chosen state.
 - `tools/playtest-city.html` does the same for the city (all eight stations, about three minutes) and reports the time
   each station took. `tools/playtest-city.html?solo=1` is the other test: it tries the ways one sibling might finish a
   station alone, and passes when none of them works. Run both after changing a station.
