@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><base href="../">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Home Alone</title>
+<style>
+  html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
+  canvas{display:block}
+  #hud{position:fixed;left:18px;bottom:14px;font:600 14px/1.4 Georgia,serif;color:#fff;text-shadow:0 1px 3px #000c;pointer-events:none}
+  #hud b{font-size:22px;font-style:italic}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  .pad{position:fixed;bottom:16px;display:none;gap:8px;flex-wrap:wrap;width:150px}
+  .pad button{width:66px;height:56px;border-radius:16px;border:0;background:#0004;color:#fff;font-size:22px}
+  @media (pointer:coarse){.pad{display:flex}#hud{display:none}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"><b>Chapter One: Home Alone</b><br>
+Sister: A / D walk &middot; W use, climb up &middot; S go down, look in<br>
+Brother: &larr; / &rarr; walk &middot; &uarr; use, climb up &middot; &darr; go down, crawl in</div>
+<div class="pad" style="left:16px"><button data-k="KeyW">&#9650;</button><button data-k="KeyS">&#9660;</button><button data-k="KeyA">&#9664;</button><button data-k="KeyD">&#9654;</button></div>
+<div class="pad" style="right:16px"><button data-k="ArrowUp">&#9650;</button><button data-k="ArrowDown">&#9660;</button><button data-k="ArrowLeft">&#9664;</button><button data-k="ArrowRight">&#9654;</button></div>
+<div id="load">Home Alone</div>
+<!-- Level 1. Art: assets/house/ (the house) plus a few pieces from assets/ for the garden outside. Next scene: forest.html -->
+<script src="js/helpers.js"></script>
+<script src="assets/manifest.js"></script>
+<script src="assets/house/manifest.js"></script>
+<script src="assets/characters/shared.js"></script>
+<script src="assets/characters/hooded-traveller.js"></script>
+<script src="assets/characters/lantern-bearer.js"></script>
+<script>const LOAD = { title: 'Home Alone', script: 'js/house.js', sets: [{ assets: ASSETS, only: ['clouds', 'trees', 'bushes', 'grass', 'flowers'] }, { assets: HOUSE_ASSETS }] };</script>
+<script src="js/loader.js"></script>
+<script src="tools/playtest.js"></script></body></html>

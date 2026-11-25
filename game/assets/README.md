@@ -18,7 +18,30 @@ All the art the game uses lives in this folder. Change a file here, refresh the 
 | `effects/` | Soft light and mist | `fog.png`, `light-dapple.png`, `shade.png` |
 | `characters/` | The two characters | see "Characters" below |
 
-`manifest.js` is the list of every image the game loads, with its size and ground point.
+`manifest.js` is the list of every forest image, with its size and ground point.
+
+### The house (Chapter One)
+
+`house/` holds the art for the house level, with its own list in `house/manifest.js`:
+
+| Kind | Files |
+|---|---|
+| Repeating tiles | `wallpaper-kitchen.png`, `wallpaper-living.png`, `wallpaper-bedroom.png`, `wallpaper-study.png`, `floorboards.png`, `outside-brick.png`, `roof-tiles.png`, `foundation-stone.png` |
+| Kitchen | `fridge.png`, `kitchen-counter.png`, `kitchen-shelf.png`, `window-kitchen.png` |
+| Hall and dining | `dining-table.png`, `chair.png`, `treasure-map.png`, `family-portrait.png`, `wall-clock.png`, `rug-hall.png`, `coat-rack.png`, `front-door.png`, `front-door-frame.png`, `door-mat.png` |
+| Stairs | `stairs.png`, `stair-railing.png`, `cupboard-closed.png`, `cupboard-inside.png` |
+| Kids' bedroom | `bed-sister.png`, `bed-brother.png`, `toy-chest.png`, `kids-shelf.png`, `rug-bedroom.png`, `forest-painting.png`, `window-bedroom.png` |
+| Dad's study | `tall-bookcase.png`, `desk.png`, `armchair.png`, `floor-lamp.png`, `world-map.png`, `window-study.png` |
+| Spare | `house-plant.png` (made but not placed yet) |
+
+The **windows**, **front door frame** and **roof window** have see-through glass: the game paints the city
+behind them. Keep the glass transparent in replacement art.
+
+The **cupboard** pictures must keep their exact shape, because they fit under the stairs. The stairs rise 460 units
+over 440 units, and the cupboard's outline is in `tools/generate-house.js` (look for `CUP`).
+
+Drawn by code in `js/house.js`, not image files: the city skyline outside, Dad's box, the key, the chalk code, the light bulb and the darkness in the
+cupboard, the chimney smoke, and the chat bubbles, goal card and map and note pop-ups.
 
 ## Replacing an image
 
@@ -49,8 +72,8 @@ These settings are in `js/loader.js` under `DEPTH`.
 
 The characters are not pictures. They are drawn live by code, because they walk, blink and change expression:
 
-- `characters/hooded-traveller.js`: the hooded traveller's look and colours.
-- `characters/lantern-bearer.js`: the lantern bearer's look and colours.
+- `characters/hooded-traveller.js`: the sister's look and colours.
+- `characters/lantern-bearer.js`: the brother's look and colours (the file kept its old name; he no longer carries a lantern).
 - `characters/shared.js`: legs, faces and expressions that both share.
 - `characters/*-preview.png`: reference pictures only. The game does not load them.
 
@@ -65,6 +88,10 @@ the falling water, sun rays, birds, butterflies and falling leaves.
 
 ## The `tools` folder
 
-The PNGs here were painted by code in `tools/generate-assets.js`. Opening `tools/export.html` through
-`python tools/dev_server.py` paints them all again and **overwrites this folder's images and `manifest.js`**,
-so do not run it after you have put your own art in, unless you want the originals back.
+The PNGs here were painted by code in `tools/generate-assets.js` (forest) and `tools/generate-house.js` (house).
+Opening `tools/export.html` through `python tools/dev_server.py` paints the forest art again, and
+`tools/export.html?set=house` paints the house art again. Both **overwrite the images and the manifest**,
+so do not run them after you have put your own art in, unless you want the originals back.
+
+`tools/playtest.html?skip=1` (also through the dev server) plays Chapter One from start to finish with
+simulated key presses and reports PLAY PASSED or PLAY FAILED, which is a quick check after changes.

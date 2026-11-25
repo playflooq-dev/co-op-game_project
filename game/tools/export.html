@@ -9,16 +9,27 @@ Add <code>?only=previews</code> to the address to redo just the character refere
 <p id="status">Working...</p>
 <script src="../js/helpers.js"></script>
 <script src="generate-assets.js"></script>
+<script src="generate-house.js"></script>
 <script src="../assets/characters/shared.js"></script>
 <script src="../assets/characters/hooded-traveller.js"></script>
 <script src="../assets/characters/lantern-bearer.js"></script>
 <script>
 'use strict';
 const only = new URLSearchParams(location.search).get('only');
+const set = new URLSearchParams(location.search).get('set'); // ?set=house paints only the Level 1 house art into assets/house/
 const status = (t) => { document.getElementById('status').textContent = t; };
 const save = async (path, body) => { const r = await fetch('/save?path=' + encodeURIComponent(path), { method: 'POST', body }); if (!r.ok) throw new Error('could not save ' + path); };
 const png = (cv) => new Promise((res) => cv.toBlob(res, 'image/png'));
 (async () => {
+  if (set === 'house') {
+    const items = generateHouse();
+    for (const [i, it] of items.entries()) { status(`Saving ${i + 1} / ${items.length}: ${it.file}`); await save('assets/' + it.file, await png(it.s.cv)); }
+    let m = '// Every image the Level 1 house loads (see assets/manifest.js for what w, h, ax and ay mean).\n'
+      + '// Furniture: (ax, ay) is the middle of where it stands on the floor. Wallpaper, floor, brick, roof and stone are repeating tiles.\n'
+      + 'const HOUSE_ASSETS = {\n' + items.map((it) => `  ${it.group}: [{ file: '${it.file}', w: ${it.s.w}, h: ${it.s.h}, ax: ${it.s.ax}, ay: ${it.s.ay} }],\n`).join('') + '};\n';
+    await save('assets/house/manifest.js', m);
+    status('Done.'); await fetch('/log', { method: 'POST', body: 'EXPORT DONE' }); return;
+  }
   if (only !== 'previews') {
     const items = generateAll(), groups = {};
     for (const [i, it] of items.entries()) { status(`Saving ${i + 1} / ${items.length}: ${it.file}`); await save('assets/' + it.file, await png(it.s.cv)); (groups[it.group] = groups[it.group] || []).push(it); }
