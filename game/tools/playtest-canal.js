@@ -66,13 +66,19 @@
   // where a try starts; the tries themselves use the keys.)
   if (QS.get('solo')) {
     const put = (b, x, h = 0) => Object.assign(b, { x, y: FEET - h - 1, vx: 0, vy: 0, grounded: false, on: null, held: false, carrier: null, lost: false });
-    const set = async (xs, xb, hs = 0, hb = 0) => { for (const c of KEYS) key(c, false); await until(() => !sis.gone && !bro.gone, 3000); if (MV.duo.state) endRide(); MV.pending = null; for (const p of players) { if (p.carry) putDown(p); Object.assign(p, { crawl: false, h: p.standH, holding: null, climb: null, gravity: 1, flying: false }); } put(sis, xs, hs); put(bro, xb, hb); camX = cameraTarget(); await until(() => sis.grounded && bro.grounded, 3000); await frames(4); };
+    const set = async (xs, xb, hs = 0, hb = 0) => { for (const c of KEYS) key(c, false); await until(() => !sis.gone && !bro.gone, 3000); if (MV.duo.state) endRide(); MV.pending = null; for (const p of players) { if (p.carry) putDown(p); Object.assign(p, { crawl: false, h: p.standH, holding: null, climb: null, gravity: 1, flying: false }); } put(sis, xs, hs); put(bro, xb, hb); sis.safe = { x: overWater(xs) ? xb : xs, y: FEET }; bro.safe = { x: overWater(xb) ? xs : xb, y: FEET }; camX = cameraTarget(); await until(() => sis.grounded && bro.grounded, 3000); await frames(4); };
+    // (set also moves each one's last safe spot: after a splash they come back to it, and it must not be left over from an earlier try)
     const place = (p, x, rest, h = 0) => (p === sis ? set(x, rest, h, 0) : set(rest, x, 0, h)); // p at x, the other waiting at 'rest'
     const dash = async (p, toX, jump) => { // run right, with a jump on the way if asked, and see where they get to
       key(p.keys.right, true); if (jump) { await frames(2); key(p.keys.up, true); await frames(3); key(p.keys.up, false); }
       await until(() => p.x > toX || (p.grounded && p.hitSide === 1), 4000); await secs(0.5); key(p.keys.right, false); await until(() => !p.gone && p.grounded, 3000); await frames(3); return p.x;
     };
     const liftUp = async () => { await secs(0.8); await tap('ArrowDown'); return until(() => MV.duo.state === 'on', 2500); };
+    const bunny = async (p, cond, max = 6000) => { // run right and jump again the moment the feet touch anything
+      const t0 = performance.now(); key(p.keys.right, true);
+      while (!cond() && performance.now() - t0 < max) { key(p.keys.up, true); await frame(); await frame(); key(p.keys.up, false); await frame(); }
+      key(p.keys.right, false); key(p.keys.up, false); await until(() => !p.gone && p.grounded, 3000); await frames(3);
+    };
     try {
       for (const p of players) { // ---- section 1: plate and gate
         const rest = SECTIONS[0].start[0], g = gate1.def.x, name = p.who;
@@ -90,6 +96,8 @@
         check('2: she jumps onto the plank: it springs her back to the bank', sis.x < a + 40 && plank2.state.sprung > 0, `she is at ${sis.x.toFixed(0)}`);
         await place(sis, a - 400, rest); await leap(sis, a - 150); await secs(1);
         check('2: a jump from further back does not carry her over either', sis.x < b - 100, `she is at ${sis.x.toFixed(0)}`);
+        await place(sis, a - 300, rest); await bunny(sis, () => sis.x > b, 5000); await secs(1);
+        check('2: nor by jumping again and again the moment her feet touch it', sis.x < a + 40, `she is at ${sis.x.toFixed(0)}`);
         await set(a - 200, a - 150); const up2 = await liftUp(); await run(sis, 1, () => sis.x > b, 2500);
         check('2: nor with him on her shoulders', up2 && sis.x < a + 40 && bro.x < a + 60, `she is at ${sis.x.toFixed(0)}`);
         await set(rest, rest + 90);
@@ -106,6 +114,9 @@
         check('3: nor with a run from the quay', bro.x < boatB.def.x - 100, `he is at ${bro.x.toFixed(0)}`);
         await place(sis, edge - 200, rest); const s0 = game.splashes; await run(sis, 1, () => sis.gone || sis.x > far, 4000);
         check('3: the first boat sinks under her: a splash, and she is back on the quay', game.splashes > s0 && sis.x < edge, `she is at ${sis.x.toFixed(0)}`);
+        check('3: and a duck quacks', await until(() => REACT.quacks > 0, 1500));
+        await place(sis, edge - 300, rest); await bunny(sis, () => sis.x > far, 6000);
+        check('3: she cannot hop from boat to boat either', sis.x < edge, `she is at ${sis.x.toFixed(0)}`);
         await place(sis, saw3.def.x - 400, rest); await leap(sis, saw3.def.x - 255); await secs(0.6);
         check('3: she jumps onto the see-saw alone: nobody flies', saw3.state.launches === 0 && sis.x < edge);
         await place(bro, saw3.def.x - 400, rest); await leap(bro, saw3.def.x - 255); await go(bro, saw3.def.x + 125, 3000); await hop(bro);
@@ -160,6 +171,8 @@
         const a = RIVER[0], b = RIVER[1], rest = at(6)[0];
         await place(sis, a - 200, rest); const s0 = game.splashes; await run(sis, 1, () => sis.gone || sis.x > b, 5000);
         check('7: the boats sink under her: she cannot cross the river', game.splashes > s0 && sis.x < a, `she is at ${sis.x.toFixed(0)}`);
+        await place(sis, a - 300, rest); await bunny(sis, () => sis.x > b, 8000);
+        check('7: nor by hopping from boat to boat as fast as she can', sis.x < a, `she is at ${sis.x.toFixed(0)}`);
         await place(sis, nearL.def.x - 15, rest + 90); key('KeyS', true); await wait(3200); const held = sis.holding === nearL.thing; key('KeyS', false);
         check('7: her lever alone does not move the bridge', held && bridge7.state.prog === 0);
         await place(bro, nearL.def.x - 15, rest); key('ArrowDown', true); await wait(500); key('ArrowDown', false); await hop(bro);
@@ -185,7 +198,8 @@
       check('the gate is shut', gate1.state.open === 0 && !(await go(bro, g + 100, 2500)) && bro.x < g);
       await go(sis, pA.def.x); check('she stands on the plate and the gate opens', (await until(() => gate1.state.open >= 1, 3000)) && sis.on === pA.ledge);
       check('he walks through and stands on the far plate', (await go(bro, pB.def.x)) && bro.x > g && bro.on === pB.ledge);
-      check('she walks through: solved', (await go(sis, g + 200)) && (await until(() => game.solved[0], 2000)));
+      check('she walks through: solved, and they cheer', (await go(sis, g + 200)) && (await until(() => game.solved[0], 2000)) && sis.cheer > 0 && bro.cheer > 0);
+      check('the gate wobbled as it opened', REACT.wobbles > 0);
       check('into section 2', (await go(sis, at(1)[0] + 20)) && (await go(bro, at(1)[1] + 10)) && game.section === 1, `section ${game.section + 1}`);
     }
     if (FROM <= 1) { // ================= section 2: teach, the thin plank
@@ -206,6 +220,7 @@
       await go(sis, saw3.def.x - 420); await leap(sis, saw3.def.x - 255);
       check('she jumps onto the green end: he flies', saw3.state.launches === 1);
       check('and lands on the middle boat, without steering', (await until(() => bro.grounded && !bro.gone, 4000)) && bro.on === boatB.ledge, `he is at ${bro.x.toFixed(0)}, the boat at ${boatB.def.x}`);
+      await frames(4); check('the boat dipped under him', REACT.dips > 0 && boatB.state.dip !== 0);
       check('over the raft to the far quay, to the lever', (await go(bro, lev3.def.x - 40)) && bro.x > far);
       await face(bro, 1); await tap('ArrowDown'); check('he pulls it: the raft goes over to her side', lev3.state.on && (await until(() => near(raft.state.x, raft.def.x[0], 2), 8000)));
       await go(sis, raft.def.x[0]); check('she steps onto the raft', sis.on === raft.ledge);
@@ -255,6 +270,7 @@
       check('her lever alone does not move the bridge', sis.holding === nearL.thing && bridge7.state.prog === 0);
       key('ArrowDown', true);
       check('both levers held, one on each bank: the bridge comes down', (await until(() => bridge7.state.down, 6000)) && game.solved[6]); key('KeyS', false); key('ArrowDown', false);
+      check('confetti: the one big celebration, at the end of the chapter', REACT.confetti.length > 0);
       check('she walks over the bridge to him: a high five', (await go(sis, bro.x - 110, 14000)) && (await until(() => game.five, 3000)) && MV.highFives > 0);
       await secs(1.2);
       check('to the forest path', (await go(sis, CANAL.exit - 30, 14000)) && (await go(bro, CANAL.exit + 30, 14000)));

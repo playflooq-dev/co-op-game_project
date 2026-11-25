@@ -26,7 +26,7 @@ KIT.thinplank = (world, d, ground) => {
     update(dt) { // before the world moves: anything heavy on it is sent back the way it came
       const r = heavyOn(), f = st.refuse;
       if (r && (!f || f.r !== r)) { // she has just stepped or landed on it
-        const dir = r.x < mid ? 1 : -1, edge = dir > 0 ? x0 : x1, depth = (r.x - edge) * dir;
+        const from = r.safe ? r.safe.x : r.x, dir = from < mid ? 1 : -1, edge = dir > 0 ? x0 : x1, depth = (r.x - edge) * dir; // back to the bank she last stood on, wherever on it she landed
         st.refuse = { r, dir, t: 0.2 }; st.refused++; st.shake = 0.5; snd('creak');
         if (depth > 95) { // she jumped well onto it: it springs her back to the bank
           const back = edge - dir * 70; r.vy = -speedFor(90); r.vx = clamp((back - r.x) / 0.42, -1100, 1100); r.grounded = false; r.on = null; r.flying = true; st.sprung++; snd('pop');
@@ -37,6 +37,7 @@ KIT.thinplank = (world, d, ground) => {
       }
     },
     after(dt) { // how far it bends: a little under him, a little more with the box, deep under her
+      const hv = heavyOn(); if (hv) hv.strain = Math.max(hv.strain || 0, 0.14); // too heavy: no jumping off it, not even in the moment she lands
       let load = 0, at = st.at; for (const r of world.riders(l)) { const w = world.load(r); if (w > load) { load = w; at = r.x; } }
       const heavy = load >= MOVE.heavy, u = clamp01((at - x0) / (x1 - x0)), want = load ? (heavy ? 30 : 5 + (load - 1) * 6) * (heavy ? 1 : 4 * u * (1 - u)) : 0;
       st.load = load; if (load) st.at = at; st.shake = Math.max(0, st.shake - dt);
@@ -76,7 +77,11 @@ KIT.footbridge = (world, d, ground) => {
     } };
 };
 
-KIT.lightboat = (world, d, ground) => KIT.boat(world, d, ground);
+KIT.lightboat = (world, d, ground) => canalBoat(KIT.boat(world, d, ground), world);
+function canalBoat(o, world) { // the kit's boat, and one rule more: whoever is too heavy for it cannot jump on from it, so she can never hop from boat to boat
+  o.after = () => { for (const r of world.riders(o.ledge)) if (r.weight + (r.extra || 0) >= MOVE.heavy) { r.strain = Math.max(r.strain || 0, 0.16); o.state.load = Math.max(o.state.load, 0.13); } };
+  return o;
+}
 KIT.lockgate = (world, d, ground) => KIT.gate(world, d, ground);
 
 // ---------- the see-saw that sends him somewhere: the kit's see-saw, and a flight that needs no steering
@@ -104,7 +109,7 @@ KIT.launcher = (world, d, ground) => {
 
 // ---------- the raft: the kit's ferry, which knows by itself when to go and when to come back
 KIT.raft = (world, d, ground) => {
-  const id = d.by + '_go', o = KIT.ferry(world, Object.assign({}, d, { by: id, home: 1 }), ground + 10), update = o.update, mid = (d.x[0] + d.x[1]) / 2;
+  const id = d.by + '_go', o = KIT.ferry(world, Object.assign({}, d, { by: id, home: 1 }), ground + 14), update = o.update, mid = (d.x[0] + d.x[1]) / 2;
   o.update = (dt) => { // called: over to her side while she is still there and nobody is on it; with somebody on it: home
     KIT_SIG[id] = !!KIT_SIG[d.by] && world.riders(o.ledge).length === 0 && !MV.sis.gone && MV.sis.x < mid;
     update(dt);
