@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><base href="../"><title>Asset sheet</title>
+<!-- Shows every image of one world on one page, for a quick look: tools/sheet.html?world=city (or house, forest). -->
+<style>body{margin:0;background:#e8dcc0;font:12px Georgia,serif;display:flex;flex-wrap:wrap;gap:6px;padding:6px}
+figure{margin:0;background:repeating-conic-gradient(#d8ccb0 0 25%,#efe4cc 0 50%) 0 0/16px 16px;padding:4px;text-align:center}
+img{display:block;max-height:260px;max-width:420px}</style></head>
+<body>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="worlds/house/assets/manifest.js"></script>
+<script src="worlds/city/assets/manifest.js"></script>
+<script>
+const world = new URLSearchParams(location.search).get('world') || 'city';
+const M = { forest: FOREST_ASSETS, house: HOUSE_ASSETS, city: CITY_ASSETS }[world];
+for (const g in M) for (const a of M[g]) {
+  const f = document.createElement('figure'), i = new Image(); i.src = `worlds/${world}/assets/${a.file}`;
+  f.append(i, document.createTextNode(g)); document.body.append(f);
+}
+</script>
+</body></html>

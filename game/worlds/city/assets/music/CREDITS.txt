@@ -1,0 +1,15 @@
+All files in this folder are CC0 (public domain): free to use in any project, with no credit needed.
+Downloaded on 2026-11-19 from OpenGameArt.org. The licence was checked on each page.
+
+quaint-town.mp3
+  "Quaint Town" (loopable version) by neonarkade
+  https://opengameart.org/node/31877
+
+hot-springs-town.mp3
+  "Hot Springs Town" by Kistol
+  https://opengameart.org/node/155383
+
+magic-town.mp3
+  "Magic Town" by controllerhead
+  https://opengameart.org/content/magic-town
+

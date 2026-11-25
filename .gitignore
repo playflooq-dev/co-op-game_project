@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+.wrangler/
+# scratch folder used while measuring sounds
+game/tools/_eval/

@@ -3,51 +3,53 @@
 <style>body{font:16px/1.5 Georgia,serif;margin:32px;background:#f3e6c4;color:#4a3a22}</style></head>
 <body>
 <h1>Export assets</h1>
-<p>Paints every scenery image with the original drawing code and saves it into the <b>assets</b> folder, together with a fresh <b>assets/manifest.js</b>.
-This <b>overwrites</b> the PNG files that are there. Open it through <code>python tools/dev_server.py</code>, not by double-clicking.
-Add <code>?only=previews</code> to the address to redo just the character reference pictures.</p>
+<p>Paints one world's scenery with its original drawing code (<b>worlds/&lt;world&gt;/generate.js</b>) and saves the PNGs into
+<b>worlds/&lt;world&gt;/assets/</b>, together with a fresh <b>manifest.js</b>. This <b>overwrites</b> the PNG files that are there.
+Open it through <code>python tools/dev_server.py</code>, not by double-clicking, with one of:</p>
+<ul><li><code>?world=forest</code></li><li><code>?world=house</code></li><li><code>?world=city</code></li>
+<li><code>?world=characters</code> (only the reference pictures in shared/characters/)</li></ul>
 <p id="status">Working...</p>
-<script src="../js/helpers.js"></script>
-<script src="generate-assets.js"></script>
-<script src="generate-house.js"></script>
-<script src="../assets/characters/shared.js"></script>
-<script src="../assets/characters/hooded-traveller.js"></script>
-<script src="../assets/characters/lantern-bearer.js"></script>
+<script>addEventListener('error', (e) => fetch('/log', { method: 'POST', body: 'EXPORT FAILED ' + e.message + ' (' + String(e.filename).split('/').pop() + ' line ' + e.lineno + ')' }));</script>
+<script src="../shared/helpers.js"></script>
+<script src="../worlds/forest/generate.js"></script>
+<script src="../worlds/house/generate.js"></script>
+<script src="../worlds/city/generate.js"></script>
+<script src="../shared/characters/shared.js"></script>
+<script src="../shared/characters/sister.js"></script>
+<script src="../shared/characters/brother.js"></script>
 <script>
 'use strict';
-const only = new URLSearchParams(location.search).get('only');
-const set = new URLSearchParams(location.search).get('set'); // ?set=house paints only the Level 1 house art into assets/house/
+const world = new URLSearchParams(location.search).get('world');
 const status = (t) => { document.getElementById('status').textContent = t; };
 const save = async (path, body) => { const r = await fetch('/save?path=' + encodeURIComponent(path), { method: 'POST', body }); if (!r.ok) throw new Error('could not save ' + path); };
 const png = (cv) => new Promise((res) => cv.toBlob(res, 'image/png'));
+const WORLDS = {
+  forest: { make: () => generateAll(), name: 'FOREST_ASSETS', note: 'the Forest world' },
+  house: { make: () => generateHouse(), name: 'HOUSE_ASSETS', note: 'the House world (Chapter One)' },
+  city: { make: () => generateCity(), name: 'CITY_ASSETS', note: 'the City world (Chapter Two)' },
+};
 (async () => {
-  if (set === 'house') {
-    const items = generateHouse();
-    for (const [i, it] of items.entries()) { status(`Saving ${i + 1} / ${items.length}: ${it.file}`); await save('assets/' + it.file, await png(it.s.cv)); }
-    let m = '// Every image the Level 1 house loads (see assets/manifest.js for what w, h, ax and ay mean).\n'
-      + '// Furniture: (ax, ay) is the middle of where it stands on the floor. Wallpaper, floor, brick, roof and stone are repeating tiles.\n'
-      + 'const HOUSE_ASSETS = {\n' + items.map((it) => `  ${it.group}: [{ file: '${it.file}', w: ${it.s.w}, h: ${it.s.h}, ax: ${it.s.ax}, ay: ${it.s.ay} }],\n`).join('') + '};\n';
-    await save('assets/house/manifest.js', m);
-    status('Done.'); await fetch('/log', { method: 'POST', body: 'EXPORT DONE' }); return;
-  }
-  if (only !== 'previews') {
-    const items = generateAll(), groups = {};
-    for (const [i, it] of items.entries()) { status(`Saving ${i + 1} / ${items.length}: ${it.file}`); await save('assets/' + it.file, await png(it.s.cv)); (groups[it.group] = groups[it.group] || []).push(it); }
-    let m = '// Every image the game loads, in groups. The game picks at random within a group, so a group can hold as many variants as you like.\n'
-      + '//   file    the image, inside the assets folder\n'
+  if (world === 'characters') {
+    // Reference pictures of the characters. The game draws the characters live from their .js files; it does not load these.
+    for (const [name, draw, face] of [['sister', drawSister, FACE_A], ['brother', drawBrother, FACE_B]]) {
+      const k = 4, cv = document.createElement('canvas'); cv.width = 250 * k; cv.height = 330 * k;
+      const c = cv.getContext('2d'); c.setTransform(k, 0, 0, k, 125 * k, 305 * k); c.lineCap = 'round'; c.lineJoin = 'round';
+      draw(c, { m: 0, phase: 0, t: 0, giggle: 0, blink: 1, face, ex: newExpr(face) }, 0);
+      await save(`shared/characters/${name}-preview.png`, await png(cv));
+    }
+  } else {
+    const W = WORLDS[world];
+    if (!W) { status('Add ?world=forest, ?world=house, ?world=city or ?world=characters to the address.'); return; }
+    const base = `worlds/${world}/assets/`, items = W.make(), groups = {};
+    for (const [i, it] of items.entries()) { status(`Saving ${i + 1} / ${items.length}: ${it.file}`); await save(base + it.file, await png(it.s.cv)); (groups[it.group] = groups[it.group] || []).push(it); }
+    let m = `// Every image ${W.note} loads, in groups. Where a group has several files, the game picks between them.\n`
+      + '//   file    the image, inside this folder\n'
       + '//   w, h    how big it is drawn, in scene units (the screen is always 1080 units tall)\n'
       + '//   ax, ay  the point of the image that is placed on the ground, measured from its top-left corner in scene units\n'
       + '// A replacement image can be any resolution; keep the same proportions (w : h) or update w, h, ax, ay to match.\n'
-      + 'const ASSETS = {\n';
+      + `const ${W.name} = {\n`;
     for (const g in groups) m += `  ${g}: [\n` + groups[g].map((it) => `    { file: '${it.file}', w: ${it.s.w}, h: ${it.s.h}, ax: ${it.s.ax}, ay: ${it.s.ay} },\n`).join('') + '  ],\n';
-    await save('assets/manifest.js', m + '};\n');
-  }
-  // Reference pictures of the characters. The game draws the characters live from their .js files; it does not load these.
-  for (const [name, draw, face] of [['hooded-traveller', drawHooded, FACE_A], ['lantern-bearer', drawLantern, FACE_B]]) {
-    const k = 4, cv = document.createElement('canvas'); cv.width = 250 * k; cv.height = 330 * k;
-    const c = cv.getContext('2d'); c.setTransform(k, 0, 0, k, 125 * k, 305 * k); c.lineCap = 'round'; c.lineJoin = 'round';
-    draw(c, { m: 0, phase: 0, t: 0, giggle: 0, blink: 1, face, ex: newExpr(face) }, 0);
-    await save(`assets/characters/${name}-preview.png`, await png(cv));
+    await save(base + 'manifest.js', m + '};\n');
   }
   status('Done.'); await fetch('/log', { method: 'POST', body: 'EXPORT DONE' });
 })().catch((e) => { status('Failed: ' + e.message); fetch('/log', { method: 'POST', body: 'EXPORT FAILED ' + (e.stack || e) }); });
