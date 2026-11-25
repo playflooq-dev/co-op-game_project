@@ -1,41 +1,68 @@
 # Checkpoints
 
-A checkpoint is a saved point in the project's history (a git tag) that the game can be rolled back to if later changes
-go wrong. The newest is at the top. Every commit so far is listed below the checkpoints.
+A checkpoint is a saved version of the whole project (a git tag) that can be looked at again, or gone back to, if a
+later change goes wrong. The newest is at the top. Below the checkpoints is a list of every change so far.
 
 ## Checkpoints
 
-| Checkpoint (git tag) | Date | What it holds |
-|---|---|---|
-| `checkpoint-2026-11-chapter-1` | 2026-11-25 | Chapter 1 complete as a draft, on the branch `level-3/canal`: Level 3 "The Canal" (`game/canal.html`: thin planks and small boats that only hold the brother, combined with known tools, seven sections, the chapter's ending at the Old Bridge), the picture-only chapter map (`game/map.html`) with a save in the browser, `game/index.html` starting the chapter, the review in `game/worlds/canal/REVIEW.md`, and the tests. Levels 1 and 2 are as at the checkpoint below, plus the city without stickers and the link to the map. Level 3 and the chapter flow are not approved yet. Not on the live site. |
-| `checkpoint-2026-11-level-1-plain` | 2026-11-24 | Level 1, the park, made plain after the client's feedback, on the branch `level-1/plain`: no stickers, no dog and no ball (the dog and the ball are saved in `game/shared/later/`); an opening that is only about learning to move, with each player's keys shown as pictures next to their own sibling, one move at a time; the first-time player review in `game/worlds/park/REVIEW.md`. The four puzzles are as at the checkpoint below. Nothing in it is approved yet. Not on the live site. |
-| `checkpoint-2026-11-level-1-gentle` | 2026-11-23 | Level 1, the park, on the branch `level-1/gentle`: a gentle first level of about five minutes (learn to move, four very small puzzles, a calm moment, a finale together), the progression rules in `PROGRESSION.md`, the reactions (dog, cat, birds, ducks, flowers), and its two scripted tests. `game/index.html` opens the park; the house is `game/house.html`. The city lab and the forest are as at the checkpoint below. Nothing in it is approved yet. Not on the live site. |
-| `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city lab, on the branch `lab/city-v2`: the city as a test level of eight stations for children of 5 to 10, with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. Nothing in it is approved yet. The house and the forest are as at the checkpoint below. Not on the live site. |
-| `checkpoint-2026-11-20-city-music` | 2026-11-20 | Chapter Two rebuilt to be fun (new puzzles, Old Town, hints, stickers), recorded CC0 music and sound effects in every chapter, and the puzzle-design research. Same as the live site at https://forest-trail-d56.pages.dev on 2026-11-20. |
-| `checkpoint-2026-11-18-forest-trail` | 2026-11-18 | The approved Forest Trail scene: the art style and the two characters. |
+| Checkpoint (git tag) | Date | What it holds | Where to play it |
+|---|---|---|---|
+| `checkpoint-2026-11-25-chapter-1-approved` | 2026-11-25 | **Chapter 1, approved.** The park (Level 1), the city to the Old Bridge (Level 2) and the canal (Level 3), with the picture map between them and progress saved in the browser. Two dead ends removed, the torn map taken out of the city, the log in the park fixed. All documents brought up to date. It is on `main`: the approved work of every branch was merged there on this day. | https://chapter-1.forest-trail-d56.pages.dev (the same game) |
+| `checkpoint-2026-11-chapter-1` | 2026-11-25 | Chapter 1 as first finished, on the branch `level-3/canal`, before the first plays by hand: Level 3 "The Canal", the chapter map and the save, `game/index.html` starting the chapter. It still has the dead end in the canal's section 6, the dead end at Fountain Square, and the torn map in the city. | (none: its address now shows the approved version) |
+| `checkpoint-2026-11-level-1-plain` | 2026-11-24 | Level 1, the park, made plain after the client's feedback, on the branch `level-1/plain`: no stickers, no dog and no ball; an opening that is only about learning to move, with each player's keys shown as pictures; the first-time player review. The city still has its stickers and its map here. | https://level-1-plain.forest-trail-d56.pages.dev |
+| `checkpoint-2026-11-level-1-gentle` | 2026-11-23 | The first version of the park, on the branch `level-1/gentle`: learn to move, four very small puzzles, a calm moment, with stickers, a dog and a ball. Also the progression rules in `PROGRESSION.md`. `game/index.html` opens the park; the house moved to `game/house.html`. | https://level-1-gentle.forest-trail-d56.pages.dev |
+| `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city rebuilt as a test level, "the city lab", on the branch `lab/city-v2`: eight stations with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. This became Level 2. | https://lab-city-v2.forest-trail-d56.pages.dev |
+| `checkpoint-2026-11-20-city-music` | 2026-11-20 | The older game: the house level and the first city level (road crossings, the metro, buses, codes), with recorded music and sound effects, and the puzzle-design research. | https://forest-trail-d56.pages.dev (the main address, last updated 2026-11-19; it has the same levels but may not have this checkpoint's music) |
+| `checkpoint-2026-11-18-forest-trail` | 2026-11-18 | The approved Forest Trail scene: the art style and the two characters. | (part of every later version: `forest.html`) |
 
-### How to go back to a checkpoint
+The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
+itself. The main address has not been changed since November 19: whether it should show Chapter 1 is an open question.
 
-Ask Claude, or run these in `co-op-game_project`:
+## How to go back to a checkpoint
 
-- See a checkpoint without changing anything: `git switch --detach checkpoint-2026-11-20-city-music` (go back with
-  `git switch level-3/canal` for the newest work, `git switch level-1/plain` for Levels 1 and 2 without Level 3 and the
-  chapter map, `git switch level-1/gentle` for the first version of the park (with
-  the stickers, the dog and the ball), `git switch lab/city-v2` for the lab without the park, or
-  `git switch level-2/city` for the branch without either).
-- Start new work from a checkpoint: `git switch -c my-new-branch checkpoint-2026-11-20-city-music`.
+Ask Claude, or run these in the `co-op-game_project` folder. None of them deletes anything.
+
+**Look at a checkpoint without changing anything**
+
+    git switch --detach checkpoint-2026-11-20-city-music
+
+Now the folder holds that version: open `game/index.html` to play it. To come back to the newest approved version:
+
+    git switch main
+
+**Start new work from a checkpoint**
+
+    git switch -c my-new-branch checkpoint-2026-11-25-chapter-1-approved
+
+This makes a new branch that starts at that version. The checkpoint itself and `main` stay as they are.
+
+**Undo a bad change without losing history**
+
+    git revert <commit>
+
+This adds a new change that takes the bad one out again. Both stay in the history, so nothing is lost and it can be
+undone in turn. Find the commit's short name in the table below, or with `git log --oneline`. To undo a whole merged
+branch, use the merge commit's name with `git revert -m 1 <merge commit>`.
+
+**Do not use** `git reset --hard` or a forced push (`git push --force`): they throw history away, on this computer
+or on GitHub.
 
 ## Every commit so far
 
-Commits from `aa38627` on are on the branch `lab/city-v2`, where the city is rebuilt as a test level (the plan is in
-`game/worlds/city/LAB_PLAN.md`). Commits from `23e48ce` on are on the branch `level-1/gentle`, which starts from the
-lab and adds a gentle first level, the park (the rules it follows are in `PROGRESSION.md`). Commits from `17d66aa` on
-are on the branch `level-1/plain`, which starts from there and makes Level 1 plain. Commits from `772a0c3` on are on
-the branch `level-3/canal`, which starts from `level-1/plain` and adds Level 3 and the chapter. The small commits that
-only add a row to this table are not listed.
+`main` holds everything. Until 2026-11-25 the work was done on branches, each starting from the one before; on that
+day they were merged into `main` in order. The branches still exist: `level-1/house-escape`, `level-2/city`,
+`lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`. The small commits that only add a row to this
+table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `f037436` | 2026-11-25 | Merge of `level-3/canal` into `main`: the canal (Level 3), the chapter map and save, the fixes and the updated documents. The checkpoint `checkpoint-2026-11-25-chapter-1-approved` is on this commit. |
+| `0a4abf6` | 2026-11-25 | Merge of `level-1/plain` into `main`: the plain park (Level 1), and the city without stickers. |
+| `ab7a86e` | 2026-11-25 | Merge of `level-1/gentle` into `main`: the first version of the park, and the progression rules. |
+| `61606cc` | 2026-11-25 | Merge of `lab/city-v2` into `main`: the city rebuilt with jumping and the object kit (now Level 2). |
+| `9b44329` | 2026-11-25 | Merge of `level-2/city` into `main`: the first city level, with music and sound. |
+| `bd6ac8c` | 2026-11-25 | Merge of `level-1/house-escape` into `main`: the house level, "Home Alone". |
+| `2106bab` | 2026-11-25 | The documents brought up to date after Chapter 1 was approved: decisions 25 to 39 in DECISIONS.md and the older decisions they replaced, OPEN_QUESTIONS.md rewritten, PROGRESSION.md with the three built levels, the README files, a status line on the per-level files, and the new PROJECT_STATUS.md. No game code changed. |
 | `daac1d1` | 2026-11-25 | After the first play by hand: two dead ends removed (a low step on the far side of the ledge in the canal's section 6; a ladder that is always down on the far side of the wall at Fountain Square in the city), and the brother can no longer hop off her shoulders into a wall (shared movement code). The solo tests try each. This is after the checkpoint `checkpoint-2026-11-chapter-1`. |
 | `fd3db18` | 2026-11-25 | The torn map is out of the city (no gust, no pieces, no box of pieces; the three places at Maple Street are lamps with cables to the gate, and the puppy is helped down). And the log in the park is drawn where it is stood on: the siblings no longer stand in the air above it. |
 | `5885a21` | 2026-11-25 | Level 3, Step 5: the documents (README files, PROGRESSION.md with the "Combinations" rules, proposals I to L in DECISIONS.md, "Level 3 and Chapter 1 flow: waiting for feedback" in OPEN_QUESTIONS.md). The checkpoint `checkpoint-2026-11-chapter-1` is on the commit after this one. |
