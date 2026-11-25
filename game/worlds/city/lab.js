@@ -14,8 +14,9 @@ const FROM = QS.get('station') === null ? 0 : clamp(Math.floor(+QS.get('station'
 let last = performance.now();
 const game = { time: 0, chapter: 0, queue: [], bubble: null, sparks: [], objective: '', objT: 0, done: false, endT: 0, exitT: -1, lift: 0, shake: 0, fps: 60, slow: 0,
   station: FROM, entered: STATIONS.map(() => null), // when each station was first reached (seconds of play)
-  // the torn map: after the gust, three pieces land where the settings put them; the puppy has the fourth
-  map: { gust: FROM > 0, t: FROM > 0 ? 99 : 0, from: [0, 0], got: [FROM > 0, FROM > 0, FROM > 0, FROM > 2], took: null, landed(i) { return this.gust && this.t > 1.5 + i * 0.3; } } };
+  // what has been done for the two gates that are not opened by a plate or a lever: the three lamps of station 0
+  // (lit[0] to lit[2]) and the puppy helped down in station 2 (lit[3]). (This was the torn map and its four pieces.)
+  lit: [FROM > 0, FROM > 0, FROM > 0, FROM > 2] };
 game.entered[FROM] = 0;
 if (typeof SOUND !== 'undefined') SOUND.wantMusic = true;
 
@@ -40,7 +41,6 @@ setupMovement(world, players, {
 });
 MV.bottom = VH + 260;
 const pads = makeTouchPads(QS.get('touch'));
-const piecesGot = () => game.map.got.filter(Boolean).length;
 
 function fitScreen() { // on touch screens the street is drawn higher, so the buttons sit over the road
   resizeScreen();
@@ -54,12 +54,8 @@ function cameraTarget() { // the middle of the two; or, while both are inside a 
 
 // ---------- every frame
 function update(dt) {
-  const m = game.map, ending = game.exitT >= 0;
+  const ending = game.exitT >= 0;
   game.time += dt;
-  // the gust that tears the map: three pieces fly to their places, the fourth sails off towards the market
-  if (!m.gust && (sis.x > MAP.gust || bro.x > MAP.gust)) { m.gust = true; m.t = 0; m.from = [sis.x + 20, sis.y - 190]; snd('wind'); for (const p of players) p.sqv = -3; }
-  if (m.gust) m.t += dt; if (m.took) { m.took.t += dt; if (m.took.t > 1.4) m.took = null; }
-  KIT_SIG.map3 = m.got[0] && m.got[1] && m.got[2]; KIT_SIG.map4 = m.got[3];
   moveSiblings(dt, ending || game.done);
   for (const o of kit) if (o.update) o.update(dt);
   world.step(dt);
@@ -109,13 +105,13 @@ function drawHints(c, t) { // what the grab key would do, shown as a picture: a 
 const kitIn = (n, kind, i = 0) => kit.filter((o) => o.station === n && o.def.kind === kind)[i];
 const high = (p) => FEET - p.y;
 const HINTS = (() => {
-  const m = game.map, f = [0, 1, 2].map((i) => kitIn(0, 'find', i)), hoist = kitIn(1, 'lever'), crate = kitIn(1, 'crate').body, plate = kitIn(1, 'plate');
+  const m = { got: game.lit }, f = [0, 1, 2].map((i) => kitIn(0, 'find', i)), hoist = kitIn(1, 'lever'), crate = kitIn(1, 'crate').body, plate = kitIn(1, 'plate');
   const box2 = kitIn(2, 'box').body, pup = kitIn(2, 'puppy'), saw = kitIn(3, 'seesaw'), lad = kitIn(3, 'ladder'), wall3 = kitIn(3, 'block').def;
   const ferry = kitIn(4, 'ferry'), fl = kitIn(4, 'lever'), boat = kitIn(4, 'boat'), lift = kitIn(5, 'pulley'), boxes5 = [0, 1, 2].map((i) => kitIn(5, 'box', i).body);
   const shelf6 = kitIn(6, 'ledge').def, crank = kitIn(6, 'lever'), para = kitIn(6, 'parasol'), wall6 = kitIn(6, 'block').def, post = kitIn(7, 'lever', 0), hut = kitIn(7, 'lever', 1), bridge = kitIn(7, 'bridge');
   const freeBox = () => boxes5.find((b) => b.on !== lift.b && !b.held) || boxes5[0];
   return [
-    [ { who: sis, icon: 'hand', done: () => !m.landed(2) || m.got[0], x: () => f[0].def.x, y: () => FEET - 262, gx: () => f[0].def.x - 30 },
+    [ { who: sis, icon: 'hand', done: () => m.got[0], x: () => f[0].def.x, y: () => FEET - 262, gx: () => f[0].def.x - 30 },
       { who: bro, icon: 'hand', done: () => m.got[1], x: () => f[1].def.x, y: () => FEET + 30, gx: () => f[1].def.x - 30 },
       { who: bro, icon: 'hands', done: () => m.got[2], x: () => f[2].def.x, y: () => FEET - 352, gx: () => f[2].def.x + 60 } ],
     [ { who: bro, icon: 'hand', done: () => KIT_SIG.hoist, x: () => hoist.def.x, y: () => FEET - 70, gx: () => hoist.def.x - 30 },
@@ -146,7 +142,7 @@ const hint = { key: '', t: 0, step: null, fast: QS.get('hints') === 'fast' ? 10 
 function updateHints(dt) {
   const steps = HINTS[game.station] || [], i = steps.findIndex((s) => !s.done()), key = game.station + ':' + i;
   if (key !== hint.key) { hint.key = key; hint.t = 0; }
-  hint.step = i < 0 || game.exitT >= 0 || (game.station === 0 && !game.map.landed(2)) ? null : steps[i];
+  hint.step = i < 0 || game.exitT >= 0 || (game.station === 0 && Math.max(sis.x, bro.x) < STATIONS[0].view[0]) ? null : steps[i]; // (station 0 begins with steps and a box: no hint for the lamps until somebody is there)
   if (hint.step) hint.t += dt * hint.fast;
 }
 function drawGhost(c, p, x, y, icon, t) { // a faint copy of a sibling, washed in their colour, with the sign for what to press
@@ -166,36 +162,23 @@ function drawHintMarks(c, t) {
   if (hint.t >= HINT_TIMES[2]) drawGhost(c, s.who, s.gx(), FEET - (s.gy ? s.gy() : 0), s.icon, t);
 }
 function drawGoalBubble(c, t) { // the picture bubble: what this station is about. It shows on arriving, and again whenever both stand still for a while.
-  const icon = KIT_SIG.bridge ? 'tree' : STATIONS[game.station].goal; if (!icon || (game.station === 0 && !game.map.landed(2))) return;
+  const icon = KIT_SIG.bridge ? 'tree' : STATIONS[game.station].goal; if (!icon || (game.station === 0 && Math.max(sis.x, bro.x) < STATIONS[0].view[0])) return;
   game.goalT = game.goalKey === icon ? game.goalT : 0; game.goalKey = icon;
   const a = game.goalT < 5 ? Math.min(1, game.goalT * 3, (5 - game.goalT) * 2) : sis.idle > 6 && bro.idle > 6 ? Math.min(1, (Math.min(sis.idle, bro.idle) - 6) * 2) : 0; if (a <= 0) return;
   const x = clamp(sis.x, camX + 90, camX + VW - 90), y = sis.y - sis.standH - 118 + Math.sin(t * 2) * 3;
   c.save(); c.globalAlpha = a; ell(c, x - 14, y + 62, 7, 7, '#fffbf0', a); ell(c, x - 4, y + 46, 10, 10, '#fffbf0', a); c.globalAlpha = a;
   c.beginPath(); c.ellipse(x, y, 54, 42, 0, 0, TAU); fs(c, '#fffbf0', '#8a6a3a', 3); drawIcon(c, icon, x, y, 1.9); c.restore();
 }
-function drawFlyingPieces(c, t) { // the torn pieces on the wind, and a piece hopping up to the corner of the screen when it is found
-  const m = game.map; if (!m.gust) return;
-  const spots = kit.filter((o) => o.spot).sort((a, b) => a.piece - b.piece).map((o) => o.spot).concat([[m.from[0] + 1900, 240]]);
-  spots.forEach(([x, y], i) => { if (m.landed(i) || m.t <= 0) return; const u = clamp01(m.t / (1.5 + i * 0.3)); drawPiece(c, lerp(m.from[0], x, u), lerp(m.from[1], y, u) - Math.sin(u * Math.PI) * 260, u * 9 + i, MAP.pictures[i], 1.2); });
-  if (m.took) { const u = ease(clamp01(m.took.t / 0.9)); drawPiece(c, lerp(m.took.x, camX + 60 + m.took.i * 44, u), lerp(m.took.y, game.lift + 48, u) - Math.sin(u * Math.PI) * 120, u * 6, MAP.pictures[m.took.i], lerp(1.6, 1, u)); }
-}
-function drawHud(c, top) { // pictures only: the pieces of the map found so far (nothing else is collected)
-  const x = camX + 22, m = game.map;
-  c.save();
-  if (m.gust && m.t > 1) { // four places for the pieces of the map
-    rrect(c, x, top + 20, 204, 56, 14); fs(c, 'rgba(255,248,230,.9)', '#8a6a3a', 2);
-    m.got.forEach((g, i) => { const px = x + 38 + i * 44, py = top + 48; if (g && !(m.took && m.took.i === i)) drawPiece(c, px, py, 0.15 * (i - 1.5), MAP.pictures[i], 1); else if (!g) { rrect(c, px - 15, py - 14, 30, 28, 4); c.strokeStyle = '#b9a07a'; c.setLineDash([4, 4]); c.lineWidth = 2; c.stroke(); c.setLineDash([]); } });
-  }
-  c.restore();
-}
-function drawEnd(c, t, top) { // the end card, in pictures: the map put together, the time on a clock, and an arrow (jump goes on)
+function drawEnd(c, t, top) { // the end card, in pictures: a high five, the time on a clock, and an arrow (jump goes on, to the chapter map)
   const a = Math.min(1, game.endT); c.fillStyle = `rgba(28,18,10,${a * 0.8})`; c.fillRect(camX - 10, 0, VW + 20, VH + top + 40);
-  c.save(); c.globalAlpha = a; const w = 520, h = 300, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40, cx = x + w / 2; parchment(c, x, y, w, h);
-  game.map.got.forEach((g, i) => drawPiece(c, cx - 99 + i * 66, y + 82, 0.12 * (i - 1.5), MAP.pictures[i], 1.7));
+  c.save(); c.globalAlpha = a; const w = 460, h = 330, x = camX + VW / 2 - w / 2, y = top + (VH - top) / 2 - h / 2 - 40, cx = x + w / 2; parchment(c, x, y, w, h);
+  const clap = Math.pow(Math.abs(Math.sin(t * 2.6)), 6) * 10;
+  for (const [side, col] of [[-1, sis.col], [1, bro.col]]) { c.save(); c.translate(cx + side * (40 - clap), y + 96); c.scale(side, 1); rrect(c, -22, 22, 44, 20, 6); fs(c, col, INK, 3); drawIcon(c, 'hand', 0, 0, 2.3); c.restore(); }
+  for (let k = 0; k < 5; k++) star(c, cx + Math.cos(-Math.PI / 2 + (k - 2) * 0.62) * 118, y + 112 + Math.sin(-Math.PI / 2 + (k - 2) * 0.62) * 84, 12 + Math.sin(t * 5 + k * 1.7) * 5, t + k, a * 0.95);
   const secs = Math.floor(game.finished || game.time), time = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
   c.fillStyle = INK; c.font = '700 38px Georgia, serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; const lx = cx - (52 + 14 + c.measureText(time).width) / 2 + 26;
-  c.beginPath(); circ(c, lx, y + 176, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(lx, y + 160); c.lineTo(lx, y + 176); c.lineTo(lx + 12, y + 183); c.stroke(); c.fillStyle = INK; c.fillText(time, lx + 40, y + 178);
-  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', cx, y + h - 48, 1.5, '#6d9b45'); } // "press jump to go on"
+  c.beginPath(); circ(c, lx, y + 200, 26); fs(c, '#fffbf0', INK, 4); c.strokeStyle = INK; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(lx, y + 184); c.lineTo(lx, y + 200); c.lineTo(lx + 12, y + 207); c.stroke(); c.fillStyle = INK; c.fillText(time, lx + 40, y + 202);
+  if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); drawIcon(c, 'up', cx, y + h - 52, 1.6, '#6d9b45'); } // "press jump to go on"
   c.restore(); c.textBaseline = 'alphabetic';
 }
 function drawDebug(c, t, top) {
@@ -209,7 +192,7 @@ function drawDebug(c, t, top) {
   const tag = (s, x, y, col = '#fff6dc') => { c.fillStyle = 'rgba(20,12,6,.78)'; c.fillRect(x, y, c.measureText(s).width + 16, 25); c.fillStyle = col; c.fillText(s, x + 8, y + 3); };
   STATIONS.forEach((s, n) => { c.strokeStyle = 'rgba(120,200,255,.8)'; c.setLineDash([14, 10]); c.beginPath(); c.moveTo(s.x[0], 0); c.lineTo(s.x[0], VH); c.stroke(); c.setLineDash([]); tag('station ' + s.name, s.x[0] + 8, top + 150, '#bfe2ff'); });
   for (const id in KIT_AT) tag(id + (KIT_SIG[id] ? ' ON' : ' off'), KIT_AT[id].x - 30, FEET + 60, KIT_SIG[id] ? '#ffe27a' : '#b9b0a4');
-  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   station ${game.station}   map ${piecesGot()}/4   time ${game.time.toFixed(0)} s`,
+  const lines = [`fps ${game.fps.toFixed(0)}   slowest frame ${game.slow.toFixed(0)} ms   cam ${camX.toFixed(0)}   station ${game.station}   lamps ${game.lit.slice(0, 3).filter(Boolean).length}/3   time ${game.time.toFixed(0)} s`,
     ...players.map((p) => `${p.who.padEnd(7)} x ${p.x.toFixed(0).padStart(5)}  y ${(FEET - p.y).toFixed(0).padStart(4)} up  vx ${p.vx.toFixed(0).padStart(5)} vy ${p.vy.toFixed(0).padStart(5)}  ${p.gone ? 'gone' : p.held ? 'held' : p.climb ? 'climb' : p.grounded ? 'ground' : 'air'}${p.crawl ? ' crawl' : ''}${p.carry ? ' carry' : ''}${p.holding ? ' holding' : ''}  on ${p.on ? (p.on.isBody ? 'box' : p.on.isLedge ? 'ledge' : 'solid') : '-'}  load ${world.load(p)}`),
     `duo ${MV.duo.state || '-'}   jump ${(MOVE.jumpHeight * broHeight()).toFixed(0)} units in ${MOVE.jumpTime}s   gravity ${moveGravity().toFixed(0)}`];
   lines.forEach((s, i) => tag(s, camX + 250, top + 22 + i * 26));
@@ -241,10 +224,10 @@ function frame(now) {
     c.fillStyle = lg(c, 0, FEET + 26, 0, VH + top, 'rgba(111,154,176,.55)', 'rgba(63,106,130,.96)'); c.fillRect(a + 16, FEET + 26, b - a - 32, VH + top - FEET);
     c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2.5; for (let i = 0; i < 7; i++) { const xx = a + 30 + ((i * 139 + t * 26) % (b - a - 100)), yy = FEET + 34 + (i % 3) * 22; c.beginPath(); c.moveTo(xx, yy); c.quadraticCurveTo(xx + 18, yy - 5, xx + 36, yy); c.stroke(); }
   }
-  drawFlyingPieces(c, t); if (!game.done && game.exitT < 0) drawHintMarks(c, t);
+  if (!game.done && game.exitT < 0) drawHintMarks(c, t);
   drawLampGlow(c); drawLeaves(c, t); drawMoveFx(c); drawSparks(c);
   drawStreetGlow(c);
-  if (ZOOM <= 1) { if (!game.done) { drawHints(c, t); drawGoalBubble(c, t); drawHud(c, top); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
+  if (ZOOM <= 1) { if (!game.done) { drawHints(c, t); drawGoalBubble(c, t); } if (DEBUG) drawDebug(c, t, top); if (game.done) drawEnd(c, t, top); }
   requestAnimationFrame(frame);
 }
 

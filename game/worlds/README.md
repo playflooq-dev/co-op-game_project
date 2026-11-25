@@ -113,7 +113,7 @@ Objects are placed exactly as in the city (see "Placing objects" below): one lin
 
 | Kind | Settings | What it is |
 |---|---|---|
-| `log` | `x, h` | A log lying on the path: hop over it or stand on it. |
+| `log` | `x, h` | A log lying on the path: hop over it or stand on it. `h` is where feet stand; the picture is scaled so that the top of its bark is exactly there, and the solid part is as long as the bark. |
 | `parkgate` | `x, by: [ids], any, latch` | The kit's gate, drawn as a green iron park gate. `any: true` opens for any one of its plates (the kit's gate needs all of them). `by: ['balloon']` opens for whoever carries the balloon. |
 | `parkbox` | `x` | The kit's light box, with a cat on it; it squashes and puffs dust when it lands. |
 | `pond` | `x: [from, to]` | A duck pond behind the path. Grab makes a splash; the ducks swim away from it. |
@@ -199,9 +199,9 @@ carrying, the lift and the toss. Everything in it may change. Its story is in [c
 | File | What it holds |
 |---|---|
 | `settings.js` | The street (buildings, lamps, stalls, where the water is) and the `STATIONS`: every object, one line each. |
-| `lab.js` | Runs the level: builds the stations, the camera, the map pieces, the hints (`HINTS`), the end card. |
+| `lab.js` | Runs the level: builds the stations, the camera, the hints (`HINTS`), the end card. |
 | `street.js` | Draws the scenery: sky, skyline, buildings, pavement, the side street, canal and river, pigeons, leaves. |
-| `things.js` | The city's own objects: map pieces, the puppy, the fountain, the bell game, water jets, parasols, the bridge. |
+| `things.js` | The city's own objects: the three lamps, the puppy, the fountain, the bell game, water jets, parasols, the bridge. |
 
 The art folders: `assets/background/` (the far skyline), `ground/` (pavement, road, cobbles, canal stone),
 `buildings/` (the fronts along the street; the flour mill is `warehouse.png` with see-through holes, and
@@ -246,7 +246,7 @@ names are on.
 | `trap` | `x: [from, to], h, by` | A shelf that swings open and drops what is on it. |
 | `tunnel` | `x: [from, to], h, gap` | A low way through that only he fits. |
 | `sticker` | `x, h, icon, ride, when` | An extra to collect. `ride: true` can be taken from her shoulders. Not placed anywhere since 2026-11-24. |
-| `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a map piece, the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
+| `find`, `puppy`, `fountain`, `striker`, `jet`, `parasol`, `bridge` | see `things.js` | The city's own: a lamp to switch on (it was a piece of a torn map until 2026-11-25), the puppy, the fountain, the bell game, a water jet, a parasol, the bridge. |
 
 The colour language is built into the kit: green things are the sister's job (heavy or high), blue things the
 brother's (light or small), plain wood is for either.

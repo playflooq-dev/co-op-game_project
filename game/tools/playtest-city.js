@@ -57,8 +57,8 @@
     const jumpGrab = async (p) => { key(JUMP[p.who], true); await frames(2); key(JUMP[p.who], false); await until(() => p.vy > -80, 1500); await tap(GRAB[p.who]); await until(() => p.grounded, 2500); await frames(3); }; // grab at the top of a jump
     const highest = async (p, doIt) => { let top = 0; const w = setInterval(() => { top = Math.max(top, up(p)); }, 10); await doIt(); clearInterval(w); return top; };
     try {
-      const m = game.map; m.gust = true; m.t = 99; // the map is already torn
-      // ---- station 0: the three map pieces
+      const m = { got: game.lit };
+      // ---- station 0: the three lamps
       const [f0, f1, f2] = of('find').map((o) => o.def), gate0 = inStation(0, 'gate')[0], box0 = inStation(0, 'box')[0].body, bar0 = inStation(0, 'bar')[0].def;
       await set(f1.x - 15, 2460); await tap('KeyS'); check('0: her hand does not fit the drain', !m.got[1]);
       await set(f2.x - 20, 2460); await tap('KeyS'); await jumpGrab(sis); check('0: she cannot reach the window box, even jumping', !m.got[2]);
@@ -68,7 +68,7 @@
       check('0: the bar stops him carrying the box on to the sign', !bro.carry && box0.x < bar0.x && bro.x > bar0.x, `box at ${box0.x.toFixed(0)}`);
       put(box0, bar0.x - 260); await set(bar0.x - 345, bar0.x - 500); await tap('KeyS'); await until(() => box0.liftT >= 1, 2000); await go(sis, bar0.x + 200);
       check('0: and stops her too', !sis.carry && box0.x < bar0.x && sis.x > bar0.x, `box at ${box0.x.toFixed(0)}`);
-      check('0: the gate is still shut', gate0.state.open === 0 && !KIT_SIG.map3);
+      check('0: the gate is still shut and no lamp is lit', gate0.state.open === 0 && !KIT_SIG.lamp0 && !KIT_SIG.lamp1 && !KIT_SIG.lamp2);
       // ---- station 1: the hoist, the crate, the green plate
       const crate = inStation(1, 'crate')[0].body, plate1 = inStation(1, 'plate')[0], gate1 = inStation(1, 'gate')[0], hoist = inStation(1, 'lever')[0];
       await set(hoist.def.x - 15, 3760); await tap('KeyS'); check('1: her hand does not fit the hatch', !KIT_SIG.hoist);
@@ -135,14 +135,14 @@
         await set(7900, 7980);
         check('3: she cannot get to that ladder from her side of the wall', !(await go(sis, backUp.def.x, 3500)) && sis.x < wall3.x[0], `she is at ${sis.x.toFixed(0)}`);
       }
-      check('nobody was needed twice: the map, the gates and the bridge are as they were', !m.got.some(Boolean) && !bridge.state.down && gate0.state.open === 0);
+      check('nobody was needed twice: the lamps, the puppy, the gates and the bridge are as they were', !m.got.some(Boolean) && !bridge.state.down && gate0.state.open === 0);
       log(fails ? `PLAY FAILED ${fails} short cut${fails > 1 ? 's' : ''} worked` : 'PLAY PASSED');
     } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }
     return;
   }
   try {
     const H = MOVE.jumpHeight * broHeight();
-    if (FROM <= 0) { // ================= station 0: jump, carry, the torn map
+    if (FROM <= 0) { // ================= station 0: jump, carry, three lamps
     let top = 0; key('KeyW', true); for (let i = 0; i < 80; i++) { await frame(); if (i === 2) key('KeyW', false); top = Math.max(top, up(sis)); if (i > 6 && sis.grounded) break; }
     check(`a jump is ${MOVE.jumpHeight} brother-heights`, near(top, H, H * 0.03), `wanted ${H.toFixed(0)}, got ${top.toFixed(0)}`);
     const box0 = inStation(0, 'box')[0].body, shelf = inStation(0, 'ledge')[0].def;
@@ -155,14 +155,15 @@
     await go(sis, 2380); await go(bro, 2330);
     check('the bar lets them through', sis.x > 1900 && bro.x > 1900);
     const gate0 = inStation(0, 'gate')[0], finds = of('find');
-    await go(sis, 2480); check('the wind tears the map', game.map.gust && (await until(() => game.map.landed(2), 5000)));
-    check('the gate is shut without the pieces', gate0.state.open === 0);
-    await go(sis, finds[0].def.x - 20); await tap('KeyS'); check('she takes the piece from the shop sign', game.map.got[0]);
-    await go(bro, finds[1].def.x - 15); await tap('ArrowDown'); check('he fishes the piece out of the drain', game.map.got[1]);
+    await go(sis, 2480);
+    check('no map: nothing is torn, flies about, or is kept at the top of the screen', typeof game.map === 'undefined' && typeof MAP === 'undefined' && typeof drawPiece === 'undefined' && typeof drawHud === 'undefined');
+    check('the gate is shut and its three lamps are dark', gate0.state.open === 0 && !game.lit.some(Boolean));
+    await go(sis, finds[0].def.x - 20); await tap('KeyS'); check('she switches on the lamp on the shop sign', game.lit[0] && (await until(() => KIT_SIG.lamp0, 500)));
+    await go(bro, finds[1].def.x - 15); await tap('ArrowDown'); check('he switches on the lamp in the drain', game.lit[1]);
     await go(sis, finds[2].def.x - 20); await go(bro, finds[2].def.x + 50);
-    check('she lifts him', await liftUp()); await tap('ArrowDown'); check('and he takes the piece from the window box', game.map.got[2]);
+    check('she lifts him', await liftUp()); await tap('ArrowDown'); check('and he switches on the lamp in the window box', game.lit[2]);
     await hop(bro);
-    check('three pieces open the gate', await until(() => gate0.state.open >= 1, 3000));
+    check('three lamps open the gate', await until(() => gate0.state.open >= 1, 3000));
     check('into station 1', (await go(sis, 3780)) && (await go(bro, 3830)) && game.station === 1, `station ${game.station}`);
     }
     if (FROM <= 1) {
@@ -181,9 +182,9 @@
     await go(sis, box2.x); await hop(sis); check('she steps onto the box', sis.on === box2);
     await go(bro, box2.x + 78);
     check('from the box she lifts him', await liftUp()); await tap('ArrowDown');
-    check('and he gets the last piece from the puppy', game.map.got[3] && pup.state.mode !== 'sit');
+    check('and he helps the puppy down', game.lit[3] && pup.state.mode !== 'sit');
     await hop(bro); await go(sis, box2.x - 120);
-    check('four pieces open the market gate', await until(() => gate2.state.open >= 1, 3000));
+    check('with the puppy down the market gate opens', await until(() => gate2.state.open >= 1, 3000));
     check('into station 3', (await go(sis, 6840)) && (await go(bro, 6900)) && game.station === 3, `station ${game.station}`);
     check('the puppy tags along and stays in the market', pup.state.mode === 'follow' && pup.state.x < 6760 && pup.state.x > pup.def.x, `puppy at ${pup.state.x.toFixed(0)}`);
     }
@@ -256,7 +257,7 @@
     STATIONS.forEach((s, n) => n >= FROM && log(`time  station ${s.name.split(':')[0]}: ${(ends[n] - game.entered[n]).toFixed(0)} s`));
     check('nothing to collect: no sticker anywhere in the city', !kit.some((o) => o.star || o.def.kind === 'sticker' || o.def.kind === 'star') && typeof starsGot === 'undefined');
     check('the city is saved as finished for the chapter', typeof CHAPTER !== 'undefined' && CHAPTER.done('city'));
-    log(`time  whole city: ${(game.finished || game.time).toFixed(0)} s   map pieces ${piecesGot()}/4`);
+    log(`time  whole city: ${(game.finished || game.time).toFixed(0)} s`);
     log(`frame rate: ${game.fps.toFixed(0)} a second, slowest frame ${game.slow.toFixed(0)} ms, canvas ${cv.width}x${cv.height}`);
     log(fails ? `PLAY FAILED ${fails} check${fails > 1 ? 's' : ''}` : 'PLAY PASSED');
   } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }

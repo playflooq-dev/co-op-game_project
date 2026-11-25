@@ -198,7 +198,7 @@ The keys are shown as pictures at the bottom of the screen. M switches the sound
 
 "Grab" does whatever fits where they stand:
 - next to a box: pick it up. Again: put it down in front (on a pile, it goes on top).
-- next to something to use (a lever, a map piece, a bell): use it. Some levers and the rope
+- next to something to use (a lever, a lamp, a bell): use it. Some levers and the rope
   only work while the key is held down.
 - next to each other, with nothing else in reach: she lifts him onto her shoulders.
   Grab again: she tosses him up and forwards. Jump while he is up there: he hops down.
@@ -232,14 +232,14 @@ back on the bank.
 THE STATIONS
 Each is one idea on one screen, and needs both of them.
 0  Maple Street. Steps and a low wall to jump; a box to carry, and a shelf it helps to reach.
-   Then the wind tears the map into four pieces. One lands on a shop sign (she reaches it), one
-   in a drain (only his hand fits), one in a window box (too high for both: she lifts him).
-   The gate opens when all three are found.
+   Then three lamps to switch on, each with a cable to the gate: one on a shop sign (she reaches
+   it), one in a drain (only his hand fits), one in a window box (too high for both: she lifts
+   him). The gate opens when all three are lit.
 1  The flour mill. The shutter stays open only while the big green plate is held down. The heavy
    crate would do it, but it is up on the hoist: he works the low hatch that lets it down, and
    she carries it onto the plate.
-2  The market. The puppy has the last piece, up on a high awning. Bring the box under it; she
-   stands on the box and lifts him.
+2  The market. The puppy is up on a high awning and cannot get down. Bring the box under it; she
+   stands on the box and lifts him, and he helps it down. That opens the market gate.
 3  Fountain Square. He stands on the blue end of the see-saw, she jumps onto the green end, and
    he flies up to the balcony. Up there he lets the rope ladder down for her. The fountain and
    the bell game are only there to play with.
@@ -260,10 +260,10 @@ to stand and what to press (60 seconds). The ghost is green for her and blue for
 
 NOTHING TO COLLECT
 The eight stickers that were hidden along the way were taken out on 2026-11-24, as in Level 1
-(collecting confused more than it added; it comes back once the base game is set). The four
-pieces of the map are not stickers: finding them is the puzzle of stations 0 and 2, and the box
-at the top left shows them once the map is torn.
-The card at the end shows the map put together and the time, in pictures and numbers.
+(collecting confused more than it added; it comes back once the base game is set). The torn map
+went on 2026-11-25: no gust of wind, no pieces flying about, no box of pieces at the top left.
+Only the puzzles are left (the three lamps, the puppy).
+The card at the end shows a high five and the time.
 Jump goes on to the chapter map, and from there to Level 3, the canal.
 
 FOR TESTING (add to the address)

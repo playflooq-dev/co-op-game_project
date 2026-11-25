@@ -1,31 +1,29 @@
 'use strict';
 // The city's own objects, placed by the STATIONS in settings.js. They work like the kinds in shared/kit.js
 // (each is made from one line of settings and gives back update / after / draw / thing), but belong to this world:
-//   find      { piece, look: 'sign' | 'drain' | 'windowbox', x, h, who }   where a piece of the torn map landed
-//   puppy     { x, h }            sits on a high awning with the last map piece; then hops down and tags along
+//   find      { lamp, look: 'sign' | 'drain' | 'windowbox', x, h, who }    a lamp to switch on, with a cable to its gate
+//   puppy     { x, h }            sits on a high awning until somebody reaches it; then hops down and tags along
 //   fountain  { x }               to splash in                striker   { x }   the bell game: stop the light high up
 //   jet       { x, h, late }      a water jet that gives whoever stands on it a little bounce
 //   parasol   { x, h, by, late }  closed until its id comes on, then a step to stand on
 //   bridge    { x: [from, to], by: [ids], time }   comes down while every id is held, and then stays down
 // The drawing of the puppy, the fountain, the bell game, the jets and the parasols comes from the first city level.
 
-// ---------- the torn map
-function drawPiece(c, x, y, rot, pic, s = 1) {
-  c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
-  c.beginPath(); c.moveTo(-16, -12); c.lineTo(-4, -15); c.lineTo(9, -11); c.lineTo(17, -14); c.lineTo(15, 2); c.lineTo(18, 13); c.lineTo(2, 15); c.lineTo(-12, 12); c.lineTo(-17, 1); c.closePath();
-  fs(c, '#f1dfb0', '#8a6a3a', 1.6);
-  if (pic) drawIcon(c, pic, 0, 0, 0.62);
+// ---------- three lamps to switch on (they were the places where pieces of a torn map had landed)
+const FIND_COL = { sign: KIT_GREEN, drain: KIT_BLUE, windowbox: '#d9a94e' }; // green: hers. Blue: his. Plain: either, here from her shoulders.
+function drawFindLamp(c, x, y, on, col, t, s = 1) {
+  c.save(); c.translate(x, y); c.scale(s, s);
+  if (on) soft(c, 0, 0, 34, 34, '#ffe27a', 0.6);
+  c.beginPath(); circ(c, 0, 0, 15); fs(c, '#1c1a20', col, 3.5); ell(c, 0, 0, 10.5, 10.5, on ? '#ffe27a' : shade(col, -0.3)); ell(c, -3.5, -4, 3, 2.2, '#fff', on ? 0.7 : 0.25);
   c.restore();
 }
-function takePiece(i, p, x, y) {
-  const m = game.map; if (m.got[i]) return;
-  m.got[i] = true; m.took = { i, x, y, t: 0 }; p.cheer = 0.7; p.reachT = 0.35; snd('piece'); burst(x, y, 10);
-  if (m.got.every(Boolean)) snd('great');
-}
 KIT.find = (world, d, ground) => {
-  const x = d.x, y = ground - d.h, i = d.piece, there = () => game.map.landed(i) && !game.map.got[i];
-  const thing = { x, y, canUse: (p) => there() && (p.grounded || p.held) && Math.abs(p.x - x) <= 90 && sibReachY(p) <= y + 8 && (!d.who || p.kind === d.who), use(p) { takePiece(i, p, x, y); } };
-  return { thing, spot: [x, y], piece: i,
+  const x = d.x, y = ground - d.h, i = d.lamp, id = 'lamp' + i, col = FIND_COL[d.look] || '#d9a94e', there = () => !game.lit[i];
+  KIT_AT[id] = { x, col };
+  const thing = { x, y, canUse: (p) => there() && (p.grounded || p.held) && Math.abs(p.x - x) <= 90 && sibReachY(p) <= y + 8 && (!d.who || p.kind === d.who),
+    use(p) { game.lit[i] = true; p.cheer = 0.7; p.reachT = 0.35; snd('click'); snd('piece'); burst(x, y, 10); if (game.lit[0] && game.lit[1] && game.lit[2]) snd('great'); } };
+  return { thing, lamp: i,
+    after() { KIT_SIG[id] = !!game.lit[i]; },
     draw(c, t) {
       if (d.look === 'sign') { // a shop sign on a post: she can reach it
         const px = x + 46, top = y - 96;
@@ -35,11 +33,11 @@ KIT.find = (world, d, ground) => {
         c.strokeStyle = '#2c2c34'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(px, top + 16); c.lineTo(x - 40, top + 16); c.moveTo(px, top + 56); c.quadraticCurveTo(x + 16, top + 40, x - 4, top + 18); c.stroke();
         c.lineWidth = 2.5; c.beginPath(); c.moveTo(x - 14, top + 16); c.lineTo(x - 14, top + 34); c.stroke();
         c.save(); c.translate(x - 14, top + 34); c.rotate(Math.sin(t * 1.6) * 0.05); c.beginPath(); circ(c, 0, 36, 36); fs(c, '#fffbf0', INK, 2.5); drawIcon(c, 'apple', 0, 36, 1.5); c.restore();
-        if (there()) drawPiece(c, x + 8, y - 4, -0.3 + Math.sin(t * 5) * 0.18, MAP.pictures[i], 1.25);
+        drawFindLamp(c, x + 8, y - 4, !there(), col, t, 1.15);
       } else if (d.look === 'drain') { // a drain by the kerb: only his small hand fits
         const gy = ground + 44;
         rrect(c, x - 46, gy - 12, 92, 30, 6); fs(c, KIT_BLUE, '#1f3a55', 2.2); rrect(c, x - 38, gy - 6, 76, 18, 4); fs(c, '#2c2a30', '#1c1a20', 1.8);
-        if (there()) drawPiece(c, x, gy + 3, 0.2, MAP.pictures[i], 0.8);
+        drawFindLamp(c, x, gy + 3, !there(), col, t, 0.62);
         c.strokeStyle = '#5a5a62'; c.lineWidth = 4; for (let bx = x - 30; bx <= x + 30; bx += 12) { c.beginPath(); c.moveTo(bx, gy - 6); c.lineTo(bx, gy + 12); c.stroke(); }
       } else { // a window box on a trellis: too high for both
         const px = x + 52;
@@ -48,15 +46,15 @@ KIT.find = (world, d, ground) => {
         c.lineWidth = 3; c.beginPath(); for (let yy = ground - 30; yy > y; yy -= 56) { c.moveTo(px - 16, yy); c.lineTo(px + 16, yy - 40); c.moveTo(px + 16, yy); c.lineTo(px - 16, yy - 40); } c.stroke();
         c.strokeStyle = '#2c2c34'; c.lineWidth = 5; c.beginPath(); c.moveTo(px - 16, y + 44); c.lineTo(x - 50, y + 44); c.moveTo(px - 16, y + 84); c.lineTo(x - 20, y + 46); c.stroke();
         for (let k = 0; k < 6; k++) { const fx = x - 44 + k * 17; c.strokeStyle = '#4f8a3a'; c.lineWidth = 3; c.beginPath(); c.moveTo(fx, y + 20); c.quadraticCurveTo(fx + 3, y + 4, fx + (k % 2 ? 4 : -3), y - 8 - (k % 3) * 5); c.stroke(); ell(c, fx + (k % 2 ? 4 : -3), y - 10 - (k % 3) * 5, 6.5, 6.5, ['#d9534a', '#f2c94e', '#e8728a'][k % 3]); }
-        if (there()) drawPiece(c, x, y - 6, 0.25 + Math.sin(t * 5) * 0.15, MAP.pictures[i], 1.25);
+        drawFindLamp(c, x, y - 12, !there(), col, t, 1.15);
         rrect(c, x - 58, y + 16, 108, 30, 5); fs(c, lg(c, 0, y + 16, 0, y + 46, '#b5713c', '#8a4e24'), KIT_EDGE, 2.2);
       }
       if (there()) { const k = Math.max(0, Math.sin(t * 2.6 + x)), gy = d.look === 'drain' ? ground + 40 : y - 8; star(c, x + 16, gy - 12, 9 + k * 7, t * 2, 0.4 + k * 0.5); }
     } };
 };
 
-// ---------- the market puppy, with the last map piece
-function drawPup(c, x, y, dir, t, run, sit, piece) {
+// ---------- the market puppy, up on an awning it cannot get down from
+function drawPup(c, x, y, dir, t, run, sit) {
   const ph = t * (run ? 18 : 5), bob = run ? Math.abs(Math.sin(ph)) * 5 : 0, wag = Math.sin(t * (sit ? 16 : 9)) * (sit ? 0.6 : 0.3);
   c.save(); c.translate(x, y + 8 - bob); c.scale(dir * 1.45, 1.45); c.lineCap = 'round'; c.lineJoin = 'round';
   const fur = '#c98a4a', dark = '#7a4a24', cream = '#f6e6c8';
@@ -70,18 +68,18 @@ function drawPup(c, x, y, dir, t, run, sit, piece) {
   c.beginPath(); c.ellipse(hx + 13, hy + 5, 9, 7, 0, 0, TAU); fs(c, cream, dark, 1.5); ell(c, hx + 21, hy + 2, 3.5, 3, '#2a1a10');
   ell(c, hx + 5, hy - 3, 2.6, 2.6, '#2a1a10'); ell(c, hx + 6, hy - 4, 0.9, 0.9, '#fff');
   c.save(); c.translate(hx - 7, hy - 9); c.rotate(0.5 + (run ? Math.sin(ph) * 0.3 : 0)); c.beginPath(); c.ellipse(0, 8, 6, 11, 0, 0, TAU); fs(c, dark, '#4a2a14', 1.4); c.restore();
-  if (sit && !piece) { c.beginPath(); c.ellipse(hx + 16, hy + 12, 3, 5, 0, 0, TAU); c.fillStyle = '#e8728a'; c.fill(); }
-  if (piece) { c.save(); c.translate(hx + 20, hy + 9); c.rotate(0.4); c.beginPath(); c.moveTo(-6, -8); c.lineTo(10, -10); c.lineTo(12, 8); c.lineTo(-4, 9); c.closePath(); fs(c, '#f1dfb0', '#8a6a3a', 1.4); c.restore(); }
+  if (sit) { c.beginPath(); c.ellipse(hx + 16, hy + 12, 3, 5, 0, 0, TAU); c.fillStyle = '#e8728a'; c.fill(); }
   c.restore();
 }
 KIT.puppy = (world, d, ground) => {
   const x = d.x, top = ground - d.h, st = { mode: 'sit', t: 0, x, y: top, dir: -1, bark: 0, hop: 0 };
-  const thing = { get x() { return st.mode === 'sit' ? x : st.x; }, y: top + 8, // up on the awning it gives up the map piece; down on the ground it likes to be petted (once)
+  KIT_AT.puppy = { x, col: '#c98a4a' };
+  const thing = { get x() { return st.mode === 'sit' ? x : st.x; }, y: top + 8, // up on the awning: whoever reaches it helps it down. Down on the ground it likes to be petted (once)
     canUse: (p) => (st.mode === 'sit' ? (p.grounded || p.held) && Math.abs(p.x - x) <= 95 && sibReachY(p) <= top + 14 : st.mode === 'follow' && !KIT_SIG.petted && p.grounded && Math.abs(p.x - st.x) < 100 && Math.abs(p.y - st.y) < 30),
-    use(p) { if (st.mode === 'sit') { st.mode = 'jump'; st.t = 0; st.to = x + (p.x < x ? 150 : -150); takePiece(3, p, x, top - 20); } else { st.hop = 0.35; st.bark = 1.6; p.reachT = 0.3; burst(st.x, st.y - 70, 8); KIT_SIG.petted = [st.x, st.y - 90]; } snd('bark'); } };
+    use(p) { if (st.mode === 'sit') { st.mode = 'jump'; st.t = 0; st.to = x + (p.x < x ? 150 : -150); game.lit[3] = true; p.cheer = 0.7; p.reachT = 0.35; snd('great'); burst(x, top - 20, 10); } else { st.hop = 0.35; st.bark = 1.6; p.reachT = 0.3; burst(st.x, st.y - 70, 8); KIT_SIG.petted = [st.x, st.y - 90]; } snd('bark'); } };
   return { state: st, thing,
     after(dt) {
-      st.t += dt; st.bark = Math.max(0, st.bark - dt); st.hop = Math.max(0, st.hop - dt);
+      st.t += dt; st.bark = Math.max(0, st.bark - dt); st.hop = Math.max(0, st.hop - dt); KIT_SIG.puppy = !!game.lit[3];
       const sibs = [MV.sis, MV.bro], near = Math.abs(sibs[0].x - st.x) < Math.abs(sibs[1].x - st.x) ? sibs[0] : sibs[1];
       if (st.mode === 'sit') { // up on the awning: it watches whoever is closest, and yips when somebody jumps for it
         st.dir = near.x < st.x ? -1 : 1;
@@ -101,7 +99,7 @@ KIT.puppy = (world, d, ground) => {
       for (let k = 0; k < 8; k++) { const a = x - 168 + k * 42; c.beginPath(); c.moveTo(a, top + 2); c.lineTo(a + 42, top + 2); c.lineTo(a + 42, top + 34); c.quadraticCurveTo(a + 21, top + 48, a, top + 34); c.closePath(); fs(c, k % 2 ? '#fffbf0' : '#d9534a', 'rgba(58,38,24,.55)', 1.5); }
       rrect(c, x - 172, top - 8, 344, 14, 5); fs(c, '#b03a30', KIT_EDGE, 2.2);
       const hop = st.hop > 0 ? Math.abs(Math.sin(st.hop / 0.35 * Math.PI)) * 16 : 0;
-      drawPup(c, st.x, st.y - 8 - hop, st.dir, t, st.mode === 'follow' && st.run, st.mode !== 'jump' && !(st.mode === 'follow' && st.run), st.mode === 'sit');
+      drawPup(c, st.x, st.y - 8 - hop, st.dir, t, st.mode === 'follow' && st.run, st.mode !== 'jump' && !(st.mode === 'follow' && st.run));
       if (st.bark > 1.1) { c.save(); c.globalAlpha = Math.min(1, (st.bark - 1.1) * 3); for (const a of [-0.5, 0, 0.5]) { c.strokeStyle = '#fffbf0'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(st.x + st.dir * 70 + Math.sin(a) * 6, st.y - 70 - hop + a * 30); c.lineTo(st.x + st.dir * 92, st.y - 74 - hop + a * 46); c.stroke(); } c.restore(); } // "yip": three little lines
     } };
 };

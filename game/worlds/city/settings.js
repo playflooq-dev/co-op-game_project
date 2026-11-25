@@ -5,7 +5,7 @@
 //
 // THE CITY IS A TEST LEVEL ("the lab", see LAB_PLAN.md): a row of stations, each trying one idea with the new movement.
 // Everything here may change. What runs it: lab.js (the level), street.js (the scenery), things.js (the city's own
-// objects: map pieces, the puppy, the fountain, parasols, the bridge) and, shared with other worlds, shared/kit.js
+// objects: the three lamps, the puppy, the fountain, parasols, the bridge) and, shared with other worlds, shared/kit.js
 // (boxes, plates, gates, the see-saw, the lift...), shared/movement.js and shared/physics.js.
 // For scale: a jump rises about 207, the brother is about 180 tall and the sister about 220; she can reach about 280
 // up, he about 220, and about 390 from her shoulders. A toss sends him about 500 up.
@@ -58,13 +58,6 @@ const COBBLES = [[5100, 6700], [6900, 9100]];             // stretches paved wit
 const BUNTING = [[5100, 6700, 470], [6900, 7900, 430]];   // strings of little flags over the street: [from, to, height above the pavement]
 const PIGEONS = [[430, 4], [7450, 6], [12560, 5]];        // flocks that fly up when somebody runs through them: [x, how many]
 
-// ---------- the torn map. Soon after station 0 begins a gust of wind tears the treasure map into four pieces.
-// Three land on things in station 0; the puppy in the market has the fourth. Each piece has a little picture.
-const MAP = {
-  gust: 2420,                                  // where the wind blows the map apart
-  pictures: ['star', 'fish', 'moon', 'apple'], // the picture on each piece
-};
-
 // Hints, as pictures: when a station's next step stays undone this many seconds, first the right thing sparkles,
 // then an arrow points at it, then a faint ghost of the sibling whose job it is shows where to stand.
 // (city.html?hints=fast makes them come ten times sooner, for checking.)
@@ -78,22 +71,23 @@ const HINT_TIMES = [20, 40, 60];
 // the picture shown in the thought bubble. Stickers are extras: none is needed to go on.
 // city.html?station=3 starts at station 3.
 // Nothing to collect: the eight stickers were taken out on 2026-11-24 (the client found that collecting confuses more
-// than it adds). The kit still has the kind `sticker`, for when collecting comes back. The four pieces of the map are
-// not stickers: finding them is the puzzle of stations 0 and 2.
+// than it adds). The kit still has the kind `sticker`, for when collecting comes back. The torn map and its four
+// pieces were taken out on 2026-11-25: only the puzzles are left (three lamps at station 0, the puppy at station 2).
 const STATIONS = [
-  { name: '0 Maple Street: jump, carry, and the torn map', goal: 'piece', x: [150, 3700], start: [380, 540], view: [2400, 3720], things: [
+  { name: '0 Maple Street: jump, carry, and three lamps', goal: 'gate', x: [150, 3700], start: [380, 540], view: [2400, 3720], things: [
     // learn to jump: small steps and a low wall
     { kind: 'block', x: [640, 740], h: 62 }, { kind: 'block', x: [740, 920], h: 124 }, { kind: 'block', x: [920, 1020], h: 62 },
     { kind: 'block', look: 'wall', x: [1210, 1250], h: 150 },
     // learn to carry: a light box, and a shelf that is too high to jump to without it
     { kind: 'box', x: 1420 }, { kind: 'ledge', look: 'shelf', x: [1560, 1760], h: 255 },
     { kind: 'bar', x: 1850 },
-    // the torn map: one piece on a shop sign (she reaches it), one in a drain (only his hand fits),
-    // one in a window box (too high for both: she lifts him up). The gate opens when all three are found.
-    { kind: 'find', piece: 0, look: 'sign', x: 2700, h: 262 },
-    { kind: 'find', piece: 1, look: 'drain', x: 3020, h: 6, who: 'bro' },
-    { kind: 'find', piece: 2, look: 'windowbox', x: 3360, h: 352 },
-    { kind: 'gate', x: 3650, by: ['map3'] },
+    // three lamps to switch on, each with a cable to the gate: one on a shop sign (she reaches it), one in a drain
+    // (only his hand fits), one in a window box (too high for both: she lifts him up). The gate opens when all three
+    // are lit. (Until 2026-11-25 these were three pieces of a torn map; the map is gone, the puzzle is the same.)
+    { kind: 'find', lamp: 0, look: 'sign', x: 2700, h: 262 },
+    { kind: 'find', lamp: 1, look: 'drain', x: 3020, h: 6, who: 'bro' },
+    { kind: 'find', lamp: 2, look: 'windowbox', x: 3360, h: 352 },
+    { kind: 'gate', x: 3650, by: ['lamp0', 'lamp1', 'lamp2'] },
   ] },
   { name: '1 The flour mill: plate and gate', goal: 'crate', x: [3700, 4900], start: [3760, 3840], view: [3720, 4900], things: [
     // the shutter needs the big green plate held down. The heavy crate would do it, but it is up on the hoist:
@@ -103,10 +97,10 @@ const STATIONS = [
     { kind: 'plate', id: 'mill', big: true, x: 4350 }, { kind: 'gate', x: 4700, by: ['mill'] }, // the plate is far enough from the shutter that nobody can step off it and dash through
   ] },
   { name: '2 The market: a box as a step', goal: 'paw', x: [4900, 6760], start: [4960, 5040], view: [5080, 6480], things: [
-    // the puppy sits on a high awning with the last map piece. Too high even from her shoulders:
+    // the puppy sits on a high awning and cannot get down. Too high even from her shoulders:
     // bring the light box, both step onto it, and then she lifts him.
     { kind: 'box', x: 5230 }, { kind: 'puppy', x: 5880, h: 432 },
-    { kind: 'gate', x: 6640, by: ['map4'] }, { kind: 'bar', x: 6560 },
+    { kind: 'gate', x: 6640, by: ['puppy'] }, { kind: 'bar', x: 6560 },
     { kind: 'ledge', look: 'shelf', x: [6240, 6420], h: 255 }, // a shelf over the fish stall: the box is a step up to it
   ] },
   { name: '3 Fountain Square: the see-saw', goal: 'ladder', x: [6760, 9120], start: [6840, 6920], view: [7800, 9000], things: [
