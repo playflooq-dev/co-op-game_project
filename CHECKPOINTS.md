@@ -12,11 +12,11 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 | `checkpoint-2026-11-level-1-plain` | 2026-11-24 | Level 1, the park, made plain after the client's feedback, on the branch `level-1/plain`: no stickers, no dog and no ball; an opening that is only about learning to move, with each player's keys shown as pictures; the first-time player review. The city still has its stickers and its map here. | https://level-1-plain.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-level-1-gentle` | 2026-11-23 | The first version of the park, on the branch `level-1/gentle`: learn to move, four very small puzzles, a calm moment, with stickers, a dog and a ball. Also the progression rules in `PROGRESSION.md`. `game/index.html` opens the park; the house moved to `game/house.html`. | https://level-1-gentle.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-lab-city-v2` | 2026-11-21 | The city rebuilt as a test level, "the city lab", on the branch `lab/city-v2`: eight stations with jumping, carrying, the lift and the toss, an object kit, picture hints and no reading. This became Level 2. | https://lab-city-v2.forest-trail-d56.pages.dev |
-| `checkpoint-2026-11-20-city-music` | 2026-11-20 | The older game: the house level and the first city level (road crossings, the metro, buses, codes), with recorded music and sound effects, and the puzzle-design research. | https://forest-trail-d56.pages.dev (the main address, last updated 2026-11-19; it has the same levels but may not have this checkpoint's music) |
+| `checkpoint-2026-11-20-city-music` | 2026-11-20 | The older game: the house level and the first city level (road crossings, the metro, buses, codes), with recorded music and sound effects, and the puzzle-design research. | https://forest-trail-d56.pages.dev (the main address; it matched this checkpoint on 2026-11-20 and has not been changed since) |
 | `checkpoint-2026-11-18-forest-trail` | 2026-11-18 | The approved Forest Trail scene: the art style and the two characters. | (part of every later version: `forest.html`) |
 
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
-itself. The main address has not been changed since November 19: whether it should show Chapter 1 is an open question.
+itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
 
 ## How to go back to a checkpoint
 
