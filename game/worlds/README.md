@@ -140,9 +140,56 @@ section. Things can only be taken with feet on something, never in a jump.
 How the moves feel in the park is `PARK_MOVE` in `park/settings.js`: a slightly higher jump than the lab, more
 forgiveness at edges and before landing, and no toss. `park.html?tune=1` has sliders.
 
+## The canal (`canal/`)
+
+Level 3 since 2026-11-25, the last level of Chapter 1: built to the rules in [PROGRESSION.md](../../PROGRESSION.md)
+("Combinations"). It is waiting for feedback and is not approved. Its one new idea is light-only surfaces; everything
+else is known from the park and the city. It has no art of its own: the houses, lamps, bench and the Old Bridge are
+the city's, the trees on the far bank the forest's.
+
+| File | What it holds |
+|---|---|
+| `settings.js` | The seven `SECTIONS` (every object, one line each), where the water is (`WATERS`), the houses and lamps, the forest edge, hint times (as in the city: 20, 40 and 60 seconds), and `CANAL_MOVE` (no toss). |
+| `level.js` | Runs the level: builds the sections, the camera, when a puzzle counts as solved, the hints (`HINTS`), the end card. |
+| `scenery.js` | Draws what cannot be touched: sky, the far town, the row of houses, the quay, the canal in front, the side canals, the forest on the far bank. |
+| `things.js` | The canal's own objects (table below). Most are a kit object with one thing added. |
+| `react.js` | Small reactions: boats dip, gates wobble, a quack after a splash, confetti when the bridge comes down. |
+| `REVIEW.md` | The first-time player review of 2026-11-25, with what was applied and what waits for a decision. |
+
+Objects are placed as in the park and the city: one line in a section's `things` list. Besides the kit's `block`,
+`ledge`, `box`, `plate`, `lever` and `bar`, and the city's `bridge`, the canal has:
+
+| Kind | Settings | What it is |
+|---|---|---|
+| `thinplank` | `x: [from, to], h` | The new idea. A thin blue plank: holds him and a light box, and bends a little (more with the box). Under her it creaks, bends deep and walks her back; a jump onto it springs her back to the bank she last stood on. It never breaks. |
+| `footbridge` | `x: [from, to], by` | A sturdy bridge with a green edge. It slides out over the water once its id comes on, and stays. |
+| `lightboat` | `x, w` | The kit's small blue boat. It dips under him; under her it sinks, and she cannot jump off it. |
+| `launcher` | `x, half, h, to: [x, h], rise` | The kit's see-saw (standing `h` above the quay if asked). Whoever it flings is carried to the place `to`, so nobody has to steer. `rise` is how high, in brother-heights. |
+| `raft` | `x: [her dock, home], by` | The kit's ferry. Once its lever is pulled it goes over to her side by itself, and brings back whoever steps on. |
+| `dropladder` | `x, h, by` | The kit's rope ladder, let down while its id is on and rolled up again when it goes off. |
+| `lockgate` | `x, by, any, latch` | The kit's gate; it wobbles as it opens. |
+| `ducks` | `x: [from, to], n` | Ducks on the canal in front of the quay. Only to look at. |
+| `moored` | `x` | A brown rowing boat tied up at the quay. Only to look at (blue would say "his boat"). |
+
+Rules that keep it fair, all checked by `tools/playtest-canal.html?solo=1`:
+- A stream is at least 340 wide and the gap to the middle boat 320: a jump carries about 190.
+- Nobody too heavy can jump off a light-only surface, not even in the moment of landing on it.
+- The high lever in section 5 is out of his reach, and the high shelf in section 6 out of reach of a jump, a lift, or
+  a second jump off the see-saw. There is no toss in this level.
+- A `bar` keeps each box in its own section.
+- After a splash a sibling comes back next to the other one only if both are on the same bank.
+
+## The chapter (`../shared/chapter.js`, `../shared/chaptermap.js`, `../map.html`)
+
+Chapter 1 is three levels: the park, the city, the canal. `shared/chapter.js` lists them in order (`CHAPTER.LEVELS`:
+id, page, the picture for its stop, and how to open it part-way) and keeps what the browser remembers. Each level's
+page loads it, calls `CHAPTER.note(id, n)` when a new section is reached and `CHAPTER.mark(id)` when its end card
+comes up, and its end card leads to `map.html?from=<id>`. `shared/chaptermap.js` draws the map. To add a level to a
+chapter: one line in `CHAPTER.LEVELS`, those two calls in its level code, and its end card's address.
+
 ## The city (`city/`)
 
-Since 2026-11-21 the city is a **test level, "the lab"**: a row of stations that each try one idea with jumping,
+Level 2 of Chapter 1 (so named by the user on 2026-11-25). Since 2026-11-21 the city is a **test level, "the lab"**: a row of stations that each try one idea with jumping,
 carrying, the lift and the toss. Everything in it may change. Its story is in [city/LAB_PLAN.md](city/LAB_PLAN.md).
 
 | File | What it holds |
@@ -257,6 +304,10 @@ at `http://127.0.0.1:8780/`.
   shown one move at a time in section 1 and that there is no sticker, dog or ball, and reports the time each section took; `?section=4` starts it at section 4. `tools/playtest-park.html?solo=1` lets one sibling try every puzzle
   alone and passes when no short cut works. Run both after changing a section. `tools/snap-park.html?section=...`
   sends a picture of the park to the server log.
+- `tools/playtest-canal.html` plays Level 3 (about a minute and three quarters) and reports the time each section took;
+  `?solo=1` tries every short cut with one sibling alone (45 checks). `tools/snap-canal.html?section=...` sends a
+  picture. `tools/playtest-chapter.html` checks the chapter: what `index.html` opens, the map's stops, the save
+  (30 checks). `tools/snap-map.html?done=park,city` sends a picture of the map in a chosen state.
 - `tools/playtest-city.html` does the same for the city (all eight stations, about three minutes) and reports the time
   each station took. `tools/playtest-city.html?solo=1` is the other test: it tries the ways one sibling might finish a
   station alone, and passes when none of them works. Run both after changing a station.

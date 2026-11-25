@@ -139,6 +139,48 @@ dog should then do something for a puzzle or stay a friend that only tags along.
 the same day, and out of the city lab too) stay in the object kit, `shared/kit.js`, and come back once the base game
 is set. Open for then: what collecting is for, and how to show it without it looking like a task.
 
+## 1e. Level 3 and Chapter 1 flow: waiting for feedback
+
+Built on 2026-11-25 on the branch `level-3/canal` (made from `level-1/plain`, which holds the approved Levels 1
+and 2). Level 3, "The Canal", is `game/canal.html`; the chapter map is `game/map.html`; `game/index.html` starts the
+chapter. Nothing here is approved (proposals I to L in [DECISIONS.md](DECISIONS.md)). How to open one section is in
+`game/README.txt`.
+
+**Decisions waiting for you** are in [game/worlds/canal/REVIEW.md](game/worlds/canal/REVIEW.md) (19 numbered items).
+The six to look at first:
+- Level 2 already has small boats, a ferry and the same Old Bridge with two levers. Is that fine, or should Level 2
+  later end before its canal station and somewhere other than the bridge?
+- In section 5 he can stand on the plate himself, so the box is not strictly needed. Leave it, or make the plate one
+  that only a box can press?
+- No toss in Level 3, although Level 2 taught it. Keep it out?
+- The low end of the see-saw can only be walked onto at its tip (jumping onto it works anywhere). Change the shared
+  see-saw, which would also change Level 2?
+- The calm moment has no dog and no ball. Bring them back there with a game of fetch, or keep it plain?
+- Whoever runs ahead stops at the edge of the picture, with nothing to show why.
+
+**While somebody plays Level 3 for the first time, watch for:**
+
+| Section | What we want to learn |
+|---|---|
+| 1 Warm-up | Is it solved from memory, in a few seconds? Does it feel like a rest after Level 2's ending, or like a step back? |
+| 2 The thin plank | Do they understand "it holds him, not her" from one try? Is being sent back funny or annoying? Is the plate and the sliding bridge understood without a hint? |
+| 3 The see-saw and the boats | Do they think of the see-saw by themselves? Does he get onto its low end easily? Is flying to the boat fun, and is it clear that no steering is needed? Do they connect the lever with the raft? |
+| 4 A calm moment | Do they stop here at all? Is it missed if it is empty of things to do? |
+| 5 The box over the plank | Who thinks of the box, and do they simply stand on the plate instead? Does she find the ladder and the high lever? Is "the plank bends more with the box" noticed? |
+| 6 The see-saw on the ledge | Do they use the box as a step without a hint? Does this one feel like "we have got good at this", or like one puzzle too many? |
+| 7 The Old Bridge | Do they see that the levers are on opposite banks and that only he can cross? Does it feel like the end of a chapter? Do they walk on into the forest by themselves? |
+
+**Questions about the whole level and the chapter**
+- How long does Level 3 take? The script needs 104 seconds; the plan is eight to nine minutes.
+- Does it feel like a clear step up from Level 2, by combining known tools, or easier than Level 2 (which has eight
+  stations and more tools)?
+- How often do they fall in, and is the splash still funny the fifth time?
+- The map: is it understood without words? Tick, arrow, padlock; tap or jump to start; playing a finished level again.
+- Three screens follow the last puzzle (Level 3's end card, the map, the chapter card). Too many?
+- Is the forest behind the mist understood as "there is more to come", and is the padlock on it a disappointment?
+- Coming back the next day: do they find their way on from the map? (The save is per device and per browser.)
+- Not tested by anybody yet: real players, real fingers on a tablet or phone, sound by ear, one person playing both.
+
 ## 2. How the game looks and moves
 - **Top-down grid** (one tile per step, like a board) *(suggested)*: calm, suits thinking
   puzzles, and is easy to keep in sync online.

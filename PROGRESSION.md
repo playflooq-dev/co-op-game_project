@@ -42,8 +42,8 @@ both siblings, and neither one only waits.
 | Level | Place | The new idea | Puzzles | Length |
 |---|---|---|---|---|
 | 1 | The park | Walk, jump, small plate and gate, carry one light box, the lift | 4 tiny ones | about 5 min |
-| 2 | (not chosen) | The see-saw | 4 to 5 | about 7 min |
-| 3 | (not chosen) | Light-only boats and planks | 5 | about 8 min |
+| 2 | The city, to the Old Bridge | The see-saw level, as built: the former test level, with eight stations (see the note below) | 8 stations | about 10 min |
+| 3 | The canal | Light-only planks and boats, combined with known tools | 6, and a calm moment | about 8 min |
 | 4 | (not chosen) | The heavy crate and the big green plate | 5 to 6 | about 10 min |
 | 5 | (not chosen) | The pulley lift | 6 | about 12 min |
 | 6 | (not chosen) | The toss | 6 to 7 | about 12 min |
@@ -54,6 +54,34 @@ no light-only surfaces, no pulley, no toss, no heavy crate, no green plate, and 
 
 The city lab (`game/city.html`) is not one of these levels. It is the test bench where the tools were built, and
 it stays as it is. For now the park's end card leads on to it, until Level 2 exists.
+
+**Chapter 1** is Levels 1 to 3, all in the city: the park, the city to the Old Bridge, the canal. Level 3 is the
+chapter's last level; Chapter 2 is the forest. (Proposed on 2026-11-25; see DECISIONS.md.)
+
+**A note on Level 2.** On 2026-11-25 the user named the city level that ends at the Old Bridge
+(`game/city.html`) as the approved Level 2. It was built as a test bench before these rules were written, so it
+does not follow them: it has eight stations and several new ideas (the heavy crate, the see-saw, small boats and a
+ferry, the pulley, the toss). Two of the later levels' planned ideas are therefore already met in it, and the table
+above no longer matches rows 4 to 6 exactly. Level 3 is built to the rules, and counts only on what the brief lists
+as known: walking, jumping, plates and gates, carrying a light box, the lift, levers and the see-saw.
+
+## Combinations
+
+From Level 3 on, a level feels like progress less through new tools than through **combining tools the players
+already know**. The rules for a combination:
+- **At most two steps**, and both visible on one screen. (Carry the box over the plank, then she climbs the ladder
+  it lets down. Not: carry, then lift, then launch.)
+- **A combination uses known tools plus, at most, the level's one new idea.** Level 3: see-saw + light-only;
+  carry + plate + light-only; and one made of known tools alone (carry + see-saw), which should feel like "we have
+  got good at this".
+- **Teach the new idea alone first**, with nothing combined, before any combination uses it.
+- **Each combination is only a little longer than the puzzle before it.** The scripted play-through shows this as
+  times that rise gently, with the calm moment as the dip.
+- Every combination still needs both siblings, and neither one only waits.
+
+Combination ideas not used yet, for later levels:
+- **Lift onto a boat roof.** She lifts him onto the roof of a moored boat; he unties it, and it drifts over to her.
+- **Balloon on the see-saw.** He holds the low end down; she jumps to the high end and grabs a balloon.
 
 ## Level 1, the park, against the rules
 
@@ -101,3 +129,36 @@ fence in it).
 So the order is easy, harder, calm, easy, easy. The second test (`?solo=1`) lets one sibling try every puzzle alone,
 with every short cut I could think of (37 checks); none works, and nobody gets through section 1 without jumping. In
 every puzzle both siblings walk and both do something (rule: neither one only waits).
+
+## Level 3, the canal, against the rules
+
+| Section | What happens | Which rule |
+|---|---|---|
+| 1 Warm-up | Plate and gate, known from Level 1. Nothing else on the first screen. | 6 |
+| 2 The thin plank | *Teach.* The new idea alone: it holds him, it sends her back. A plate brings a sturdy bridge for her. | 3 |
+| 3 The see-saw and the boats | *Practise.* See-saw + light-only: she launches him to the middle boat; his lever sends the raft for her. | 3, combinations |
+| 4 A calm moment | Ducks and a rowing boat. Nothing has to be done. | 4 |
+| 5 The box over the plank | *Twist.* Carry + plate + light-only: the box on the plate lets her ladder down; her lever opens the lock. | 3, combinations |
+| 6 The see-saw on the ledge | Known tools only: carry + see-saw. The box is a step up; she launches him to the high lever. | combinations |
+| 7 The Old Bridge | Two levers on opposite banks, at once; he gets to his over the small boats. A high five; the forest ahead. | 7 |
+
+## Level 3, measured (2026-11-25)
+
+From the scripted play-through, `game/tools/playtest-canal.html`. As before, real players will take several times
+as long: my guess is seven to nine minutes, which has to be checked with players.
+
+| Section | Script | What it shows |
+|---|---|---|
+| 1 Warm-up | 11 s | Easier than Level 2's last puzzle (the Old Bridge there takes the same script 18 s): rule 6. |
+| 2 The thin plank (teach) | 14 s | A little more, and it includes her trying the plank once. |
+| 3 The see-saw and the boats (practise) | 18 s | The first combination. |
+| 4 A calm moment | 9 s | The dip (rule 4). |
+| 5 The box over the plank (twist) | 17 s | About as long as section 3. |
+| 6 The see-saw on the ledge | 16 s | No longer than the one before: known tools only. |
+| 7 The Old Bridge | 21 s | The longest, but nearly half of it is the walk over the bridge and on to the forest path. |
+| Whole level | 104 s | The park takes the script 110 s, the city 153 s. |
+
+So the times rise gently (11, 14, 18), dip (9), and stay level through the combinations (17, 16) to the finale (21).
+The solo test (`?solo=1`, 45 checks) confirms that no puzzle can be finished by one sibling alone, that the sister
+can never cross a light-only surface (walking, jumping onto it, jumping again the moment she lands, hopping from boat
+to boat, or carrying him), and that the brother cannot reach the bonus lever without her see-saw launch.

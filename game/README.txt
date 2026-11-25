@@ -2,32 +2,51 @@ TREASURE HUNT - game prototype
 ==============================
 
 HOW TO OPEN
-Double-click index.html. It opens in your web browser and starts Level 1, the park.
+Double-click index.html. It opens in your web browser and starts Chapter 1: the first time with
+Level 1, the park; after that with the chapter map, where players go on from where they stopped.
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
+CHAPTER 1: THREE LEVELS IN THE CITY
+Level 1  park.html    The park: learning to move, then four very small puzzles. About 5 minutes.
+Level 2  city.html    Across the city to the Old Bridge: eight stations (carrying, the lift, the
+                      see-saw, boats, the pulley, the toss). About 10 minutes.
+Level 3  canal.html   The canal (since 2026-11-25): thin planks and small boats that only hold the
+                      brother, combined with what the first two levels taught. About 8 minutes.
+                      It ends the chapter at the Old Bridge, with the forest on the far bank.
+Each level's end card leads to the chapter map, and the map leads to the next level.
+Level 3 and the chapter map are waiting for feedback and are not approved yet.
+
 THE PAGES
-index.html    Starts the game: it passes straight on to park.html.
-park.html     LEVEL 1, "The Park" (since 2026-11-23; made plainer on 2026-11-24). A gentle first level
-              of about five minutes for parents playing with children of about 5 to 10, or two
-              children together. It is made for somebody who has never seen the game: first only
+index.html    Starts the game: Level 1 the first time, the chapter map once a game has been started.
+map.html      The chapter map, in pictures: three stops on a map of the city. A finished stop has a
+              green tick, the next one to play pulses under an arrow, later ones have a padlock.
+              Jump, Enter or a tap starts the stop the siblings stand at; left and right, or a tap,
+              choose any finished stop to play it again. After the third level a card celebrates
+              the end of the chapter, and then the mist lifts from the forest across the river:
+              where Chapter 2 will be (it has a padlock).
+park.html     LEVEL 1, "The Park". Made for somebody who has never seen the game: first only
               learning to walk and jump, with the keys shown as pictures, then four very small
               puzzles. Nothing in it needs reading and there is nothing to collect.
-              It is waiting for feedback on difficulty and is not approved yet.
-              Its end card leads on to the city.
-city.html     The city. Since 2026-11-21 it is a TEST LEVEL ("the lab"): eight stations that each
-              try one idea with new movement (jumping, carrying, the lift and the toss). It was found
-              far too hard as a first level; it stays as the place where ideas are tried.
-              It ends at Forest Park.
+city.html     LEVEL 2, the city. Built on 2026-11-21 as a test level ("the lab"): eight stations that
+              each try one idea (jumping, carrying, the lift, the see-saw, boats, the pulley, the
+              toss). It ends at the Old Bridge.
+canal.html    LEVEL 3, "The Canal". See its own part below.
 house.html    "Home Alone" (this was index.html until 2026-11-23): the brother and sister are locked
-              in the house and must find the spare key. Getting out leads on to the city.
-forest.html   The Forest Trail (the first art scene; a later chapter will be built here).
+              in the house and must find the spare key. Not part of Chapter 1's flow.
+forest.html   The Forest Trail (the first art scene; Chapter 2 will be built here).
 
-The park and the city lab play the new way: jumping, pictures in place of words. The house and the
-forest still play the old way: walking, no jumping, and words on the screen.
+WHAT IS REMEMBERED
+The browser keeps, on this device only, which of the three levels are finished, how far into an
+unfinished level the players got, and whether the chapter's ending has been shown. Nothing else:
+no names, no accounts, and nothing is sent anywhere. In a private window, or if the browser will
+not store anything, the game simply starts from the beginning each time.
+map.html?reset=1 forgets everything.
+
+The three levels play the new way: jumping, pictures in place of words. The house and the forest
+still play the old way: walking, no jumping, and words on the screen.
 How the levels are meant to get harder, one small step at a time, is in PROGRESSION.md (one folder up).
-What follows is in three parts: the park, the city lab, then the house and the forest.
-
+What follows is in four parts: the park, the canal, the city, then the house and the forest.
 
 LEVEL 1: THE PARK
 =================
@@ -78,8 +97,8 @@ THE SECTIONS
    it, and the little gate opens for whoever carries a balloon.
 6  The way out. Two plates side by side: both stand on one at the same time, the gate opens for
    good, confetti, a high five. Walk to the big park gate together to finish.
-The card at the end shows a high five and the time. Jump goes on to the next level
-(for now, the city lab, which is much harder).
+The card at the end shows a high five and the time. Jump goes on to the chapter map, and from
+there to Level 2, the city.
 
 STUCK?
 A thought bubble over the sister shows a picture of what the section is about (a gate, the
@@ -112,8 +131,65 @@ park.html?fps=30       draws only 30 frames a second, to feel a slow device
 They can be joined with "&": park.html?section=5&debug=1
 
 
-THE CITY LAB
-============
+LEVEL 3: THE CANAL
+==================
+
+CONTROLS (the same keys as in the park and the city)
+Sister:   A / D walk     W jump     S grab
+Brother:  Left / Right walk     Up jump     Down grab
+M switches the sound off and on. Jump, held at a ladder, climbs it.
+On a tablet or phone, hold it sideways: each player gets four buttons in their bottom corner.
+
+THE ONE NEW IDEA: LIGHT FEET ONLY
+Thin blue planks and small blue boats hold the brother, and a light box. Under the sister a plank
+creaks, bends and walks her back to her bank; a boat sinks under her. She can never cross one.
+Everything else is known from Levels 1 and 2: plates and gates, carrying a light box, the lift,
+levers and the see-saw. There is no toss, no pulley and no heavy crate in this level.
+
+Nobody can get hurt or lose. Falling into the water is a splash and a duck's quack; a moment later
+that sibling is back: next to the other one if both are on the same bank, otherwise on the bank
+they came from.
+
+THE SECTIONS
+1  Warm-up. Plate and gate, as in the park: one holds the gate open, the other walks through and
+   holds it from the far side. Nothing else is on the first screen.
+2  The thin plank. He walks over the stream on it. On the far side he steps on a plate, and a
+   sturdy bridge slides out for her and stays.
+3  The see-saw and the boats. The middle boat is too far to jump to. He stands on the blue end of
+   the see-saw, she jumps onto the green end, and he flies over to it (no steering needed). He goes
+   on over the raft to the far quay and pulls the lever: the raft fetches her by itself.
+4  A calm moment. Ducks, and a rowing boat tied up at the quay. Nothing has to be done.
+5  The box over the plank. He carries the light box over a thin plank and puts it on the plate.
+   That lets a ladder down on her side. She climbs up to the high green lever, which slides the
+   lock bridge out and opens the lock gate, for both.
+6  The see-saw on the ledge. The ledge is too high to jump onto: the box goes against it as a
+   step. Up there he stands on the blue end, she jumps onto the green end, and he flies up to
+   the high shelf, where a lever opens the way to the bridge.
+7  The Old Bridge. He walks over the small boats to the far bank. Each holds a lever, one on
+   each bank, at the same time: the bridge comes down. She walks over to him: a high five, and
+   the forest is ahead.
+The card at the end shows a high five and the time. Jump goes on to the chapter map.
+
+STUCK?
+As in the city: a thought bubble shows a picture of what the section is about; then the thing to
+use sparkles (after about 20 seconds), an arrow points at it (40 seconds), and a faint, glittering
+ghost of a sibling shows where to stand (60 seconds). These times are HINT_TIMES in
+worlds/canal/settings.js.
+
+FOR TESTING (add to the address)
+canal.html?section=3   starts at section 3 (1 to 7)
+canal.html?debug=1     shows what is solid, what is switched on, the section names, the frame rate
+canal.html?hints=fast  the hints come ten times sooner
+canal.html?touch=1     shows the touch buttons on a computer
+canal.html?fps=30      draws only 30 frames a second, to feel a slow device
+canal.html?tune=1      sliders for how the jump and the running feel
+map.html?reset=1       forgets what has been played
+worlds/canal/REVIEW.md is the first-time player review of this level.
+
+
+LEVEL 2: THE CITY
+=================
+(Built as a test level, "the lab"; it is Level 2 of Chapter 1.)
 
 CONTROLS (the same keys as in the park; the lab adds the toss, levers and ladders)
 Sister:   A / D walk     W jump     S grab
@@ -188,6 +264,7 @@ The eight stickers that were hidden along the way were taken out on 2026-11-24, 
 pieces of the map are not stickers: finding them is the puzzle of stations 0 and 2, and the box
 at the top left shows them once the map is torn.
 The card at the end shows the map put together and the time, in pictures and numbers.
+Jump goes on to the chapter map, and from there to Level 3, the canal.
 
 FOR TESTING (add to the address)
 city.html?station=5    starts at station 5 (0 to 7)
@@ -225,12 +302,14 @@ city's daytime music. A few animal sounds are made by code.
 Browsers only allow sound after the first key press or tap.
 
 WHAT IS IN THE FOLDER
-index.html, park.html, city.html, house.html, forest.html   the pages; open index.html to start
-worlds/        one folder per world (park, house, city, forest): its art, its settings and its
+index.html, map.html, park.html, city.html, canal.html, house.html, forest.html
+               the pages; open index.html to start
+worlds/        one folder per world (park, city, canal, house, forest): its art, its settings and its
                code. worlds/park/REVIEW.md is the first-time player review of Level 1. worlds/README.md explains how to change or replace any of it, and how to
                place objects in the park and the city. worlds/city/LAB_PLAN.md is the story of
                the city lab.
 shared/        what more than one world uses: the two characters, the sounds, and for worlds with
-               jumping the physics, the movement and the object kit. shared/later/ holds things
+               jumping the physics, the movement and the object kit; chapter.js and chaptermap.js
+               (the chapter, what is remembered, and the map). shared/later/ holds things
                saved for a later level (the dog, the ball); no page loads them.
 tools/         developer tools used to create the artwork and test the game; not needed to play
