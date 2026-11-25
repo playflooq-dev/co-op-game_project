@@ -10,7 +10,7 @@ function drawSister(c, p, t) {
   const legA = { pants: '#3b4a6a', edge: '#232d45', boot: '#74492f', bootEdge: '#40261a', cuff: '#8f6243', sole: '#2e1c14' };
   const legB = { pants: '#2f3b57', edge: '#1e2740', boot: '#5e3b27', bootEdge: '#352016', cuff: '#754f36', sole: '#24160f' };
   // far arm
-  { const th = sw * 0.6, sx = -6, sy = top + 13, hx = sx + Math.sin(th) * 44, hy = sy + Math.cos(th) * 44;
+  { const th = poseArm(p, 0, sw * 0.6), sx = -6, sy = top + 13, hx = sx + Math.sin(th) * 44, hy = sy + Math.cos(th) * 44;
     limb(c, [sx, sy, (sx + hx) / 2 - 5, (sy + hy) / 2, hx, hy], 16, G1, G0);
     c.beginPath(); circ(c, hx, hy + 3, 7); fs(c, '#e0ae88', '#b07a58', 1.5); }
   // backpack, bedroll and tin cup
@@ -29,8 +29,9 @@ function drawSister(c, p, t) {
   rrect(c, -8, 9, 15, 15, 3); fs(c, lg(c, -8, 0, 7, 0, '#8e989e', '#d5dde0'), '#5a6268', 1.4); c.beginPath(); c.arc(-9, 16, 4.5, Math.PI * 0.5, Math.PI * 1.5); c.strokeStyle = '#5a6268'; c.lineWidth = 2; c.stroke(); c.restore();
   c.restore();
   // legs
-  drawLeg(c, -6, hipY, legPose(ph + Math.PI, m, 20, 9, -6), 25, legB);
-  drawLeg(c, 6, hipY, legPose(ph, m, 20, 9, 4), 25, legA);
+  const st = poseStride(p);
+  drawLeg(c, -6, hipY, poseLeg(p, 0, legPose(ph + Math.PI, m, 20 * st, 9 * st, -6)), 25, legB);
+  drawLeg(c, 6, hipY, poseLeg(p, 1, legPose(ph, m, 20 * st, 9 * st, 4)), 25, legA);
   // coat
   const hs = -sw * 5;
   const coat = () => { c.beginPath(); c.moveTo(-22, top + 2); c.quadraticCurveTo(0, top - 4, 22, top + 2); c.quadraticCurveTo(31, top + 40, 37 + hs, hem); c.quadraticCurveTo(18 + hs, hem + 9, hs * 0.6, hem + 4); c.quadraticCurveTo(-18 + hs, hem + 10, -37 + hs, hem); c.quadraticCurveTo(-31, top + 40, -22, top + 2); c.closePath(); };
@@ -70,7 +71,7 @@ function drawSister(c, p, t) {
   c.save(); c.translate(15, top + 7); c.rotate(-0.5); c.beginPath(); c.moveTo(0, 5); c.quadraticCurveTo(6, 0, 0, -7); c.quadraticCurveTo(-6, 0, 0, 5); fs(c, '#e2c26a', '#8a6a22', 1.2); c.strokeStyle = '#8a6a22'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 4); c.lineTo(0, -5); c.stroke(); c.restore(); // leaf brooch
   for (const [dx, ln, pw] of [[17, 20, 0], [25, 16, 0.8]]) { const s2 = Math.sin(ph * 2 + pw) * 3 * m - m * 3; c.strokeStyle = '#d8c9a0'; c.lineWidth = 2; c.beginPath(); c.moveTo(dx, top + 10); c.quadraticCurveTo(dx + s2 * 0.4, top + 10 + ln * 0.6, dx + s2, top + 10 + ln); c.stroke(); ell(c, dx + s2, top + 12 + ln, 2.6, 3.4, '#8f7d4c'); }
   // front arm, swinging freely (cheering throws it up in the air)
-  const th = -sw * 0.6 * (1 - ar) + ar * (2.55 + Math.sin(t * 14) * 0.18), sx = 12, sy = top + 14, hx = sx + Math.sin(th) * 46, hy = sy + Math.cos(th) * 46;
+  const th = poseArm(p, 1, -sw * 0.6 * (1 - ar) + ar * (2.55 + Math.sin(t * 14) * 0.18)), sx = 12, sy = top + 14, hx = sx + Math.sin(th) * 46, hy = sy + Math.cos(th) * 46;
   const bend = 6 * (1 - ar); // a slight bend at the elbow
   limb(c, [sx, sy, (sx + hx) / 2 + bend, (sy + hy) / 2, hx, hy], 17, G2, G0);
   { const k = 0.84, cx = sx + (hx - sx) * k, cy = sy + (hy - sy) * k; c.save(); c.translate(cx, cy); c.rotate(Math.atan2(hy - sy, hx - sx) - Math.PI / 2); c.beginPath(); c.moveTo(-9, -5); c.lineTo(9, -5); c.lineTo(11, 5); c.lineTo(-11, 5); c.closePath(); fs(c, G3, G0, 1.8); c.restore(); }

@@ -1,22 +1,22 @@
 'use strict';
-// Settings for the City world (Chapter Two, "Across the City"). Change a number here and refresh the game.
+// Settings for the City world. Change a number here and refresh the game.
 // Positions are in scene units: the screen is always 1080 units tall, and the street runs left to right along x.
-// The art is in worlds/city/assets/ (list: assets/manifest.js). The code that runs the level is worlds/city/level.js,
-// and the things to play with (boats, fountain, bell game, stickers, hints...) are in worlds/city/play.js.
+// The art is in worlds/city/assets/ (list: assets/manifest.js).
 //
-// The journey, left to right: Maple Street (map pieces, crossing) - the flour mill yard - the market (the puppy) - the canal
-// (boats and ferry) - Fountain Square - down into the metro ... up again in Old Town (picture game, ladder and jets, parasols)
-// - the bus - the Old Bridge - Forest Park.
-// The part of the street between Fountain Square and Old Town is never walked: the metro skips it.
+// THE CITY IS A TEST LEVEL ("the lab", see LAB_PLAN.md): a row of stations, each trying one idea with the new movement.
+// Everything here may change. What runs it: lab.js (the level), street.js (the scenery), things.js (the city's own
+// objects: map pieces, the puppy, the fountain, parasols, the bridge) and, shared with other worlds, shared/kit.js
+// (boxes, plates, gates, the see-saw, the lift...), shared/movement.js and shared/physics.js.
+// For scale: a jump rises about 207, the brother is about 180 tall and the sister about 220; she can reach about 280
+// up, he about 220, and about 390 from her shoulders. A toss sends him about 500 up.
 
 const CITY = {
-  length: 19500,          // how long the whole street is
-  walk: [150, 19200],     // furthest left and right the siblings can walk
+  length: 16700,          // how long the whole street is
+  walk: [150, 16480],     // furthest left and right the siblings can walk
   feet: 935,              // where feet stand on the pavement
   facadeBase: 905,        // where the buildings meet the pavement
   kerb: 990,              // edge of the pavement; the main road is in front of it
-  horizon: 655,           // where side streets, the canal and the river disappear into the distance
-  speed: 205,             // walking speed
+  horizon: 655,           // where the side street, the canal and the river disappear into the distance
 };
 
 // The sky slowly turns from afternoon to sunset as the siblings travel along the street.
@@ -26,247 +26,134 @@ const SKY = {
   sunX: 0.85,                                             // where the sun glow is, as a share of the screen width
 };
 
-// The buildings along the street, left to right: [art, x of its middle]. The art names are groups in assets/manifest.js.
-// Leave gaps where the side street, the canal and the river are.
-// fillStreet(from, to, [names]) lines up buildings edge to edge between two points, taking turns through the names.
+// ---------- scenery (nothing here can be bumped into)
+const ROAD = [1900, 2320];     // a side street, with a zebra crossing along the pavement
+const CANAL = [9300, 10200];   // water: no pavement here
+const RIVER = [15000, 15800];  // water, under the Old Bridge; Forest Park is on the far bank
+const PARK_GATE = 16180;       // the gate of Forest Park, where the chapter ends
+
+// The buildings, left to right: [art, x of its middle]. The art names are groups in assets/manifest.js.
+// fillStreet(from, to, [names]) lines buildings up edge to edge between two points, taking turns through the names.
 function fillStreet(from, to, names) {
   const out = []; let x = from, i = 0;
   while (x < to - 150) { const n = names[i++ % names.length], w = CITY_ASSETS[n][0].w - 60; out.push([n, x + w / 2]); x += w; }
   return out;
 }
 const BUILDINGS = [
-  ['townhouseCream', 0], ['homeFront', 460], ['townhouseBrick', 930], ['grocer', 1370], ['cornerShop', 1745],
-  // the crossing is at 1900..2320
-  ['cafe', 2550], ['warehouse', 3310], // the warehouse is the flour mill: shutter, yard and arch
-  ['bakery', 4070], ['townhouseCream', 4510], ['apartment', 4980],
-  // the canal is at 5240..6140
-  ['townhouseBrick', 6360], ['cornerShop', 6735],
-  // Fountain Square is at 6890..7930, then the metro entrance; the street is closed after it
-  ...fillStreet(6890, 9800, ['bookshop', 'townhouseCream', 'cafe', 'apartment', 'bakery', 'townhouseBrick', 'grocer']),
-  // ... the metro skips from here to Old Town ...
-  ...fillStreet(11080, 13300, ['cafe', 'townhouseCream', 'bakery', 'townhouseBrick', 'grocer']), // Old Town square: the picture game
-  ...fillStreet(13300, 17620, ['bookshop', 'townhouseBrick', 'bakery', 'apartment', 'cafe', 'townhouseCream', 'grocer', 'cornerShop', 'townhouseBrick', 'apartment']),
-  // the river is at 17820..18620, and Forest Park is on the far bank
+  ...fillStreet(-240, ROAD[0], ['townhouseCream', 'homeFront', 'townhouseBrick', 'grocer', 'cornerShop']),
+  // the flour mill ('warehouse') lands at about 4030 to 5090, behind station 1
+  ...fillStreet(ROAD[1] - 30, CANAL[0], ['cafe', 'grocer', 'townhouseCream', 'bookshop', 'warehouse', 'bakery', 'townhouseBrick', 'apartment', 'cafe', 'townhouseCream', 'grocer', 'bookshop', 'apartment', 'bakery']),
+  ...fillStreet(CANAL[1] - 30, RIVER[0] - 40, ['townhouseBrick', 'cornerShop', 'cafe', 'townhouseCream', 'bakery', 'apartment', 'bookshop', 'grocer', 'townhouseBrick', 'cafe', 'townhouseCream']),
 ];
-
-// Small things along the pavement: [art, x]. The art names are groups in assets/manifest.js.
+// Small things along the pavement, only to look at: [art, x].
 const PROPS = [
-  ['streetLamp', 240], ['bench', 700], ['postbox', 1150], ['streetLamp', 1560], ['hydrant', 1790],
-  ['streetLamp', 2420], ['bin', 2700],
-  ['streetLamp', 3900], ['stallFruit', 4150], ['stallFlowers', 4470], ['stallFish', 4790], ['crates', 5050],
-  ['streetLamp', 6290], ['bench', 6500], ['hydrant', 6820],
-  ['streetLamp', 6930], ['bench', 7130], ['bench', 7960], ['streetLamp', 8080], ['bin', 8180],
-  // Old Town
-  ['streetLamp', 11850], ['streetLamp', 12170], ['streetLamp', 13215], ['bench', 14500], ['busShelter', 14760], ['streetLamp', 15100], ['postbox', 15400], ['streetLamp', 15700],
-  ['bench', 16000], ['streetLamp', 16300], ['hydrant', 16600], ['streetLamp', 16900], ['busStopSign', 17100], ['streetLamp', 17400],
-  ['streetLamp', 18720], ['bench', 18840],
-];
-const TREES = [ // street trees in planters, borrowed from the forest world: [x, scale]
-  [1270, 0.4], [2640, 0.42], [6440, 0.4], [12130, 0.42], [15550, 0.4], [16450, 0.42],
+  ['streetLamp', 240], ['streetLamp', 1100], ['streetLamp', 2440], ['streetLamp', 3560], ['streetLamp', 5010],
+  ['stallFruit', 5420], ['stallFlowers', 5880], ['stallFish', 6330], ['streetLamp', 6780],
+  ['streetLamp', 9180], ['streetLamp', 10390], ['streetLamp', 12440], ['streetLamp', 14150], ['streetLamp', 16000],
 ];
 const PARK = [ // Forest Park on the far side of the river: borrowed forest trees and bushes, [kind, x, scale]
-  ['trees', 18700, 0.75], ['bushes', 18800, 0.8], ['trees', 18900, 0.85], ['bigTrees', 19250, 0.62], ['bushes', 19160, 0.9], ['trees', 19400, 0.8],
+  ['trees', 15880, 0.75], ['bushes', 15980, 0.8], ['trees', 16060, 0.85], ['bigTrees', 16420, 0.62], ['bushes', 16330, 0.9], ['trees', 16560, 0.8],
 ];
-const COBBLES = [[3960, 5240], [6890, 7930]];           // stretches paved with cobbles: the market and Fountain Square
-const BUNTING = [[3900, 5200, 470], [6930, 8080, 430]]; // strings of little flags over the street: [from, to, height above the pavement]
-const PIGEONS = [[590, 4], [7160, 6], [12190, 5]];      // flocks of pigeons that fly up when somebody walks through them: [x, how many]
+const COBBLES = [[5100, 6700], [6900, 9100]];             // stretches paved with cobbles: the market and Fountain Square
+const BUNTING = [[5100, 6700, 470], [6900, 7900, 430]];   // strings of little flags over the street: [from, to, height above the pavement]
+const PIGEONS = [[430, 4], [7450, 6], [12560, 5]];        // flocks that fly up when somebody runs through them: [x, how many]
 
-// ---------- the puzzles, in the order the siblings meet them
-
-// The little pictures. Four of them are stamped on the map pieces (a different four every game), and they are
-// the code for the bridge controls at the end. The others are on stickers.
-const SYMBOLS = ['star', 'bell', 'fish', 'key', 'moon', 'apple', 'boat', 'bird'];
-
-// 0. The torn map. Soon after setting off, a gust of wind tears the treasure map into four pieces.
-// Three land on Maple Street; the fourth is carried off by a puppy in the market.
-// who: 'sis' (only she can reach it), 'bro' (only he can), or 'boost' (too high for both: she lifts him up).
-const PIECES = {
-  gust: 820,      // where the wind blows the map apart
-  spots: [
-    { x: 1370, y: 655, who: 'sis', key: 'up', label: 'Grab the map piece', no: "It's on the shop sign. Way too high for me!" },        // on the grocer's sign
-    { x: 760, y: 1000, who: 'bro', key: 'down', label: 'Fish it out of the drain', no: 'My fingers are too big for the drain grate.' }, // in the drain by the kerb
-    { x: 1077, y: 604, who: 'boost' },                                                                                              // in a window box, one floor up
-  ],
+// ---------- the torn map. Soon after station 0 begins a gust of wind tears the treasure map into four pieces.
+// Three land on things in station 0; the puppy in the market has the fourth. Each piece has a little picture.
+const MAP = {
+  gust: 2420,                                  // where the wind blows the map apart
+  pictures: ['star', 'fish', 'moon', 'apple'], // the picture on each piece
 };
 
-// 1. Maple Street crossing: press the button, wait for the green man, cross before the cars come back.
-const CROSSING = {
-  road: [1900, 2320], button: 1835, name: 'Maple Street',
-  wait: 1.8,     // seconds from pressing the button until the cars stop
-  walk: 8,       // seconds of green man
-  flash: 3,      // seconds the green man flashes before the cars go again
-  gap: [2.4, 4.6], // seconds between cars while the cars have green
-};
+// Hints, as pictures: when a station's next step stays undone this many seconds, first the right thing sparkles,
+// then an arrow points at it, then a faint ghost of the sibling whose job it is shows where to stand.
+// (city.html?hints=fast makes them come ten times sooner, for checking.)
+const HINT_TIMES = [20, 40, 60];
 
-// 2. The flour mill yard: the pavement is closed for roadworks, so the siblings go through the yard.
-// The shutter only stays up while the button outside is held. Inside, a chain locks it open, but the chain is high
-// up, so the sister has to go in first. Then the brother crawls under the yard gate and opens it from the far side.
-const ALLEY = {
-  barrier: [3100, 3790],  // where the roadworks block the pavement
-  shutter: 2990,          // the roll-up shutter in the mill front
-  buttonOut: 2860,        // the shutter button outside on the wall
-  chain: 3120,            // the chain inside the yard that locks the shutter open (only the sister can reach it)
-  inside: [2900, 3790],   // how far they can walk inside the yard
-  gate: 3480,             // the yard gate (only the brother fits through the gap under it)
-  gateButton: 3560,       // the gate's release button, on the far side of the gate
-  arch: 3740,             // the archway back out to the street, past the roadworks
-  out: 3830,              // where they come out on the street
-  floor: 905,             // where feet stand inside the yard (a little further back than the pavement)
-  depth: 0.9,             // how big the siblings look inside the yard
-  raise: 1.15,            // how fast the shutter rolls up while the button is held (share per second)
-  drop: 0.55,             // how fast it rolls back down
-  sock: [3190, 618],      // the odd sock on the washing line (a sticker: she lifts him up to it)
-};
-
-// 3. The market puppy has the last map piece. It runs from whoever is closest and hides under a market stall,
-// where only the brother fits. When he crawls in, it dashes out of the other side: if the sister is waiting
-// there, it stops. (Coming at it from both sides in the open works too.)
-const PUPPY = {
-  start: 4560,                // where it waits
-  area: [3990, 5060],         // where it runs around (the market)
-  stalls: [4150, 4470, 4790], // the stalls it can hide under
-  speed: 310,                 // faster than the siblings
-  scare: 270,                 // how close someone can get before it runs
-  trap: 240,                  // it gives up when a sibling is this close on BOTH sides
-  block: 430,                 // how near the far side of a stall the sister must wait to stop it
-  peek: 7,                    // seconds it stays hidden with nobody near before it comes out again
-};
-
-// 4. The canal. The ferry is on the far side and the button on this side is broken. A row of little boats is
-// tied across the water: the sister holds the rope tight at the mooring post (the ring is high up), the brother
-// steps across the boats (they would sink under her), and he sends the ferry back for her.
-const FERRY = {
-  canal: [5240, 6140], buttonNear: 5165, buttonFar: 6215,
-  post: 5224,           // the mooring post with the rope ring
-  deck: 125,            // half the length of the ferry's deck
-  speed: 235,           // how fast the ferry crosses
-  boats: 5,             // how many little boats
-  boatY: 906,           // where feet stand on the boats (a little further back than the pavement)
-  depth: 0.92,          // how big the brother looks on the boats
-  tighten: 1.7,         // how fast the rope pulls tight while held (share per second)
-  loosen: 0.75,         // how fast it goes slack again
-};
-
-// 5. Fountain Square: a place to rest and play. Nothing here has to be done to go on.
-const SQUARE = {
-  area: [6890, 7930], name: 'Fountain Square',
-  fountain: 7420,       // the fountain (a sticker sits on top: she lifts him up to it)
-  splash: 7290,         // where they can reach into the water
-  striker: 7730,        // the bell game: stop the light as high as you can
-  period: 1.15,         // seconds the light takes to run up and down the pole
-  ring: 0.9,            // how high the light has to be stopped to ring the bell (share of the pole)
-};
-
-// 6. The metro. The street past the square is closed, so they go underground. The goal is Old Town:
-// Blue line towards Harbour, change at Central, Green line towards Riverside, get off at Old Town.
-const METRO = {
-  entrance: 8330,            // the stairs down, just past Fountain Square
-  closed: [8560, 11700],     // the street is closed from here to here (Old Town side)
-  exit: 12000,               // the stairs up in Old Town
-  start: 'Fountain Square', goal: 'Old Town',
-  lines: {
-    Blue: ['Market Square', 'Fountain Square', 'Central', 'Museum', 'Harbour'],
-    Green: ['City Zoo', 'Central', 'Old Town', 'Riverside'],
-  },
-  colours: { Blue: '#3f6f9f', Green: '#4f8a5a' },
-  platform: [170, 1760],     // how far they can walk along the platform
-  stairs: 120,               // the stairs up from the platform (left end)
-  piano: 1380,               // the "play me" piano on every platform
-  board: 1.2,                // seconds after a train arrives before its doors open (time to read its sign)
-  wait: 7,                   // seconds a train waits with its doors open
-  gap: 2,                    // seconds between trains
-  between: 2.6,              // seconds the train takes between two stations
-  stop: 4.5,                 // seconds it stops at each station on the way
-};
-
-// 7. Old Town. The bus needs a ticket each, and the two tickets are won in three little puzzles on the way to the stop:
-// - The painter's picture game. Four paintings are shown, then turn round. The board shows one picture for each
-//   sibling, and each stands at the painting that hides their own picture. Three rounds win the first ticket.
-// - The ladder on wheels blocks the pavement. It only rolls when both push, and three water jets in the pavement
-//   spout in turn: anyone caught is soaked and pushed back a little.
-// - The cafe parasols. The other ticket is caught on a shop sign. Only the sister can step from the ladder onto a
-//   parasol; the brother winds each parasol open for her. A parasol stays open while she stands on it.
-const OLDTOWN = {
-  board: 12330,                         // the picture game board (press here to start)
-  easels: [12480, 12620, 12760, 12900], // the four paintings
-  prize: 12995,                         // the prize box
-  rounds: 3,                            // rounds to win
-  show: 3.2,                            // seconds the paintings can be looked at before they turn round
-  cartStart: 13130,                     // where the ladder on wheels stands at first
-  cartSpeed: 120,                       // how fast it rolls when both push
-  jets: [13300, 13480, 13660],          // the water jets in the pavement
-  period: 4.2,                          // seconds for one round of a jet: quiet, bubbling, spouting
-  warn: 0.9,                            // seconds it bubbles before it spouts
-  on: 1.3,                              // seconds it spouts
-  dock: 13800,                          // where the ladder stops, beside the first parasol
-  parasols: [13900, 14080, 14260],      // the cafe parasols
-  ticket: [14352, 392],                 // the second ticket, caught on the shop sign
-};
-
-// 8. The bus stop in Old Town: the route map shows which bus goes to the Old Bridge. The numbers are shuffled every game.
-// The siblings pick a number on the request box, and that bus comes.
-const BUS = {
-  stop: 14800,               // where the bus door stops
-  board: 14620,              // the route map board
-  dial: 15020,               // the request box: press to change the bus number
-  lines: [3, 7, 12, 21],     // bus numbers
-  places: ['Old Bridge', 'City Zoo', 'Harbour', 'Station'], // where the lines go; the first one is where the siblings need to go
-  call: 1.3,                 // seconds after the last press before the bus sets off for the stop
-  wait: 10,                  // seconds a bus waits at the stop
-  arrive: 17100,             // where the right bus drops them off
-  rideSpeed: 520,            // how fast the bus drives on the ride
-};
-
-// 9. The Old Bridge: a lift bridge. The sister switches the power on (the switch is high up), the brother crawls
-// into the little control hut. The controls want a code: the four pictures on the map pieces, in order.
-// Then he holds the lever. Halfway down the safety brake catches, and she has to hold the brake handle
-// (high on the power post) while he holds the lever.
-const BRIDGE = {
-  power: 17500,           // the power switch and the brake handle, on the tall post
-  hut: 17680,             // the control hut door
-  river: [17820, 18620],  // the river; the bridge lifts from the left bank
-  lower: 4.2,             // seconds of holding the lever to bring the bridge all the way down
-  jam: 0.5,               // how far down the brake catches (share of the way)
-  gate: 19040,            // the gate of Forest Park, where the chapter ends
-};
-
-// Stickers: little rewards hidden along the way. None is needed to finish the chapter.
-// Those with x are found at a spot: who 'sis' (reach up), 'bro' (small hands, crawling) or 'boost' (she lifts him).
-// The others are given for doing something: petting the puppy, ringing the bell, playing the piano together...
-const STICKERS = [
-  { id: 'bench', icon: 'star', name: 'Lucky star', plane: 'street', x: 700, y: 905, who: 'bro', key: 'down', label: 'Look under the bench', no: 'Something is shining under the bench, but I cannot get down there.' },
-  { id: 'awning', icon: 'apple', name: 'Red apple', plane: 'street', x: 1745, y: 668, who: 'sis', key: 'up', label: 'Feel along the shop sign', no: 'Something is stuck up on the shop sign. Too high for me!' },
-  { id: 'sock', icon: 'sock', name: 'Odd sock', plane: 'yard', x: ALLEY.sock[0], y: ALLEY.sock[1], who: 'boost' },
-  { id: 'paw', icon: 'paw', name: 'Puppy friend' },          // pet the puppy once more after catching it
-  { id: 'boat', icon: 'boat', name: 'Little boat' },         // the brother looks into the middle boat
-  { id: 'drop', icon: 'drop', name: 'Fountain drop', plane: 'street', x: SQUARE.fountain, y: 566, who: 'boost' },
-  { id: 'bell', icon: 'bell', name: 'Ding!' },               // ring the bell in the bell game
-  { id: 'note', icon: 'note', name: 'Duet' },                // both play the piano at the same time
-];
-
-// Hints. Each goal has up to three, from a nudge to the answer. They unlock one by one after this many seconds
-// on the same goal, and are read on the treasure map (S or the down arrow with nothing nearby).
-const HINT_TIMES = [25, 55, 90];
-
-// Things the siblings say when one of them first reaches a spot: [x, who ('sis' or 'bro'), words].
-const CHATTER = [
-  [500, 'bro', 'The map says: cross the city to the Old Bridge. That is miles!'],
-  [500, 'sis', 'Then we had better get walking.'],
-  [2700, 'bro', 'Mmm... something smells like cinnamon buns.'],
-  [4060, 'sis', 'The market! Stay close, it gets busy here.'],
-  [6350, 'bro', 'My feet are getting tired...'],
-  [6360, 'sis', 'Fountain Square is just ahead. We can rest there.'],
-  [6960, 'bro', 'A fountain! And look, a bell game!'],
-  [6970, 'sis', 'Five minutes. Then we take the metro.'],
-  [12200, 'bro', 'Old Town! It looks so old... and so pretty.'],
-  [12210, 'sis', 'Now we need a bus to the Old Bridge. And a ticket each!'],
-  [17350, 'bro', 'There it is! The Old Bridge!'],
-  [17360, 'sis', "It's lifted up... how do we get it down?"],
+// ---------- THE STATIONS, left to right. Each tries one idea, fits on one screen, and needs both siblings.
+// `things` places objects: kinds from shared/kit.js (block, ledge, box, crate, plate, gate, lever, seesaw, pulley,
+// boat, ferry, ladder, branch, plank, tunnel, bar, trap, sticker) and the city's own from things.js (find, puppy,
+// fountain, striker, jet, parasol, bridge). x is the place along the street ([from, to] for long things), h the
+// height above the pavement. `view` is the stretch the camera holds still on while both are inside it; `goal` is
+// the picture shown in the thought bubble. Stickers are extras: none is needed to go on.
+// city.html?station=3 starts at station 3.
+const STATIONS = [
+  { name: '0 Maple Street: jump, carry, and the torn map', goal: 'piece', x: [150, 3700], start: [380, 540], view: [2400, 3720], things: [
+    // learn to jump: small steps and a low wall
+    { kind: 'block', x: [640, 740], h: 62 }, { kind: 'block', x: [740, 920], h: 124 }, { kind: 'block', x: [920, 1020], h: 62 },
+    { kind: 'block', look: 'wall', x: [1210, 1250], h: 150 },
+    // learn to carry: a light box, and a shelf that is too high to jump to without it
+    { kind: 'box', x: 1420 }, { kind: 'ledge', look: 'shelf', x: [1560, 1760], h: 255 }, { kind: 'sticker', icon: 'key', x: 1660, h: 325 },
+    { kind: 'bar', x: 1850 },
+    // the torn map: one piece on a shop sign (she reaches it), one in a drain (only his hand fits),
+    // one in a window box (too high for both: she lifts him up). The gate opens when all three are found.
+    { kind: 'find', piece: 0, look: 'sign', x: 2700, h: 262 },
+    { kind: 'find', piece: 1, look: 'drain', x: 3020, h: 6, who: 'bro' },
+    { kind: 'find', piece: 2, look: 'windowbox', x: 3360, h: 352 },
+    { kind: 'gate', x: 3650, by: ['map3'] },
+    { kind: 'sticker', icon: 'bird', x: 2540, h: 330, ride: true }, // high on a lamp: only from her shoulders
+  ] },
+  { name: '1 The flour mill: plate and gate', goal: 'crate', x: [3700, 4900], start: [3760, 3840], view: [3720, 4900], things: [
+    // the shutter needs the big green plate held down. The heavy crate would do it, but it is up on the hoist:
+    // only his small hand fits the release in the low hatch. Down it comes; she carries it onto the plate.
+    { kind: 'lever', id: 'hoist', x: 3930, h: 70, who: 'bro', once: true },
+    { kind: 'trap', x: [4020, 4190], h: 262, by: 'hoist' }, { kind: 'crate', x: 4105, h: 262 },
+    { kind: 'plate', id: 'mill', big: true, x: 4350 }, { kind: 'gate', x: 4700, by: ['mill'] }, // the plate is far enough from the shutter that nobody can step off it and dash through
+  ] },
+  { name: '2 The market: a box as a step', goal: 'paw', x: [4900, 6760], start: [4960, 5040], view: [5080, 6480], things: [
+    // the puppy sits on a high awning with the last map piece. Too high even from her shoulders:
+    // bring the light box, both step onto it, and then she lifts him.
+    { kind: 'box', x: 5230 }, { kind: 'puppy', x: 5880, h: 432 },
+    { kind: 'gate', x: 6640, by: ['map4'] }, { kind: 'bar', x: 6560 },
+    { kind: 'ledge', look: 'shelf', x: [6240, 6420], h: 255 }, { kind: 'sticker', icon: 'sock', x: 6330, h: 325 }, // over the fish stall: the box is a step
+    { kind: 'sticker', icon: 'paw', when: 'petted' },                                                              // pet the puppy once it is down
+  ] },
+  { name: '3 Fountain Square: the see-saw', goal: 'ladder', x: [6760, 9120], start: [6840, 6920], view: [7800, 9000], things: [
+    // nothing has to be done at the fountain or the bell game: they are there to play with
+    { kind: 'fountain', x: 7230 }, { kind: 'striker', x: 7580 },
+    // a wall with a balcony over it. She jumps onto the green end of the see-saw and he flies up to the balcony;
+    // up there he lets the rope ladder down for her. They walk over the wall and hop down on the far side.
+    { kind: 'seesaw', x: 8090, half: 170 },
+    { kind: 'block', look: 'wall', x: [8560, 8640], h: 520 }, { kind: 'ledge', look: 'balcony', x: [8180, 8800], h: 520 },
+    { kind: 'ladder', x: 8470, h: 520 },
+    { kind: 'sticker', icon: 'drop', x: 7230, h: 345, ride: true }, // on top of the fountain: only from her shoulders
+    { kind: 'sticker', icon: 'bell', when: 'rang' },                // ring the bell in the bell game
+  ] },
+  { name: '4 The canal: light feet only', goal: 'boat', x: [9120, 10440], start: [9160, 9230], view: [9130, 10420], things: [
+    // the small blue boats hold him and sink under her. He crosses, and his lever on the far bank sends the ferry for her.
+    { kind: 'boat', x: 9417 }, { kind: 'boat', x: 9639 }, { kind: 'boat', x: 9861 }, { kind: 'boat', x: 10083 },
+    { kind: 'ferry', x: [9409, 10091], by: 'ferry', home: 1 }, { kind: 'lever', id: 'ferry', x: 10280, h: 150 },
+    { kind: 'sticker', icon: 'boat', x: 9861, h: 66 }, // in the third boat: only he can stand there
+  ] },
+  { name: '5 Old Town: the pulley lift', goal: 'lift', x: [10440, 12420], start: [10500, 10570], view: [10520, 11720], things: [
+    // the street goes on up on the terrace. He stands on the lift; she hauls on the rope and up he goes. On the high
+    // ledge are boxes: two of them on the other platform are enough (it has a block and tackle) to lift her.
+    { kind: 'pulley', a: 11290, b: 10760, w: 160, high: 520, bias: [0.5, 0], gear: 2, catch: true, rope: { x: 10640, h: 170 } },
+    { kind: 'ledge', look: 'shelf', x: [10850, 11200], h: 520 },
+    { kind: 'box', x: 10990, h: 520 }, { kind: 'box', x: 11075, h: 520 }, { kind: 'box', x: 11160, h: 520 },
+    { kind: 'block', x: [11380, 12050], h: 520 },
+    // on the terrace, for fun: two water jets
+    { kind: 'jet', x: 11640, h: 520 }, { kind: 'jet', x: 11850, h: 520, late: 1.6 },
+    { kind: 'block', x: [12050, 12140], h: 390 }, { kind: 'block', x: [12140, 12230], h: 260 }, { kind: 'block', x: [12230, 12320], h: 130 },
+    { kind: 'bar', x: 12380 },
+  ] },
+  { name: '6 The cafe: boost and toss', goal: 'parasol', x: [12420, 14000], start: [12480, 12560], view: [12560, 13900], things: [
+    // a wall in the way, and three closed parasols. The crank is on a high shelf: she tosses him up, he winds it,
+    // and the parasols open into steps over the wall.
+    { kind: 'ledge', look: 'shelf', x: [12700, 12860], h: 440 }, { kind: 'lever', id: 'crank', x: 12770, h: 560, base: 440, once: true, who: 'bro' },
+    { kind: 'parasol', x: 13050, h: 160, by: 'crank' }, { kind: 'parasol', x: 13260, h: 310, by: 'crank', late: 0.35 }, { kind: 'parasol', x: 13470, h: 460, by: 'crank', late: 0.7 },
+    { kind: 'block', look: 'wall', x: [13600, 13690], h: 520 }, { kind: 'sticker', icon: 'note', x: 13645, h: 590 },
+  ] },
+  { name: '7 The Old Bridge: two levers at once', goal: 'bridge', x: [14000, 16480], start: [14080, 14160], view: [14250, 15850], things: [
+    // the bridge comes down only while both levers are held: hers high on the post, his low in the little hut door
+    { kind: 'bridge', x: RIVER, by: ['post', 'hut'], time: 2.6 },
+    { kind: 'lever', id: 'post', hold: true, x: 14380, h: 250 }, { kind: 'lever', id: 'hut', hold: true, x: 14800, h: 80, who: 'bro' },
+  ] },
 ];
 
 // Music files, one for each kind of place (see worlds/README.md). vol balances them; all are CC0 (assets/music/CREDITS.txt).
 const MUSIC_FILES = {
   street: { file: 'worlds/city/assets/music/quaint-town.mp3', vol: 0.62 },     // the city by day
-  under: { file: 'worlds/city/assets/music/hot-springs-town.mp3', vol: 0.8 },  // the metro
+  under: { file: 'worlds/city/assets/music/hot-springs-town.mp3', vol: 0.8 },  // was the metro; not used by the lab
   evening: { file: 'worlds/city/assets/music/magic-town.mp3', vol: 0.45 },     // Old Town and the Old Bridge
 };

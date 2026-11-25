@@ -5,3 +5,8 @@ Downloaded on 2026-11-19. Packs: Interface Sounds, Impact Sounds, RPG Audio (the
   https://kenney.nl/assets/rpg-audio
 
 Which game sound uses which files, and how loud, is the SAMPLES list in shared/sound.js.
+
+Added on 2026-11-21 for the city lab (jumping, landing, footsteps, boxes, the plank, the bell, the toss), from the
+same three packs: cloth1, cloth4, impactSoft_medium, footstep_concrete, impactWood_light / medium / heavy,
+impactPlank_medium, impactBell_heavy_002 / 003, impactGeneric_light, glass_002 / 005, maximize_001 / 006,
+minimize_003, pluck_001 / 002, question_002. Their list is at the top of shared/movement.js.
