@@ -1,5 +1,8 @@
 # Level 3, the canal: first-time player review (2026-11-25)
 
+**Status (2026-11-25): current.** Level 3 was approved as it stands. The rows marked "Applied" are in the game; the
+other points are still open (the main ones are listed in [OPEN_QUESTIONS.md](../../../OPEN_QUESTIONS.md), section 1).
+
 I went through the level as somebody who has just finished Level 2 (the city, which ends at the Old Bridge) and has
 never seen the canal: every thing that is drawn, moves, sounds or reacts. For each one: could it distract, look like
 something to use when it is not, or need explaining? And what I recommend: **keep**, **tone down**, **move** or

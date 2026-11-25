@@ -1,5 +1,10 @@
 # Level 1, the park: first-time player review (2026-11-24)
 
+**Status (2026-11-25): current.** Level 1 was approved as it stands. The rows marked "Applied" are in the game; the
+other recommendations were not taken up yet and are still open (the main ones are listed in
+[OPEN_QUESTIONS.md](../../../OPEN_QUESTIONS.md), section 1). One thing changed since: the log in section 1 is now
+drawn where it is stood on.
+
 I went through the whole level as somebody who has never seen the game and does not know how to move, and looked at
 every thing that is drawn, moves, makes a sound or reacts. For each one: could it distract, look like something to
 use, look like a puzzle, or need explaining? And what I recommend: **keep**, **tone down**, **move later** or

@@ -4,10 +4,14 @@ Each place in the game is a **world** with its own folder. A world can be change
 
 | Folder | Chapter | Page |
 |---|---|---|
-| `park/` | Level 1, "The Park": the gentle first level (since 2026-11-23; see "The park" below) | `park.html` (`index.html` opens it) |
-| `house/` | "Home Alone" | `house.html` (it was `index.html` until 2026-11-23) |
-| `city/` | The city: since 2026-11-21 a test level, "the lab" (see "The city" below) | `city.html` |
-| `forest/` | The Forest Trail (a later chapter will be built here) | `forest.html` |
+| `park/` | **Level 1**, "The Park": the plain first level (see "The park" below). Approved 2026-11-25. | `park.html` |
+| `city/` | **Level 2**, the city: the see-saw level, eight stations to the Old Bridge (see "The city" below). It began as a test level, "the city lab", and its files still carry that name: the lab and Level 2 are the same world. Approved 2026-11-25. | `city.html` |
+| `canal/` | **Level 3**, "The Canal": light-only planks and boats, and combinations (see "The canal" below). Approved 2026-11-25. | `canal.html` |
+| `house/` | "Home Alone", the first level ever built. It plays the old way (walking only, words on the screen) and is not part of Chapter 1; its future is an open question. | `house.html` |
+| `forest/` | The Forest Trail: the approved art scene. Chapter 2 will be built here. | `forest.html` |
+
+`index.html` starts Chapter 1 (Level 1 the first time, the chapter map `map.html` afterwards). The three levels and
+the map are tied together by `../shared/chapter.js`: see "The chapter" below.
 
 Every world folder has the same parts:
 
@@ -16,7 +20,7 @@ Every world folder has the same parts:
 | `assets/` | The world's pictures, one PNG per item, in sub-folders. |
 | `assets/manifest.js` | The list of those pictures: size and ground point of each one. |
 | `settings.js` | The numbers you may want to change: where things are, how fast things move, timings. Change a number, refresh, and see it. |
-| `level.js` (house, park), `scene.js` (forest), `lab.js` (city) | The code that runs the world. |
+| `level.js` (park, canal, house), `lab.js` (city), `scene.js` (forest) | The code that runs the world. |
 | `street.js`, `things.js` (city) | The city's scenery, and the city's own objects: see "The city" below. |
 | `scenery.js`, `things.js`, `life.js` (park) | The park's scenery, its own objects, and everything that only reacts: see "The park" below. The park has no `assets/` folder: all its pictures are borrowed. |
 | `generate.js` | The drawing code that painted the PNGs. The game does not use it; see "Repainting" below. |
@@ -32,7 +36,7 @@ What worlds share is in `../shared/`:
 - `shared/sounds/`: recorded sound effects (Kenney, CC0; see `CREDITS.txt` there). The `SAMPLES` list in
   `shared/sound.js` says which files each sound uses and how loud; `shared/movement.js` adds the ones for jumping
   and carrying. Sounds without files are made by code.
-- Only for worlds with jumping (today: the park and the city). The house and the forest do not load these.
+- Only for worlds with jumping (the park, the city and the canal). The house and the forest do not load these.
   - `shared/physics.js`: gravity, floors and walls, things to stand on, weight.
   - `shared/movement.js`: how the siblings walk, jump, carry, lift and toss. Every number that shapes the feel is in
     `MOVE` at the top of it.
@@ -93,8 +97,8 @@ picks between pictures of a group, it will start using it.
 
 ## The park (`park/`)
 
-Level 1 since 2026-11-23: a gentle first level built to the rules in [PROGRESSION.md](../../PROGRESSION.md). It is
-waiting for feedback and is not approved. It may only use walking, jumping, small blue plates, gates, one light box
+Level 1 since 2026-11-23, approved on 2026-11-25: a plain first level built to the rules in
+[PROGRESSION.md](../../PROGRESSION.md). It may only use walking, jumping, small blue plates, gates, one light box
 and the lift. On 2026-11-24 it was made plainer after the client's feedback: nothing to collect, no dog and no ball,
 and an opening that is only about learning to move.
 
@@ -142,8 +146,8 @@ forgiveness at edges and before landing, and no toss. `park.html?tune=1` has sli
 
 ## The canal (`canal/`)
 
-Level 3 since 2026-11-25, the last level of Chapter 1: built to the rules in [PROGRESSION.md](../../PROGRESSION.md)
-("Combinations"). It is waiting for feedback and is not approved. Its one new idea is light-only surfaces; everything
+Level 3 since 2026-11-25, the last level of Chapter 1, approved the same day: built to the rules in
+[PROGRESSION.md](../../PROGRESSION.md) ("Combinations"). Its one new idea is light-only surfaces; everything
 else is known from the park and the city. It has no art of its own: the houses, lamps, bench and the Old Bridge are
 the city's, the trees on the far bank the forest's.
 
@@ -193,8 +197,12 @@ chapter: one line in `CHAPTER.LEVELS`, those two calls in its level code, and it
 
 ## The city (`city/`)
 
-Level 2 of Chapter 1 (so named by the user on 2026-11-25). Since 2026-11-21 the city is a **test level, "the lab"**: a row of stations that each try one idea with jumping,
-carrying, the lift and the toss. Everything in it may change. Its story is in [city/LAB_PLAN.md](city/LAB_PLAN.md).
+**Level 2** of Chapter 1, the see-saw level, approved on 2026-11-25: a row of eight stations that each bring one idea
+(jumping and carrying, the heavy crate, a box as a step, the see-saw, small boats and a ferry, the pulley lift, the
+toss, two levers at once). It was built on 2026-11-21 as a test level, "the city lab", which is why its main file is
+`lab.js`; the lab and Level 2 are the same thing. How it was built is told in [city/LAB_PLAN.md](city/LAB_PLAN.md)
+(historical). The level that was here before, with road crossings and the metro, is kept at the git tag
+`checkpoint-2026-11-20-city-music`.
 
 | File | What it holds |
 |---|---|

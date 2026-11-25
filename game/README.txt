@@ -15,7 +15,39 @@ Level 3  canal.html   The canal (since 2026-11-25): thin planks and small boats 
                       brother, combined with what the first two levels taught. About 8 minutes.
                       It ends the chapter at the Old Bridge, with the forest on the far bank.
 Each level's end card leads to the chapter map, and the map leads to the next level.
-Level 3 and the chapter map are waiting for feedback and are not approved yet.
+Chapter 1 was approved on 2026-11-25.
+
+CONTROLS (the same in all three levels)
+Two players on one keyboard, or one player with both hands:
+  Sister:   A / D walk     W jump     S grab
+  Brother:  Left / Right walk     Up jump     Down grab
+  M switches the sound off and on. Jump, held at a ladder, climbs it.
+On a tablet or phone, held sideways: each player has four buttons in their bottom corner, the
+sister's on the left and the brother's on the right (two to walk, one to jump, one to grab).
+On the chapter map: jump, Enter or a tap starts a level; left and right choose one.
+Nobody has to know the keys beforehand: Level 1 shows them as pictures, one move at a time.
+
+WHAT EACH SIBLING CAN DO
+The sister is tall, strong and heavy (her colour is green). She reaches high levers, carries the
+heavy crate as well as light boxes, presses the big green plates, lifts the brother onto her
+shoulders, and her jump onto a see-saw sends him flying. Thin planks and small boats do not
+hold her.
+The brother is small and light (his colour is blue). He walks on thin planks and small boats,
+ducks into low gaps, his hand fits small hatches and drains, and from her shoulders he reaches
+higher than either alone.
+Every puzzle needs both of them. Nobody can get hurt, lose, or get stuck.
+
+ADDRESS OPTIONS FOR TESTING (add to the address of a level page)
+  park.html?section=3     start at section 3 of the park (1 to 6)
+  city.html?station=5     start at station 5 of the city (0 to 7)
+  canal.html?section=3    start at section 3 of the canal (1 to 7)
+  ?debug=1                show what is solid, what is switched on, the frame rate
+  ?hints=fast             the picture hints come ten times sooner
+  ?touch=1                show the touch buttons on a computer
+  ?fps=30                 draw only 30 frames a second, to feel a slow device
+  ?tune=1                 sliders for how the jump and the running feel
+  map.html?reset=1        forget what has been played
+They can be joined with "&": canal.html?section=5&debug=1
 
 THE PAGES
 index.html    Starts the game: Level 1 the first time, the chapter map once a game has been started.
@@ -28,13 +60,17 @@ map.html      The chapter map, in pictures: three stops on a map of the city. A 
 park.html     LEVEL 1, "The Park". Made for somebody who has never seen the game: first only
               learning to walk and jump, with the keys shown as pictures, then four very small
               puzzles. Nothing in it needs reading and there is nothing to collect.
-city.html     LEVEL 2, the city. Built on 2026-11-21 as a test level ("the lab"): eight stations that
-              each try one idea (jumping, carrying, the lift, the see-saw, boats, the pulley, the
-              toss). It ends at the Old Bridge.
+city.html     LEVEL 2, the city: the see-saw level. Eight stations, each one idea (jumping and
+              carrying, the heavy crate, a box as a step, the see-saw, boats, the pulley, the
+              toss). It ends at the Old Bridge. It was built on 2026-11-21 as a test level and is
+              still called "the city lab" in some file names: the lab and Level 2 are the same page.
 canal.html    LEVEL 3, "The Canal". See its own part below.
-house.html    "Home Alone" (this was index.html until 2026-11-23): the brother and sister are locked
-              in the house and must find the spare key. Not part of Chapter 1's flow.
-forest.html   The Forest Trail (the first art scene; Chapter 2 will be built here).
+
+OTHER PAGES (not part of Chapter 1)
+house.html    "Home Alone", the first level ever built (it was index.html until 2026-11-23): the
+              brother and sister are locked in the house and must find the spare key. It plays the
+              old way: walking only, words on the screen. Its future is an open question.
+forest.html   The Forest Trail: the approved art scene. Chapter 2 will be built here.
 
 WHAT IS REMEMBERED
 The browser keeps, on this device only, which of the three levels are finished, how far into an
@@ -189,7 +225,7 @@ worlds/canal/REVIEW.md is the first-time player review of this level.
 
 LEVEL 2: THE CITY
 =================
-(Built as a test level, "the lab"; it is Level 2 of Chapter 1.)
+(The see-saw level. Built as a test level, "the city lab"; approved as Level 2 on 2026-11-25.)
 
 CONTROLS (the same keys as in the park; the lab adds the toss, levers and ladders)
 Sister:   A / D walk     W jump     S grab

@@ -1,5 +1,10 @@
 # City lab plan (branch `lab/city-v2`)
 
+**Status (2026-11-25): historical.** This is the plan and the record of how the city was rebuilt as a test level in
+November 2026. That level was approved as **Level 2** on 2026-11-25. The stations it describes are still the level,
+except that the stickers and the torn map were taken out. For the level as it is now, see `game/README.txt` and
+[PROGRESSION.md](../../../PROGRESSION.md); for what is decided, [DECISIONS.md](../../../DECISIONS.md).
+
 The city is now a test level. This page says how it is being rebuilt. It was written on 2026-11-21, before Phase 1,
 from the checkpoint `checkpoint-2026-11-20-city-music` (`level-2/city` had no newer commits).
 
