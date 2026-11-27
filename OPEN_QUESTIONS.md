@@ -129,7 +129,8 @@ Still to do:
   level). The approved Chapter 1 is on a separate preview address. Should the main address show Chapter 1 now?
   (The addresses are in [CHECKPOINTS.md](CHECKPOINTS.md).)
 - **Privacy.** The game stores only its progress, on the device. That should stay true if anything is added.
-- **Languages.** Nothing needs reading, so nothing needs translating. Keep it that way?
+- **Languages.** In the park, the city and the canal nothing needs reading, so nothing needs translating (the house
+  still has words: see section 3). Keep it that way?
 
 ## 8. Housekeeping in the code (no player would notice)
 

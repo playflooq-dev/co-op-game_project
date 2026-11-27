@@ -7,6 +7,7 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 
 | Checkpoint (git tag) | Date | What it holds | Where to play it |
 |---|---|---|---|
+| `checkpoint-2026-11-27-house-on-map` | 2026-11-27 | **Approved.** Chapter 1 with the house as the first stop on the map (house, park, city, canal, then the locked forest), older saves kept, and the test links (`?unlock=all`, `?level=...`). On `main`. | https://map-house.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-25-chapter-1-approved` | 2026-11-25 | **Chapter 1, approved.** The park (Level 1), the city to the Old Bridge (Level 2) and the canal (Level 3), with the picture map between them and progress saved in the browser. Two dead ends removed, the torn map taken out of the city, the log in the park fixed. All documents brought up to date. It is on `main`: the approved work of every branch was merged there on this day. | https://chapter-1.forest-trail-d56.pages.dev (the same game) |
 | `checkpoint-2026-11-chapter-1` | 2026-11-25 | Chapter 1 as first finished, on the branch `level-3/canal`, before the first plays by hand: Level 3 "The Canal", the chapter map and the save, `game/index.html` starting the chapter. It still has the dead end in the canal's section 6, the dead end at Fountain Square, and the torn map in the city. | (none: its address now shows the approved version) |
 | `checkpoint-2026-11-level-1-plain` | 2026-11-24 | Level 1, the park, made plain after the client's feedback, on the branch `level-1/plain`: no stickers, no dog and no ball; an opening that is only about learning to move, with each player's keys shown as pictures; the first-time player review. The city still has its stickers and its map here. | https://level-1-plain.forest-trail-d56.pages.dev |
@@ -17,12 +18,6 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
 itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
-
-**Work that is not a checkpoint yet (waiting for approval).** On 2026-11-27, on the branch
-`fix/map-house-and-test-unlock` (made from `main`): the house as the first stop on the chapter map, and the test
-links. It is not merged into `main` and not on GitHub. To try it, it was put on its own web address on 2026-11-27:
-https://map-house.forest-trail-d56.pages.dev (the other addresses were not touched). When it is approved it will be
-merged, get a checkpoint here, and be pushed. Until then `main` and the newest checkpoint are unchanged.
 
 ## How to go back to a checkpoint
 
@@ -38,7 +33,7 @@ Now the folder holds that version: open `game/index.html` to play it. To come ba
 
 **Start new work from a checkpoint**
 
-    git switch -c my-new-branch checkpoint-2026-11-25-chapter-1-approved
+    git switch -c my-new-branch checkpoint-2026-11-27-house-on-map
 
 This makes a new branch that starts at that version. The checkpoint itself and `main` stay as they are.
 
@@ -57,13 +52,14 @@ or on GitHub.
 
 `main` holds everything. Until 2026-11-25 the work was done on branches, each starting from the one before; on that
 day they were merged into `main` in order. The branches still exist: `level-1/house-escape`, `level-2/city`,
-`lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`. The small commits that only add a row to this
+`lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`, and `fix/map-house-and-test-unlock` (merged on
+2026-11-27). The small commits that only add a row to this
 table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
-| `a082dbd` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`, waiting for approval.* The documents for the change below: the test links in `game/README.txt`, the house as first stop in the README files and PROJECT_STATUS.md, proposals N and O in DECISIONS.md, and the review the house now needs in OPEN_QUESTIONS.md and PROGRESSION.md. The TEST badge made readable on a phone. |
-| `4af16ad` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`, waiting for approval.* The chapter map shows the house as its first stop, before the park; new players start at the house, and its end card leads to the map. Older saves are kept and not sent back. Test links: `?unlock=all` (every level open, a TEST badge, nothing saved) and `?level=house`, `park`, `seesaw`, `canal`. The map's stops shrink on a narrow screen. The chapter test rewritten (70 checks). |
+| `a082dbd` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`.* The documents for the change below: the test links in `game/README.txt`, the house as first stop in the README files and PROJECT_STATUS.md, proposals N and O in DECISIONS.md, and the review the house now needs in OPEN_QUESTIONS.md and PROGRESSION.md. The TEST badge made readable on a phone. |
+| `4af16ad` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`.* The chapter map shows the house as its first stop, before the park; new players start at the house, and its end card leads to the map. Older saves are kept and not sent back. Test links: `?unlock=all` (every level open, a TEST badge, nothing saved) and `?level=house`, `park`, `seesaw`, `canal`. The map's stops shrink on a narrow screen. The chapter test rewritten (70 checks). |
 | `b19e950` | 2026-11-25 | `CLAUDE.md`: the standing rules for every work session (read the documents first, a branch per task, keep the documents true, merge and tag when a version is approved, never rewrite history). |
 | `f037436` | 2026-11-25 | Merge of `level-3/canal` into `main`: the canal (Level 3), the chapter map and save, the fixes and the updated documents. The checkpoint `checkpoint-2026-11-25-chapter-1-approved` is on this commit. |
 | `0a4abf6` | 2026-11-25 | Merge of `level-1/plain` into `main`: the plain park (Level 1), and the city without stickers. |

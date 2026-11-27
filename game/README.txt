@@ -23,7 +23,7 @@ Level 3  canal.html   The canal (since 2026-11-25): thin planks and small boats 
                       It ends the chapter at the Old Bridge, with the forest on the far bank.
 Each level's end card leads to the chapter map, and the map leads to the next level.
 Chapter 1 (the park, the city, the canal) was approved on 2026-11-25. The house as its first stop
-was added on 2026-11-27 and is waiting for approval.
+was added and approved on 2026-11-27.
 
 CONTROLS (the same in the park, the city and the canal; the house has its own older controls,
 described in the last part of this file)

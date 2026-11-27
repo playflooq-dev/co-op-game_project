@@ -4,12 +4,14 @@
 
 ## Where the game is now
 
-**Chapter 1 is approved and playable.** It is a 2-player co-op puzzle game in a warm storybook style, for parents
+**Chapter 1 is approved and playable**, now with the house in front of it (approved 2026-11-27). It is a 2-player co-op puzzle game in a warm storybook style, for parents
 playing with children of about 5 to 10, two children together, or one player controlling both characters. The two
 characters are an older sister (tall, strong, heavy; green) and a younger brother (small, light; blue). Every puzzle
-needs both of them. Nothing in the game needs reading, and nobody can lose or get stuck.
+needs both of them. Nobody can lose or get stuck, and in the three levels below nothing needs reading (the house is
+the exception: see below).
 
-Chapter 1 has three levels, all in the city, and takes a little over 20 minutes:
+Chapter 1 starts in the house and goes on with three levels in the city, which take a little over 20 minutes (the
+house has not been timed):
 
 | Level | Place | What players learn | Length |
 |---|---|---|---|
@@ -17,9 +19,9 @@ Chapter 1 has three levels, all in the city, and takes a little over 20 minutes:
 | 2 | The city, to the Old Bridge | Eight short stations, each with one idea: carrying, the heavy crate, a box as a step, the see-saw, small boats and a ferry, a pulley lift, the toss, two levers at once | about 10 minutes |
 | 3 | The canal | Thin planks and small boats that hold only the brother, combined with what the first two levels taught. It ends the chapter at the Old Bridge, with the forest ahead | about 8 minutes |
 
-**Waiting for your approval (built on 2026-11-27, not merged; to try it: https://map-house.forest-trail-d56.pages.dev):**
+**In front of them (approved 2026-11-27):**
 
-- **The house comes first.** The picture map now has the house, "Home Alone", as its first stop, before the park:
+- **The house comes first.** The picture map has the house, "Home Alone", as its first stop, before the park:
   house, park, city (the see-saw level), canal, and then the forest, which stays locked. New players start at the
   house, and the park opens when they leave it. Players who had already finished levels keep everything: they are
   not sent back, and the house is simply open for them to play.
@@ -37,12 +39,11 @@ buttons for each player).
 
 ## How to play it
 
-- **On the web:** https://chapter-1.forest-trail-d56.pages.dev (the approved version as of 2026-11-25; it does not
-  have the house on the map or the test links).
-- **The version waiting for approval:** https://map-house.forest-trail-d56.pages.dev (the house first, and the test
-  links, for example https://map-house.forest-trail-d56.pages.dev/index.html?unlock=all).
+- **On the web:** https://map-house.forest-trail-d56.pages.dev (the approved version as of 2026-11-27). The older
+  address https://chapter-1.forest-trail-d56.pages.dev still shows the version of 2026-11-25, without the house on
+  the map.
 - **From the project folder:** double-click `game/index.html`. No installation, no internet needed.
-- **Test links** (in the version waiting for approval; players never see them). Add the ending to that web address,
+- **Test links** (players never see them). Add the ending to the web address above,
   or to the address of `game/index.html`:
 
   | Link | What it does |

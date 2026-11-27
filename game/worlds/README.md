@@ -7,7 +7,7 @@ Each place in the game is a **world** with its own folder. A world can be change
 | `park/` | **Level 1**, "The Park": the plain first level (see "The park" below). Approved 2026-11-25. | `park.html` |
 | `city/` | **Level 2**, the city: the see-saw level, eight stations to the Old Bridge (see "The city" below). It began as a test level, "the city lab", and its files still carry that name: the lab and Level 2 are the same world. Approved 2026-11-25. | `city.html` |
 | `canal/` | **Level 3**, "The Canal": light-only planks and boats, and combinations (see "The canal" below). Approved 2026-11-25. | `canal.html` |
-| `house/` | "Home Alone", the first level ever built, and since 2026-11-27 the first stop of Chapter 1, in front of the park (waiting for approval). It still plays the old way (walking only, words on the screen, a code) and has to be reviewed before release: see OPEN_QUESTIONS.md. | `house.html` |
+| `house/` | "Home Alone", the first level ever built, and since 2026-11-27 the first stop of Chapter 1, in front of the park (approved 2026-11-27). It still plays the old way (walking only, words on the screen, a code) and has to be reviewed before release: see OPEN_QUESTIONS.md. | `house.html` |
 | `forest/` | The Forest Trail: the approved art scene. Chapter 2 will be built here. | `forest.html` |
 
 `index.html` starts Chapter 1 (the house the first time, the chapter map `map.html` afterwards). The levels and
