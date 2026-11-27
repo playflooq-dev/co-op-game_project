@@ -17,7 +17,7 @@ Chapter 1 has three levels, all in the city, and takes a little over 20 minutes:
 | 2 | The city, to the Old Bridge | Eight short stations, each with one idea: carrying, the heavy crate, a box as a step, the see-saw, small boats and a ferry, a pulley lift, the toss, two levers at once | about 10 minutes |
 | 3 | The canal | Thin planks and small boats that hold only the brother, combined with what the first two levels taught. It ends the chapter at the Old Bridge, with the forest ahead | about 8 minutes |
 
-**Waiting for your approval (built on 2026-11-27, not merged, not on the web yet):**
+**Waiting for your approval (built on 2026-11-27, not merged; to try it: https://map-house.forest-trail-d56.pages.dev):**
 
 - **The house comes first.** The picture map now has the house, "Home Alone", as its first stop, before the park:
   house, park, city (the see-saw level), canal, and then the forest, which stays locked. New players start at the
@@ -38,10 +38,12 @@ buttons for each player).
 ## How to play it
 
 - **On the web:** https://chapter-1.forest-trail-d56.pages.dev (the approved version as of 2026-11-25; it does not
-  have the house on the map or the test links yet).
+  have the house on the map or the test links).
+- **The version waiting for approval:** https://map-house.forest-trail-d56.pages.dev (the house first, and the test
+  links, for example https://map-house.forest-trail-d56.pages.dev/index.html?unlock=all).
 - **From the project folder:** double-click `game/index.html`. No installation, no internet needed.
-- **Test links** (in the version waiting for approval; players never see them). Add the ending to the address of
-  `game/index.html`:
+- **Test links** (in the version waiting for approval; players never see them). Add the ending to that web address,
+  or to the address of `game/index.html`:
 
   | Link | What it does |
   |---|---|

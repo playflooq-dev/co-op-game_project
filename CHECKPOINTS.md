@@ -20,8 +20,9 @@ itself. The main address still shows the older game: whether it should show Chap
 
 **Work that is not a checkpoint yet (waiting for approval).** On 2026-11-27, on the branch
 `fix/map-house-and-test-unlock` (made from `main`): the house as the first stop on the chapter map, and the test
-links. It is not merged into `main`, not on GitHub and not on the web. When it is approved it will be merged, get a
-checkpoint here, and be pushed. Until then `main` and the newest checkpoint are unchanged.
+links. It is not merged into `main` and not on GitHub. To try it, it was put on its own web address on 2026-11-27:
+https://map-house.forest-trail-d56.pages.dev (the other addresses were not touched). When it is approved it will be
+merged, get a checkpoint here, and be pushed. Until then `main` and the newest checkpoint are unchanged.
 
 ## How to go back to a checkpoint
 
