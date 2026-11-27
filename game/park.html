@@ -16,7 +16,7 @@
   #hud .s,#hud .b{display:none}#hud .s.on,#hud .b.on{display:flex}
   #hud span{display:none;align-items:center;gap:4px}#hud span.on{display:flex;animation:hudin .8s ease-out}#hud span.on~span.on{margin-left:9px}
   @keyframes hudin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s;pointer-events:none}
   @media (pointer:coarse){#hud{display:none}}
   body.touch #hud{display:none}
 </style></head>

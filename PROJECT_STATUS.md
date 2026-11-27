@@ -35,7 +35,9 @@ house has not been timed):
 screen: the sister and the brother on a forest path, and one big round play button, with no words. On an Android
 phone or tablet, or an iPad, the tap also switches the game to full screen, held sideways; if players leave full
 screen, a small button on the map brings it back. An iPhone does not allow full screen for web pages, so there the
-game simply starts, with the browser bar still showing. On a computer the button only starts the game.
+game simply starts, with the browser bar still showing; added to the home screen ("Add to Home Screen" in Safari), it
+opens without the bar. On a computer the button only starts the game. **For the trials with the client, the play
+button opens the map with every level open**, so any level can be chosen; this is a switch to turn off before release.
 
 Between the levels is a **picture map** of the city: finished levels get a tick, the next one is marked, and any
 finished level can be played again. The game **remembers progress** on the device (no account, no personal data).

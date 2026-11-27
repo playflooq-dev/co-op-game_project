@@ -16,7 +16,7 @@ import { mkdtempSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const W = +process.argv[2] || 844, H = +process.argv[3] || 390, DESK = process.argv[4] === 'desktop', IPHONE = process.argv[4] === 'iphone', PORT = 9333, BASE = 'http://127.0.0.1:8780/';
+const W = +process.argv[2] || 844, H = +process.argv[3] || 390, DESK = process.argv[4] === 'desktop', IPHONE = process.argv[4] === 'iphone', PORT = 9300 + Math.floor(Math.random() * 600), BASE = 'http://127.0.0.1:8780/';
 const BROWSERS = ['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Google/Chrome/Application/chrome.exe', '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'];
 const exe = BROWSERS.find((b) => existsSync(b));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -34,7 +34,10 @@ try {
   const send = (method, params = {}) => new Promise((r) => { const n = ++id; pending.set(n, r); ws.send(JSON.stringify({ id: n, method, params })); });
   const js = async (expr) => { const r = await send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true }); return r.result && r.result.result ? r.result.result.value : undefined; };
   const until = async (expr, max = 15000) => { const t0 = Date.now(); while (Date.now() - t0 < max) { if (await js(`(() => { try { return !!(${expr}); } catch (e) { return false; } })()`)) return true; await wait(150); } return false; };
-  const tap = async (x, y) => { for (const type of ['mousePressed', 'mouseReleased']) { await send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1, pointerType: 'mouse' }); await wait(60); } }; // (a press of the pointer: the browser counts it as a real tap)
+  const click = async (x, y) => { for (const type of ['mousePressed', 'mouseReleased']) { await send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1, pointerType: 'mouse' }); await wait(60); } };
+  // a finger: touch down, wait, lift. A phone only counts it as the player's own when the finger is lifted, so this
+  // catches code that asks for full screen too early (on touch down). On a computer, a mouse click.
+  const tap = async (x, y) => { if (DESK) return click(x, y); await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 1 }] }); await wait(90); await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await wait(120); };
   const inner = `document.getElementById('game').contentWindow`;
   const fsOn = `!!(document.fullscreenElement || document.webkitFullscreenElement)`;
 
@@ -45,7 +48,7 @@ try {
   await send('Page.enable'); await send('Runtime.enable');
   await send('Page.navigate', { url: 'data:text/html,<p>probe</p>' }); await wait(500);
   await js(`window.r = 'none'; addEventListener('pointerdown', () => document.documentElement.requestFullscreen().then(() => { r = 'granted'; document.exitFullscreen(); }, (e) => { r = String(e); }))`);
-  await tap(20, 20); await wait(600);
+  await click(20, 20); await wait(600);
   const real = (await js('r')) === 'granted';
   console.log(real ? '     this browser grants full screen: the checks use the real thing' : `     this browser refuses full screen to every page (${await js('r')}): the checks use a stand-in that needs a real tap`);
   if (IPHONE) await send('Page.addScriptToEvaluateOnNewDocument', { source: `(() => { // as on an iPhone: no full screen for web pages
@@ -66,7 +69,7 @@ try {
   if (DESK || IPHONE) {
     check(DESK ? 'on a computer the frame is not used' : 'a touch screen without full screen: the frame is not used', !(await js('USE_FRAME')) && (await js('TOUCH')) === IPHONE && !(await js('FS.can')) === IPHONE);
     await tap(W / 2, H / 2);
-    check(DESK ? 'a click goes straight on to the map, as before' : 'a tap goes straight on to the map, as before: the browser bar stays', await until(`location.pathname.endsWith('map.html')`));
+    check(DESK ? 'a click goes straight on to the map with every level open' : 'a tap goes straight on to the map with every level open: the browser bar stays', await until(`location.pathname.endsWith('map.html') && location.search === '?unlock=all'`));
     check('and full screen was never asked for', !(await js(`sessionStorage.asked`)) && !(await js(fsOn)));
     throw 'done';
   }
@@ -75,15 +78,21 @@ try {
   await tap(W / 2, H / 2); await wait(300);
   check('a real tap: full screen is on', await until(fsOn, 5000));
   check('the screen is held sideways where the browser allows it (here: reported, not required)', true, await js(`screen.orientation ? screen.orientation.type : 'no screen.orientation'`));
-  check('the game opens inside the frame, at the map', await until(`document.getElementById('game') && ${inner}.location.pathname.endsWith('map.html') && ${inner}.eval('typeof MAP !== "undefined" && MAP.mode === "idle"')`));
+  check('the game opens inside the frame, at the map with every level open', await until(`document.getElementById('game') && ${inner}.location.pathname.endsWith('map.html') && ${inner}.location.search === '?unlock=all' && ${inner}.eval('[0, 1, 2, 3].every(playable)') && ${inner}.eval('typeof MAP !== "undefined" && MAP.mode === "idle"')`));
   check('the full-screen button is hidden while in full screen', await js(`document.getElementById('fs').hidden`));
   await js(`${inner}.focus()`);
-  for (const key of ['ArrowRight', 'Enter']) { for (const type of ['keyDown', 'keyUp']) { await send('Input.dispatchKeyEvent', { type, code: key, key: key === 'Enter' ? 'Enter' : key, windowsVirtualKeyCode: key === 'Enter' ? 13 : 39 }); await wait(120); } await wait(250); } // (held a moment: the game reads the keys once a frame)
-  check('the keys reach the game inside the frame: the map opens the park', await until(`${inner}.location.pathname.endsWith('park.html')`));
+  if (H > W) { // held upright: the map asks for the phone to be turned (its picture covers it). Turn it, as a player would.
+    check('held upright, the map shows the "turn your phone" picture', await js(`${inner}.getComputedStyle(${inner}.document.getElementById('turn')).display !== 'none'`));
+    await send('Emulation.setDeviceMetricsOverride', { width: H, height: W, deviceScaleFactor: 2, mobile: true, screenOrientation: { type: 'landscapePrimary', angle: 90 } });
+    check('turned sideways, the picture goes away', await until(`${inner}.getComputedStyle(${inner}.document.getElementById('turn')).display === 'none'`)); await wait(600);
+  }
+  const stop = await js(`(() => { const w = ${inner}, s = w.eval('stops()')[3], k = w.eval('S / DPR'); return { x: s.x * k, y: s.y * k }; })()`);
+  await tap(stop.x, stop.y); // a finger on the canal's stop, which a new player could not play yet
+  check('a tap on any stop plays it: the canal opens', await until(`${inner}.location.pathname.endsWith('canal.html')`), JSON.stringify(stop));
   check('full screen stays on in the level', await until(`${inner}.document.readyState === 'complete'`) && await js(fsOn));
   await js(`document.exitFullscreen()`); await wait(500);
-  check('full screen left (as with the back gesture): the level goes on', !(await js(fsOn)) && await js(`${inner}.location.pathname.endsWith('park.html') && document.getElementById('fs').hidden`));
-  await js(`${inner}.location.href = 'map.html'`);
+  check('full screen left (as with the back gesture): the level goes on', !(await js(fsOn)) && await js(`${inner}.location.pathname.endsWith('canal.html') && document.getElementById('fs').hidden`));
+  await js(`${inner}.location.href = 'map.html?unlock=all'`);
   check('back on the map, out of full screen: the small button shows', await until(`!document.getElementById('fs').hidden && ${inner}.eval('typeof MAP !== "undefined"')`));
   const box = await js(`(() => { const r = document.getElementById('fs').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
   await tap(box.x, box.y);

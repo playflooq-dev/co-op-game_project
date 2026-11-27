@@ -1,11 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Treasure Hunt">
+<!-- (these let the game be added to a phone's home screen and open from there without the browser bar: the only
+     way to play without the bar on an iPhone, where Safari does not allow full screen for web pages) -->
 <title>Chapter 1</title>
 <style>
   html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
   canvas{display:block;cursor:pointer}
-  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s;pointer-events:none}
   /* a phone held upright is too narrow for the map: a picture asks for it to be turned */
   #turn{position:fixed;inset:0;display:none;place-items:center;background:#1c120aee;z-index:9}#turn svg{width:44vw;max-width:260px;animation:turn 2.4s ease-in-out infinite}
   @keyframes turn{0%,25%{transform:rotate(0)}60%,100%{transform:rotate(90deg)}}@media (orientation:portrait) and (pointer:coarse){#turn{display:grid}}

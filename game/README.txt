@@ -4,19 +4,27 @@ TREASURE HUNT - game prototype
 HOW TO OPEN
 Double-click index.html. It opens in your web browser with the start screen: the sister and the
 brother on a forest path, and one big round play button (no words). A tap, a click or any key
-starts Chapter 1: the first time with the house ("Home Alone"); after that with the chapter map,
-where players go on from where they stopped.
+starts the game.
+FOR NOW (for the trials with the client, asked for on 2026-11-27) the play button opens the
+chapter map with every level open, so any level can be chosen and played; the forest stays
+locked. This is the test view (map.html?unlock=all): it saves nothing. For the real game, set
+OPEN_ALL_LEVELS to false in shared/start.js: then the button starts Chapter 1 with the house the
+first time, and the chapter map after that. (index.html#normal does that for one visit.)
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
 PLAYING ON PHONES AND TABLETS (since 2026-11-27, waiting for approval)
 Hold the phone or tablet sideways and tap the play button.
+(The first version did not go full screen on phones: it asked as soon as a finger touched the
+screen, and phones only allow it once the finger is lifted. Fixed on 2026-11-27.)
   Android phones and tablets, and iPads: the game goes full screen after the tap, and tries to
     stay sideways. If full screen is left (for example with the back gesture), the game goes on
     as before; a small full-screen button then shows in the top left corner of the chapter map,
     and a tap on it goes back to full screen.
   iPhone: Safari does not allow web pages to go full screen, so the browser's bar stays. The game
-    starts and plays normally.
+    starts and plays normally. To play without the bar: in Safari tap Share, then "Add to Home
+    Screen", and open the game from its icon (a green play button). It then opens without the
+    browser's bar. The same works on Android and iPad.
   On a computer the play button only starts the game: it never asks for full screen.
 In full screen, the start screen stays open around the game, so the address in the browser stays
 index.html while the map and the levels are played. Reloading the page goes back to the start

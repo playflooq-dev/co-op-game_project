@@ -18,7 +18,7 @@
   const open5 = () => win().eval('[0, 1, 2, 3, 4].map(playable).map(Number).join("")'); // which of the five stops can be played: the house, the park, the city, the canal, the forest
   const key = async (code) => { const w = win(); w.dispatchEvent(new w.KeyboardEvent('keydown', { code })); await wait(90); w.dispatchEvent(new w.KeyboardEvent('keyup', { code })); await wait(90); };
   const tap = async (i) => { const w = win(), s = w.eval('stops()')[i], k = w.eval('S / DPR'); w.document.getElementById('c').dispatchEvent(new w.PointerEvent('pointerdown', { clientX: s.x * k, clientY: s.y * k, bubbles: true })); await wait(120); };
-  const start = async () => { await open('../index.html'); await until(() => win().eval('typeof START !== "undefined"'), 15000); await key('Space'); }; // index.html: the start screen, then any key (tools/playtest-start.html checks the start screen itself)
+  const start = async () => { await open('../index.html#normal'); await until(() => win().eval('typeof START !== "undefined"'), 15000); await key('Space'); }; // index.html: the start screen, then any key (tools/playtest-start.html checks the start screen itself)
   const saved = () => localStorage.getItem(CHAPTER.KEY), save = (v) => localStorage.setItem(CHAPTER.KEY, JSON.stringify(v));
   const L = CHAPTER.LEVELS, HOUSE = 0, PARK = 1, CITY = 2, CANAL = 3, FOREST = 4;
   try {

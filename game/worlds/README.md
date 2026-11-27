@@ -220,7 +220,18 @@ any key (not M) starts the game. `shared/start.js`, in order, each step giving u
 2. on a touch screen (`(pointer: coarse)`) whose browser allows full screen (`FS.can`: the Fullscreen API, or
    Safari's `webkit` names), asks for full screen for the whole page;
 3. then asks for the screen to be held sideways (`screen.orientation.lock('landscape')`);
-4. goes on as before: `house.html` the first time, `map.html` once a game has been started.
+4. goes on: **for now** to `map.html?unlock=all`, the map with every level open (`OPEN_ALL_LEVELS = true` at the
+   top of `shared/start.js`, for the trials with the client; `index.html#normal` ignores it). With it set to `false`:
+   `house.html` the first time, `map.html` once a game has been started.
+
+The start uses `click`, not `pointerdown`: a phone only counts a touch as the player's own, and so only allows full
+screen, once the finger is lifted. (The first version used `pointerdown` and never went full screen on a phone.) The
+loading cover (`#load`) on every page lets taps through (`pointer-events: none`), so that a tap in the first second
+is not lost.
+
+**Home screen.** `manifest.webmanifest` and `icon.png` (with the `apple-mobile-web-app-*` tags in `index.html` and
+`map.html`) let the game be added to a phone's home screen, from where it opens without the browser's bar
+(`"display": "fullscreen"`, held sideways). On an iPhone this is the only way to play without the bar.
 
 **Why a frame.** Browsers leave full screen whenever a new page opens, and every level is its own page. So when full
 screen is used (`USE_FRAME`), `index.html` stays open and the game opens inside it, in an iframe that fills the screen
@@ -371,9 +382,9 @@ at `http://127.0.0.1:8780/`.
   frame (`#frame`) still works when full screen is refused, with its button showing on the map only.
 - `tools/check-fullscreen.mjs` checks full screen with real taps, driving Edge or Chrome from outside (a script inside
   a page cannot ask for full screen). Needs Node 22 or newer and the dev server: `node tools/check-fullscreen.mjs 844
-  390` (a phone held sideways), `390 844`, `1024 768`, `1920 1080 desktop`, `844 390 iphone`. Headless browsers refuse
-  full screen to every page, so there it uses a stand-in that also needs a real tap; it cannot show what a real
-  phone does.
+  390` (a phone held sideways), `390 844`, `1024 768`, `1920 1080 desktop`, `844 390 iphone`. It taps with a finger
+  (touch down, then lift), so it catches full screen being asked for too early. Headless browsers refuse full screen
+  to every page, so there it uses a stand-in that also needs a real tap; it cannot show what a real phone does.
 - `tools/check-characters.html` reports a fingerprint of the two characters as the house and the forest draw them. It
   must stay the same after a change to `shared/characters/` or `shared/stage.js`.
 - The pages take options for jumping ahead: the house has `?stage=cupboard`, `bulb`, `lock`, `door`, `open` and `end`;

@@ -4,7 +4,8 @@
 //   1. the sound is woken (browsers only allow sound after a tap), with a small chime
 //   2. on a phone or tablet that allows it (Android browsers, iPad): full screen for the whole page
 //   3. there too: the screen is held sideways (screen.orientation.lock), where the browser allows that
-//   4. the game goes on as before: the house the first time, the chapter map once a game has been started
+//   4. the game goes on: for now the map with every level open (OPEN_ALL_LEVELS below); otherwise the house the
+//      first time, the chapter map once a game has been started
 // Browsers leave full screen whenever a new page opens, and every level is its own page. So when full screen is
 // used, this page stays open as a frame around the game, and the map and the levels open inside it (an iframe that
 // fills the screen). A computer, an iPhone (which does not allow full screen for web pages) or any browser without
@@ -12,7 +13,7 @@
 // While the game runs in that frame, the chapter map tells this page that it is showing (shared/chaptermap.js). If
 // full screen has been left (the back gesture, for example), a small full-screen button then shows in the map's top
 // left corner; a tap on it goes back to full screen.
-// FOR TESTING: index.html#frame uses the frame on a computer too (to check it without a phone).
+// FOR TESTING: index.html#frame uses the frame on a computer too (to check it without a phone); #normal: see below.
 const game = { sparks: [], queue: [], bubble: null, objective: '' }; let camX = 0; // what shared/stage.js expects of a page
 const START = { t: 0, going: false, goT: 0, press: 0 };
 const sibs = [makePlayer('sister', 0, 0, 1), makePlayer('brother', 0, 0, -1)];
@@ -33,7 +34,7 @@ const FS = (() => { // the full-screen calls, with Safari's older names as a fal
 })();
 // a phone or tablet: the main pointer is a finger. On a computer the game never asks for full screen.
 const TOUCH = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
-const USE_FRAME = FS.can && (TOUCH || location.hash === '#frame');
+const USE_FRAME = FS.can && (TOUCH || /frame/.test(location.hash));
 
 // ---------- the scenery, made once (the same art as the forest)
 const P = (() => {
@@ -81,12 +82,19 @@ function drawButton(c, t) {
 
 // ---------- starting
 let frame = null, onMap = false;
-const nextPage = () => { let started = false; try { started = CHAPTER.started(); } catch (e) { started = false; } return started ? 'map.html' : 'house.html'; };
+// FOR THE TRIALS WITH THE CLIENT (asked for on 2026-11-27): the play button opens the map with every level open
+// (map.html?unlock=all, the test view: it saves nothing). Set OPEN_ALL_LEVELS to false for the real game: then a new
+// player goes to the house and a returning one to the map, as before. (index.html#normal does that for one visit.)
+const OPEN_ALL_LEVELS = true;
+const nextPage = () => {
+  if (OPEN_ALL_LEVELS && !/normal/.test(location.hash)) return 'map.html?unlock=all';
+  let started = false; try { started = CHAPTER.started(); } catch (e) { started = false; } return started ? 'map.html' : 'house.html';
+};
 function go() {
   if (START.going) return; START.going = true; START.press = 1;
   try { wakeSound(); sfx('good'); } catch (e) { /* no sound here: the levels wake it again on their first tap */ }
   for (const p of sibs) p.cheer = CHEER;
-  if (!USE_FRAME) { setTimeout(() => location.assign(nextPage()), 450); return; } // a computer, an iPhone, or no full screen: as before
+  if (!USE_FRAME) { setTimeout(() => location.assign(nextPage()), 450); return; } // a computer, an iPhone, or no full screen: no frame
   FS.ask().then((ok) => { if (ok) FS.sideways(); }); // (asked at once: browsers only allow it straight after the tap)
   setTimeout(openFrame, 350);
 }
@@ -102,7 +110,9 @@ function openFrame() {
   START.stop = true; // the start screen's drawing stops; the frame covers it
 }
 addEventListener('keydown', (e) => { if (!e.repeat && e.code !== 'KeyM' && !START.going) go(); });
-addEventListener('pointerdown', (e) => { if (e.target !== fsBtn && !(fsBtn && fsBtn.contains(e.target))) go(); }); // (a tap anywhere starts: little hands miss buttons; also while the loading cover fades)
+// A tap anywhere starts (little hands miss buttons). It must be 'click', not 'pointerdown': phones only count a touch
+// as the player's own (and so only allow full screen) when the finger is lifted. A pointerdown from a finger is refused.
+addEventListener('click', (e) => { if (e.target !== fsBtn && !(fsBtn && fsBtn.contains(e.target))) go(); });
 
 // ---------- the small full-screen button over the map, when the game runs in the frame
 const fsBtn = document.getElementById('fs');

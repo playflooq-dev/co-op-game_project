@@ -96,6 +96,9 @@ Still to do:
 - **The siblings' names.** They are "the sister" and "the brother" for now.
 - **Should they meet people** (a shopkeeper, a ferryman)? Chapter 1 has only animals.
 
+- **Every level open from the start screen.** For the trials with the client, the play button opens the map with
+  every level open (`OPEN_ALL_LEVELS` in `game/shared/start.js`). Before release, switch it off so that players start
+  at the house and open the levels one by one, or decide to keep it.
 - **The start screen.** Should it show more (the game's name as a picture, the forest, a hint of the treasure)?
   Should it be skipped for players coming back the same day? In full screen, the browser's address stays
   `index.html`, and reloading goes back to the start screen: is that all right?
