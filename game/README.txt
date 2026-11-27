@@ -3,11 +3,18 @@ TREASURE HUNT - game prototype
 
 HOW TO OPEN
 Double-click index.html. It opens in your web browser and starts Chapter 1: the first time with
-Level 1, the park; after that with the chapter map, where players go on from where they stopped.
+the house ("Home Alone"); after that with the chapter map, where players go on from where they
+stopped.
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
-CHAPTER 1: THREE LEVELS IN THE CITY
+CHAPTER 1: THE HOUSE, THEN THREE LEVELS IN THE CITY
+The order on the map: the house, the park, the city (the see-saw level), the canal. After them
+comes the forest, which is locked: Chapter 2 is not built yet.
+Opening  house.html   "Home Alone" (the first stop since 2026-11-27): the two are locked in at
+                      home and find the spare key. It is the oldest level and still plays the
+                      older way: no jumping, a code to work out, and some reading. It has to be
+                      looked at again before the game is released (see OPEN_QUESTIONS.md).
 Level 1  park.html    The park: learning to move, then four very small puzzles. About 5 minutes.
 Level 2  city.html    Across the city to the Old Bridge: eight stations (carrying, the lift, the
                       see-saw, boats, the pulley, the toss). About 10 minutes.
@@ -15,9 +22,11 @@ Level 3  canal.html   The canal (since 2026-11-25): thin planks and small boats 
                       brother, combined with what the first two levels taught. About 8 minutes.
                       It ends the chapter at the Old Bridge, with the forest on the far bank.
 Each level's end card leads to the chapter map, and the map leads to the next level.
-Chapter 1 was approved on 2026-11-25.
+Chapter 1 (the park, the city, the canal) was approved on 2026-11-25. The house as its first stop
+was added and approved on 2026-11-27.
 
-CONTROLS (the same in all three levels)
+CONTROLS (the same in the park, the city and the canal; the house has its own older controls,
+described in the last part of this file)
 Two players on one keyboard, or one player with both hands:
   Sister:   A / D walk     W jump     S grab
   Brother:  Left / Right walk     Up jump     Down grab
@@ -37,6 +46,25 @@ ducks into low gaps, his hand fits small hatches and drains, and from her should
 higher than either alone.
 Every puzzle needs both of them. Nobody can get hurt, lose, or get stuck.
 
+FOR TESTING: THE TEST LINKS (since 2026-11-27)
+Players never see these. Each is index.html with something added after it. On the web, put the
+same ending after the game's address, for example https://<address>/index.html?unlock=all
+  index.html?unlock=all     The map with every level open to play, also the ones not finished yet,
+                            so any level can be tapped and played at once. The forest stays
+                            locked. A small TEST badge shows in the top right corner. Unlocking
+                            saves nothing: the saved progress is exactly as it was. (Playing a
+                            level from there counts like any other play: finishing it marks it
+                            finished.) A level started from this map starts from its beginning.
+  index.html?level=house    Straight into the house, without the map.        (opens house.html)
+  index.html?level=park     Straight into Level 1, the park.                 (opens park.html)
+  index.html?level=seesaw   Straight into Level 2, the see-saw level.        (opens city.html)
+  index.html?level=canal    Straight into Level 3, the canal.                (opens canal.html)
+  index.html?reset=1        The map, with everything that was remembered forgotten: what a new
+                            player sees. (Use it after testing, to start clean.)
+More can be added with "&" and is passed on to the level: index.html?level=canal&section=4
+The pages can also be opened directly: map.html?unlock=all, house.html, park.html, city.html,
+canal.html.
+
 ADDRESS OPTIONS FOR TESTING (add to the address of a level page)
   park.html?section=3     start at section 3 of the park (1 to 6)
   city.html?station=5     start at station 5 of the city (0 to 7)
@@ -47,16 +75,28 @@ ADDRESS OPTIONS FOR TESTING (add to the address of a level page)
   ?fps=30                 draw only 30 frames a second, to feel a slow device
   ?tune=1                 sliders for how the jump and the running feel
   map.html?reset=1        forget what has been played
+  map.html?unlock=all     the test view of the map (see the test links above)
+  house.html?stage=end    the house at its end card (also: cupboard, bulb, lock, door, open)
 They can be joined with "&": canal.html?section=5&debug=1
 
 THE PAGES
-index.html    Starts the game: Level 1 the first time, the chapter map once a game has been started.
-map.html      The chapter map, in pictures: three stops on a map of the city. A finished stop has a
-              green tick, the next one to play pulses under an arrow, later ones have a padlock.
+index.html    Starts the game: the house the first time, the chapter map once a game has been
+              started. It also takes the test links (see FOR TESTING above).
+map.html      The chapter map, in pictures: four stops on a map of the city. From the left: the
+              house, standing by itself (a house); the park (a tree); the city (a see-saw); the
+              canal (a boat). A dashed path joins them. A finished stop has a green tick, the next
+              one to play pulses under an arrow, later ones have a padlock.
               Jump, Enter or a tap starts the stop the siblings stand at; left and right, or a tap,
-              choose any finished stop to play it again. After the third level a card celebrates
+              choose any finished stop to play it again. After the last level a card celebrates
               the end of the chapter, and then the mist lifts from the forest across the river:
               where Chapter 2 will be (it has a padlock).
+              Progress saved before the house was added (2026-11-27) is kept: those players are
+              not sent back. For them the house is simply open to play, without a tick.
+              On a narrow screen the stops are drawn smaller, so that all of them fit.
+house.html    THE OPENING, "Home Alone", the first level ever built: the brother and sister are
+              locked in the house and must find the spare key. It plays the older way: walking
+              only, words on the screen, a code to work out. Its end card now leads to the map,
+              with the park open. Nothing else in it was changed. See the last part of this file.
 park.html     LEVEL 1, "The Park". Made for somebody who has never seen the game: first only
               learning to walk and jump, with the keys shown as pictures, then four very small
               puzzles. Nothing in it needs reading and there is nothing to collect.
@@ -67,20 +107,17 @@ city.html     LEVEL 2, the city: the see-saw level. Eight stations, each one ide
 canal.html    LEVEL 3, "The Canal". See its own part below.
 
 OTHER PAGES (not part of Chapter 1)
-house.html    "Home Alone", the first level ever built (it was index.html until 2026-11-23): the
-              brother and sister are locked in the house and must find the spare key. It plays the
-              old way: walking only, words on the screen. Its future is an open question.
 forest.html   The Forest Trail: the approved art scene. Chapter 2 will be built here.
 
 WHAT IS REMEMBERED
-The browser keeps, on this device only, which of the three levels are finished, how far into an
+The browser keeps, on this device only, which of the levels are finished, how far into an
 unfinished level the players got, and whether the chapter's ending has been shown. Nothing else:
 no names, no accounts, and nothing is sent anywhere. In a private window, or if the browser will
 not store anything, the game simply starts from the beginning each time.
-map.html?reset=1 forgets everything.
+map.html?reset=1 forgets everything. The test view (map.html?unlock=all) saves nothing.
 
-The three levels play the new way: jumping, pictures in place of words. The house and the forest
-still play the old way: walking, no jumping, and words on the screen.
+The park, the city and the canal play the new way: jumping, pictures in place of words. The house
+and the forest still play the old way: walking, no jumping, and words on the screen.
 How the levels are meant to get harder, one small step at a time, is in PROGRESSION.md (one folder up).
 What follows is in four parts: the park, the canal, the city, then the house and the forest.
 

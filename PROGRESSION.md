@@ -41,6 +41,11 @@ both siblings, and neither one only waits.
 
 Chapter 1 is three levels, all in the city. All three are built and approved (2026-11-25).
 
+Since 2026-11-27 the house ("Home Alone", `game/house.html`) stands in front of them on the chapter map, as the first
+thing players see. **The house was built before these rules and does not follow them**: it has no jumping, it needs
+reading, and its puzzle is a code. It is not in the table below, and it has to be reviewed against this document
+before the game is released (see [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md), "The house comes first").
+
 | Level | Place | What it teaches | Parts | Script | For players |
 |---|---|---|---|---|---|
 | 1 | The park (`game/park.html`) | Walking and jumping; then the small blue plate and the gate, carrying one light box, the lift | Learning to move, 4 very small puzzles, a calm moment | 110 s | about 5 min |

@@ -2,17 +2,29 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Treasure Hunt</title>
-<!-- The game starts here, with Chapter 1 (three levels: the park, the city, the canal).
-     The first time, this page passes straight on to Level 1, park.html. Once a game has been started in this
+<!-- The game starts here, with Chapter 1: the house, the park, the city (the see-saw level) and the canal.
+     The first time, this page passes straight on to the house, house.html. Once a game has been started in this
      browser, it opens the chapter map, map.html, where players go on from where they stopped.
-     Anything after the ? in the address goes to the park as before (index.html?section=3 opens park.html?section=3).
-     What has been played is remembered by shared/chapter.js. The house is house.html, the forest scene forest.html. -->
+     What has been played is remembered by shared/chapter.js. The forest scene is forest.html.
+
+     FOR TESTING (players never see these):
+       index.html?unlock=all     the map with every level open to play, and a small TEST badge. Nothing is saved by it.
+       index.html?level=house    straight into a level, skipping the map. Also: ?level=park  ?level=seesaw  ?level=canal
+                                 (anything else in the address is passed on: index.html?level=canal&section=4)
+       index.html?reset=1        the map, with everything that was remembered forgotten
+     Any other address option goes to the park as before (index.html?section=3 opens park.html?section=3). -->
 <style>html,body{margin:0;height:100%;background:#1c120a}</style>
 <script src="shared/chapter.js"></script>
 <script>
-  var q = location.search, started = false;
-  try { started = CHAPTER.started(); } catch (e) { started = false; }
-  location.replace((q ? 'park.html' : started ? 'map.html' : 'park.html') + q + location.hash);
+  var q = new URLSearchParams(location.search), to = 'house.html', level = null, started = false, rest;
+  try { started = CHAPTER.started(); level = q.has('level') ? CHAPTER.find(q.get('level')) : null; } catch (e) { started = false; }
+  if (level) { q.delete('level'); to = level.page; }                       // a test link: that level, now
+  else if (q.has('level')) { q.delete('level'); to = 'map.html'; }         // a level name nobody knows: the map
+  else if (q.has('unlock') || q.has('reset')) to = 'map.html';             // test options of the map
+  else if (location.search.length > 1) to = 'park.html';                   // the park's own options, as before
+  else if (started) to = 'map.html';
+  rest = q.toString();
+  location.replace(to + (rest ? '?' + rest : '') + location.hash);
 </script>
-<noscript><meta http-equiv="refresh" content="0;url=park.html"></noscript>
+<noscript><meta http-equiv="refresh" content="0;url=house.html"></noscript>
 </head><body></body></html>
