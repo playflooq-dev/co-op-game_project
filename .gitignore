@@ -3,3 +3,11 @@ __pycache__/
 .wrangler/
 # scratch folder used while measuring sounds
 game/tools/_eval/
+# Local secrets written by `elevenlabs onboard`: never commit
+/.env
+# the Sound Lab package for sending privately (not stored in git)
+sfx-lab-share.zip
+
+# Sound Lab: the generator's run output (not needed in git)
+sfx-lab/gen-run.txt
+sfx-lab/tools/__pycache__/
