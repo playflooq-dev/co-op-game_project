@@ -18,6 +18,7 @@
   const open5 = () => win().eval('[0, 1, 2, 3, 4].map(playable).map(Number).join("")'); // which of the five stops can be played: the house, the park, the city, the canal, the forest
   const key = async (code) => { const w = win(); w.dispatchEvent(new w.KeyboardEvent('keydown', { code })); await wait(90); w.dispatchEvent(new w.KeyboardEvent('keyup', { code })); await wait(90); };
   const tap = async (i) => { const w = win(), s = w.eval('stops()')[i], k = w.eval('S / DPR'); w.document.getElementById('c').dispatchEvent(new w.PointerEvent('pointerdown', { clientX: s.x * k, clientY: s.y * k, bubbles: true })); await wait(120); };
+  const start = async () => { await open('../index.html'); await until(() => win().eval('typeof START !== "undefined"'), 15000); await key('Space'); }; // index.html: the start screen, then any key (tools/playtest-start.html checks the start screen itself)
   const saved = () => localStorage.getItem(CHAPTER.KEY), save = (v) => localStorage.setItem(CHAPTER.KEY, JSON.stringify(v));
   const L = CHAPTER.LEVELS, HOUSE = 0, PARK = 1, CITY = 2, CANAL = 3, FOREST = 4;
   try {
@@ -25,7 +26,7 @@
     // ---------- 1. nothing saved: the very first visit
     CHAPTER.reset();
     check('with nothing saved, no game has been started and the next level is the house', !CHAPTER.started() && CHAPTER.next().id === 'house' && !CHAPTER.done('house'));
-    await open('../index.html'); check('index.html opens the house the first time', await until(() => page() === 'house.html'), page());
+    await start(); check('index.html opens the house the first time', await until(() => page() === 'house.html'), page());
     await open('../index.html?section=3'); check('index.html?section=3 still opens that section of the park', await until(() => page() === 'park.html?section=3'), page());
     CHAPTER.reset(); // (the park in the frame noted that somebody reached section 3)
     check('the map with nothing saved: only the house can be played', (await map('../map.html')) && open5() === '10000' && M().next === HOUSE && M().sel === HOUSE && M().mode === 'idle' && !M().done.some(Boolean), open5());
@@ -49,7 +50,7 @@
     // stopped in the middle of the park
     CHAPTER.note('park', 2); CHAPTER.note('park', 1);
     check('stopping part-way is remembered, and the furthest point counts', CHAPTER.started() && CHAPTER.state().at.park === 2 && CHAPTER.address(L[PARK]) === 'park.html?section=3');
-    await open('../index.html'); check('index.html now opens the chapter map', await until(() => page() === 'map.html'), page());
+    await start(); check('index.html now opens the chapter map', await until(() => page() === 'map.html'), page());
     await until(() => win().eval('typeof MAP !== "undefined" && typeof sibs !== "undefined"'), 15000); await wait(500); await key('Enter');
     check('jump on the map goes on where they stopped', await until(() => page() === 'park.html?section=3'), page());
     // the park finished
@@ -76,7 +77,7 @@
     await tap(FOREST); await wait(250); check('the forest has a padlock: Chapter 2 cannot be played yet', page() === 'map.html?from=canal' && M().going === null && open5() === '11110', open5());
     check('the next visit shows the map with the forest, without the card again', (await map('../map.html')) && M().mode === 'idle' && M().tease === 1 && M().done.every(Boolean));
     await key('ArrowLeft'); await key('ArrowLeft'); await key('ArrowLeft'); await key('Enter'); check('any level can be played again from the map', await until(() => page() === 'house.html'), page());
-    await open('../index.html'); check('index.html opens the map once the chapter is finished', await until(() => page() === 'map.html'), page());
+    await start(); check('index.html opens the map once the chapter is finished', await until(() => page() === 'map.html'), page());
 
     // ---------- 3. a save from before the house was added (2026-11-27): nobody is sent back
     save({ done: { park: true, city: true, canal: true }, at: {}, ended: true }); let before = saved();
@@ -84,7 +85,7 @@
     check('its map: the park, the city and the canal still have their ticks, and no card comes up again', (await map('../map.html')) && M().mode === 'idle' && M().tease === 1 && M().done.map(Number).join('') === '0111', M().done.map(Number).join(''));
     check('and the house can be played (no padlock), without being marked finished', open5() === '11110' && !M().done[HOUSE] && M().sel === CANAL, open5());
     check('looking at the map did not change that save', saved() === before, saved());
-    await open('../index.html'); check('index.html opens the map for that save, not the house', await until(() => page() === 'map.html'), page());
+    await start(); check('index.html opens the map for that save, not the house', await until(() => page() === 'map.html'), page());
     await map('../map.html'); await tap(HOUSE); check('a tap on the house plays it', await until(() => page() === 'house.html'), page());
     save({ done: { park: true }, at: { city: 3 }, ended: false });
     check('an older save with only the park finished: the city is still next, and the house is open', CHAPTER.next().id === 'city' && (await map('../map.html')) && M().next === CITY && M().sel === CITY && open5() === '11100' && !M().done[HOUSE], open5());

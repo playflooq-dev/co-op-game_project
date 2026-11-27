@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- Checks the start screen (index.html, shared/start.js): it shows, it saves nothing, a key or a click goes on to the
+     right page, the test links skip it, and the full-screen frame (index.html#frame) works even when full screen is
+     refused. Run python tools/dev_server.py 8780 log.txt and open http://127.0.0.1:8780/tools/playtest-start.html :
+     the last line of log.txt says PLAY PASSED or PLAY FAILED. (Whether full screen is really granted after a real tap
+     is checked by tools/check-fullscreen.mjs, which drives the browser from outside.) -->
+<html lang="en"><head><meta charset="utf-8"><title>Start screen test</title>
+<style>html,body{margin:0;height:100%;background:#1c120a;overflow:hidden}iframe{width:100vw;height:100vh;border:0;display:block}</style></head>
+<body>
+<script src="../shared/chapter.js"></script>
+<script>
+(async () => {
+  let sent = Promise.resolve(), fails = 0;
+  const log = (t) => (sent = sent.then(() => fetch('/log', { method: 'POST', body: t }).catch(() => fetch('/log', { method: 'POST', body: t }).catch(() => {}))));
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const check = (name, ok, info = '') => { if (!ok) fails++; log(`${ok ? 'ok  ' : 'FAIL'} ${name}${info ? '   [' + info + ']' : ''}`); return ok; };
+  const until = async (cond, max = 10000) => { const t0 = performance.now(); while (performance.now() - t0 < max) { try { if (cond()) return true; } catch (e) { /* between pages */ } await wait(40); } return false; };
+  let frame = null;
+  const open = async (url, allow) => { if (frame) frame.remove(); frame = document.createElement('iframe'); if (allow) frame.allow = allow; frame.src = url; document.body.appendChild(frame); await new Promise((r) => { frame.onload = r; }); };
+  const win = () => frame.contentWindow, page = (w = win()) => w.location.pathname.split('/').pop() + w.location.search;
+  const ready = () => until(() => win().eval('typeof START !== "undefined" && typeof sibs !== "undefined"'), 15000);
+  const key = async (code, w = win()) => { w.dispatchEvent(new w.KeyboardEvent('keydown', { code })); await wait(90); w.dispatchEvent(new w.KeyboardEvent('keyup', { code })); await wait(90); };
+  const click = async (w = win()) => { const c = w.document.getElementById('c'); c.dispatchEvent(new w.PointerEvent('pointerdown', { clientX: 200, clientY: 200, bubbles: true })); await wait(90); };
+  const saved = () => localStorage.getItem(CHAPTER.KEY);
+  try {
+    // ---------- a new player
+    CHAPTER.reset();
+    check('index.html shows the start screen first (it does not go on by itself)', (await open('../index.html'), await ready()) && (await wait(1500), page() === 'index.html') && !win().eval('START.going'), page());
+    check('the start screen has no words on it: the button, the siblings and the forest', win().eval('typeof drawButton === "function" && sibs.length === 2 && SP.trees.length > 0'));
+    check('on a computer it does not use full screen', win().eval('USE_FRAME') === false && win().eval('TOUCH') === false);
+    check('looking at the start screen saves nothing', saved() === null, saved());
+    await key('Space'); check('any key starts the game: a new player goes to the house', await until(() => page() === 'house.html'), page());
+    check('starting saved nothing either', saved() === null, saved());
+    await open('../index.html'); await ready(); await key('KeyM'); await wait(600);
+    check('M (sound on and off) does not start the game', page() === 'index.html' && !win().eval('START.going'));
+    await click(); check('a click or a tap starts it as well', await until(() => page() === 'house.html'), page());
+    // ---------- a player who has started
+    CHAPTER.mark('house');
+    await open('../index.html'); await ready(); await key('Enter');
+    check('once a game has been started, the start screen goes on to the map', await until(() => page() === 'map.html'), page());
+    // ---------- the test links skip it
+    for (const [q, want] of [['?level=house', 'house.html'], ['?level=park', 'park.html'], ['?level=seesaw', 'city.html'], ['?level=canal', 'canal.html'], ['?unlock=all', 'map.html?unlock=all'], ['?reset=1', 'map.html?reset=1'], ['?section=3', 'park.html?section=3']]) {
+      await open('../index.html' + q); check(`index.html${q} skips the start screen and opens ${want}`, await until(() => page() === want), page());
+    }
+    // ---------- the full-screen frame (index.html#frame), here where full screen is refused: a script cannot press
+    CHAPTER.reset();
+    await open('../index.html#frame', 'fullscreen; autoplay'); await ready();
+    check('#frame: the frame is used where full screen exists', win().eval('USE_FRAME') === true && win().eval('FS.can') === true);
+    await click();
+    const inner = () => win().document.getElementById('game');
+    check('a tap opens the game inside the frame, even though full screen was refused', (await until(() => inner() && page(inner().contentWindow) === 'house.html')) && page() === 'index.html#frame'.replace('#frame', ''), inner() ? page(inner().contentWindow) : 'no frame');
+    check('not in full screen, and the full-screen button is hidden outside the map', !win().eval('FS.on()') && win().document.getElementById('fs').hidden);
+    CHAPTER.mark('house');
+    await open('../index.html#frame', 'fullscreen; autoplay'); await ready(); await click();
+    check('with a game started, the frame opens the map', await until(() => inner() && page(inner().contentWindow) === 'map.html'), inner() ? page(inner().contentWindow) : 'no frame');
+    check('on the map, out of full screen: the small full-screen button shows', await until(() => !win().document.getElementById('fs').hidden, 15000));
+    const fsBox = win().document.getElementById('fs').getBoundingClientRect();
+    check('it is small and in the top left corner', fsBox.width <= 48 && fsBox.left <= 20 && fsBox.top <= 20, `${Math.round(fsBox.left)},${Math.round(fsBox.top)} ${Math.round(fsBox.width)}x${Math.round(fsBox.height)}`);
+    await until(() => inner().contentWindow.eval('typeof MAP !== "undefined" && MAP.mode === "idle"'), 15000); await wait(400);
+    await key('ArrowRight', inner().contentWindow); await key('Enter', inner().contentWindow);
+    check('the game goes on inside the frame: the map opens the park', await until(() => page(inner().contentWindow) === 'park.html'), page(inner().contentWindow));
+    check('and the full-screen button hides again in the level', await until(() => win().document.getElementById('fs').hidden));
+    win().document.getElementById('fs').click(); await wait(500);
+    check('pressing it where full screen is refused breaks nothing', page(inner().contentWindow) === 'park.html' && page() === 'index.html');
+    CHAPTER.reset();
+    log(fails ? `PLAY FAILED ${fails} check${fails > 1 ? 's' : ''}` : 'PLAY PASSED');
+  } catch (e) { log('PLAY FAILED ' + (e.stack || e.message)); }
+})();
+</script>
+</body></html>
