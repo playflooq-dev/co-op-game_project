@@ -106,7 +106,7 @@ def make(client, s, take, log, prompt=None):
             try:
                 audio = SC_convert(client, p, s['dur'])
             except Exception as e:
-                text = str(e)
+                text = str(getattr(e, 'body', None) or e)  # (the reason ElevenLabs gives, not the reply's headers)
                 if 'quota' in text.lower() or 'credits' in text.lower() or '402' in text or 'insufficient' in text.lower():
                     raise OutOfCredits(text[:200])
                 problems.append(f'try {n + 1}: ' + text[:200].replace(os.environ.get('ELEVENLABS_API_KEY', '\0'), '***'))
@@ -160,6 +160,7 @@ def main():
     ap.add_argument('--only', help='one scenario id')
     ap.add_argument('--take', default='A')
     ap.add_argument('--max', type=int, default=10 ** 6, help='stop after this many sounds')
+    ap.add_argument('--add', default='', help='with --only: words added to the prompt, e.g. "close-up and clearly audible"')
     a = ap.parse_args()
     log = read_log()
     todo = [(SC.BY_ID[a.only], a.take)] if a.only else [(s, t) for s, t in plan() if not (entry(log, s['id'], t) or {}).get('file')
@@ -186,7 +187,7 @@ def main():
             print(f'stopping: {left} credits left, the next sound needs about {cost:.0f}')
             break
         try:
-            r = make(client, s, t, log)
+            r = make(client, s, t, log, prompt=(s['takes']['ABC'.index(t)][1].rstrip('.') + ', ' + a.add + '.') if a.add else None)
         except OutOfCredits as e:
             print('stopping: ElevenLabs says the credits have run out:', e)
             break

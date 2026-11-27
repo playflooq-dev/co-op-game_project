@@ -34,7 +34,7 @@ PAGE = """<!doctype html><meta charset="utf-8"><script>
       const thr = 0.0056, first = rms.findIndex((r) => r > thr), last = rms.length - 1 - [...rms].reverse().findIndex((r) => r > thr);
       let sum = 0, cnt = 0; for (let i = Math.max(0, first); i <= last; i++) { sum += rms[i] * rms[i]; cnt++; }
       out[f] = { seconds: +buf.duration.toFixed(3), peak: +peak.toFixed(4), rms: cnt ? +Math.sqrt(sum / cnt).toFixed(4) : 0,
-        start: first < 0 ? 0 : Math.max(0, first * 0.01 - 0.02), end: first < 0 ? buf.duration : Math.min(buf.duration, (last + 1) * 0.01 + 0.08), silent: peak < 0.02 };
+        start: first < 0 ? 0 : Math.max(0, first * 0.01 - 0.02), end: first < 0 ? buf.duration : Math.min(buf.duration, (last + 1) * 0.01 + 0.08), silent: peak < 0.02, quiet: peak < 0.08 };  // (silent: nothing to hear; quiet: below 8 in 100 of full scale, faint)
     } catch (e) { out[f] = { error: String(e) }; }
   }
   await fetch('/done', { method: 'POST', body: JSON.stringify(out) });
@@ -84,7 +84,8 @@ def main():
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump(result, f, indent=1)
     silent = [k for k, v in result.items() if v.get('silent') or v.get('error')]
-    print(f'{len(result)} files measured; nearly silent or unreadable: {silent or "none"}')
+    quiet = [k for k, v in result.items() if v.get('quiet') and not v.get('silent')]
+    print(f'{len(result)} files measured; silent or unreadable: {silent or "none"}; very quiet: {quiet or "none"}')
 
 
 if __name__ == '__main__':

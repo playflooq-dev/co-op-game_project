@@ -20,6 +20,11 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
 itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
 
+**Private work that is not a checkpoint (2026-11-27).** On the branch `sound/sfx-lab` (made from `main`): the Sound
+Lab, `sfx-lab/`, a page for listening to new sound effects made with ElevenLabs and choosing favourites. The sounds
+are from ElevenLabs' free plan and are for private testing only, so this branch is **never to be pushed, merged or put
+on the web**, and it is not a checkpoint. Its commits are kept only on this computer and are not listed below.
+
 ## How to go back to a checkpoint
 
 Ask Claude, or run these in the `co-op-game_project` folder. None of them deletes anything.

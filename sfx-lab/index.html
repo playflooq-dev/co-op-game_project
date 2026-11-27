@@ -76,7 +76,7 @@
   .toast.show{opacity:1}
   footer{max-width:1100px;margin:0 auto;padding:0 16px 30px;font-size:13px;color:var(--soft)}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-  @media (max-width:560px){body{font-size:16px}h1{font-size:28px}.grid{grid-template-columns:1fr}.ctl input[type=range]{width:90px}.name{width:120px}}
+  @media (max-width:560px){.bar{position:static}body{font-size:16px}h1{font-size:28px}.grid{grid-template-columns:1fr}.ctl input[type=range]{width:90px}.name{width:120px}}
 </style></head>
 <body>
 <header>
@@ -169,14 +169,15 @@ function card(s) {
   const made = s.takes.filter((t) => t.file).length, failed = s.takes.filter((t) => t.status === 'failed').length, silent = s.takes.filter((t) => t.status === 'silent').length;
   if (made < 3) h.appendChild(el('span', 'badge', made ? `only ${made} of 3 made` : 'not made yet'));
   if (failed) h.appendChild(el('span', 'badge', failed + ' failed'));
-  if (silent) h.appendChild(el('span', 'badge', silent + ' nearly silent'));
+  if (silent) h.appendChild(el('span', 'badge', silent + ' silent'));
+  const quiet = s.takes.filter((t) => t.quiet).map((t) => t.take); if (quiet.length) h.appendChild(el('span', 'badge pri', quiet.join(', ') + ' very quiet'));
   c.appendChild(h); c.appendChild(el('p', 'when', s.when));
   for (const t of s.takes) {
     const row = el('div', 'take' + (p.rejected.includes(t.take) ? ' rejected' : '')), ok = t.file && t.status !== 'silent';
     const b = el('button', 'play'); b.dataset.take = t.take; b.setAttribute('aria-pressed', 'false'); b.disabled = !ok;
     b.title = t.prompt || '';
     b.append(el('span', 'ic', '▶'));
-    const tx = el('span', 't'); tx.append(el('b', null, `${t.take} · ${t.flavour}`), el('span', null, ok ? `${t.seconds} s` : t.status === 'failed' ? 'failed' : t.status === 'silent' ? 'nearly silent' : 'not made (credits ran out)')); b.append(tx);
+    const tx = el('span', 't'); tx.append(el('b', null, `${t.take} · ${t.flavour}`), el('span', null, ok ? `${t.seconds} s${t.quiet ? ' · very quiet' : ''}` : t.status === 'failed' ? 'failed' : t.status === 'silent' ? 'silent' : 'not made (credits ran out)')); b.append(tx);
     b.onclick = () => play(t, b);
     const fav = el('button', 'mini fav', '★'); fav.title = 'Favourite'; fav.setAttribute('aria-label', `Favourite: ${t.take}`); fav.setAttribute('aria-pressed', String(p.favourite === t.take)); fav.disabled = !ok;
     fav.onclick = () => { p.favourite = p.favourite === t.take ? null : t.take; if (p.favourite) p.rejected = p.rejected.filter((x) => x !== t.take); saveAll(); refresh(s.id); };

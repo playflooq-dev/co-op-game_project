@@ -32,7 +32,7 @@ yet, or only the picked ones. The tabs jump to one group (Sister in green, Broth
 Everything you choose is kept in this browser on this device, also after closing it. Clearing the browser's data
 removes it, so send your picks back when you are done.
 
-Cards marked **only 1 (or 2) of 3 made**, **failed** or **nearly silent** have fewer versions than planned.
+Cards marked **only 1 (or 2) of 3 made**, **failed** or **silent** have fewer versions than planned. **Very quiet** marks a version that is faint (often a "soft" take): it still plays, at full volume.
 
 ## Sending picks back
 

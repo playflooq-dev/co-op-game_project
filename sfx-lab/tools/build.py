@@ -15,8 +15,8 @@ LAB = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(LAB)
 # the game's own music, for "Play over game music" (CC0, from the game's folders). In the zip they sit in music/.
 MUSIC = [
-    {'name': 'Park, city and canal ("Quaint Town")', 'file': 'quaint-town.mp3', 'game': 'game/worlds/city/assets/music/quaint-town.mp3', 'vol': 0.6},
-    {'name': 'Evening, by the Old Bridge ("Magic Town")', 'file': 'magic-town.mp3', 'game': 'game/worlds/city/assets/music/magic-town.mp3', 'vol': 0.5},
+    {'name': 'Quaint Town (park, city, canal)', 'file': 'quaint-town.mp3', 'game': 'game/worlds/city/assets/music/quaint-town.mp3', 'vol': 0.6},
+    {'name': 'Magic Town (evening, Old Bridge)', 'file': 'magic-town.mp3', 'game': 'game/worlds/city/assets/music/magic-town.mp3', 'vol': 0.5},
 ]
 CREDIT = 'Sounds generated with ElevenLabs (elevenlabs.io), free plan, private testing only'
 
@@ -33,9 +33,9 @@ def main():
     log = load('sound-log.json', {'files': [], 'credits': {}})
     ana = load('sound-analysis.json', {})
     by = {(e['id'], e['take']): e for e in log['files']}
-    # loudness: every sound is played at the level of the quieter ones (a browser can turn a sound down, not up)
+    # loudness: a page opened from a file can turn a sound down but not up
     levels = [v['rms'] for v in ana.values() if v.get('rms')]
-    target = statistics.quantiles(levels, n=4)[0] if len(levels) >= 4 else 0.08
+    target = statistics.median(levels) if levels else 0.08  # louder ones are turned down to the middle; quieter ones play at full
     out, rows = [], []
     for s in SC.S:
         takes = []
@@ -44,14 +44,15 @@ def main():
             e = by.get((s['id'], t), {})
             a = ana.get(e.get('file') or '', {})
             status = 'missing' if not e else ('failed' if not e.get('file') else ('silent' if a.get('silent') else e.get('result', 'ok')))
+            quiet = bool(a.get('quiet') and not a.get('silent'))
             takes.append({'take': t, 'flavour': flavour, 'prompt': e.get('prompt', prompt), 'file': e.get('file'), 'status': status,
                           'seconds': round(a.get('end', e.get('seconds', 0)) - a.get('start', 0), 2) if e.get('file') else None,
                           'start': round(a.get('start', 0), 2), 'end': round(a['end'], 2) if a.get('end') else None,
-                          'gain': round(min(1.0, target / a['rms']), 2) if a.get('rms') else 1.0})
+                          'gain': round(min(1.0, target / a['rms']), 2) if a.get('rms') else 1.0, 'quiet': quiet})
         playable = sum(1 for t in takes if t['file'] and t['status'] != 'silent')
         out.append({'id': s['id'], 'cat': s['cat'], 'name': s['name'], 'when': s['when'], 'pri': s['pri'], 'takes': takes, 'playable': playable})
         for t in takes:
-            rows.append(f"| `{s['id']}` | {s['cat']} | {s['name']} | {s['when']} | {t['take']} ({t['flavour']}) | {t['prompt']} | {s['dur']} s | {s['pri']} | {t['status']} |")
+            rows.append(f"| `{s['id']}` | {s['cat']} | {s['name']} | {s['when']} | {t['take']} ({t['flavour']}) | {t['prompt']} | {s['dur']} s | {s['pri']} | {t['status']}{' (very quiet)' if t['quiet'] else ''} |")
     data = {'credit': CREDIT, 'made': datetime.date.today().isoformat(), 'categories': [{'id': c, 'name': n} for c, n in SC.CATEGORIES],
             'music': [{'name': m['name'], 'files': ['music/' + m['file'], '../' + m['game']], 'vol': m['vol']} for m in MUSIC],
             'scenarios': out}
