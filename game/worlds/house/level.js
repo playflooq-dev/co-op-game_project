@@ -259,7 +259,8 @@ function update(dt) {
     else if ((at[0] || at[1]) && !game.waitSaid) { game.waitSaid = true; const w = at[0] ? sis : bro; sayNow(w, w === sis ? 'Come on, little bro!' : 'Hurry up, sis!'); }
   }
   if (game.exitT >= 0) { game.exitT += dt; for (const p of players) { const u = Math.min(1, game.exitT / 1.4); p.alpha = 1 - u; p.scale = 1 - u * 0.18; } if (game.exitT > 1.6 && !game.done) { game.done = true; snd('fanfare'); } }
-  if (game.done) { game.endT += dt; if (game.endT > 1.2 && (hit('KeyW') || hit('ArrowUp') || hit('Enter') || hit('Space'))) location.href = 'city.html'; }
+  if (game.done) { if (!game.saved) { game.saved = true; if (typeof CHAPTER !== 'undefined') CHAPTER.mark('house'); } // the chapter map (map.html) shows it as finished and opens the park
+    game.endT += dt; if (game.endT > 1.2 && (hit('KeyW') || hit('ArrowUp') || hit('Enter') || hit('Space'))) location.href = 'map.html?from=house'; }
   if (typeof musicArea === 'function') musicArea('home');
   updateTalk(dt);
   // chimney smoke
@@ -424,7 +425,7 @@ function drawCards(c, t) {
     c.fillStyle = '#8a5a2a'; c.font = 'italic 24px Georgia, serif'; c.fillText('Chapter One complete', x + w / 2, y + 62);
     c.fillStyle = '#3a2618'; c.font = 'italic 700 52px Georgia, serif'; c.fillText('Home Alone', x + w / 2, y + 128);
     c.font = 'italic 21px Georgia, serif'; c.fillText('Map in hand, the two of them step out into the busy city.', x + w / 2, y + 182); c.fillText('The treasure trail leads right across the city...', x + w / 2, y + 212);
-    if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); c.fillStyle = '#6d7b45'; c.font = '700 21px Georgia, serif'; c.fillText('Press W or ↑ to go on to Chapter Two', x + w / 2, y + 276); }
+    if (game.endT > 1.2) { c.globalAlpha = a * (0.6 + Math.sin(t * 4) * 0.4); c.fillStyle = '#6d7b45'; c.font = '700 21px Georgia, serif'; c.fillText('Press W or ↑ to go on', x + w / 2, y + 276); }
     c.globalAlpha = 1; c.textAlign = 'left';
   }
 }

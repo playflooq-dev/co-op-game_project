@@ -8,6 +8,7 @@
   const holdUntil = async (code, cond, max = 15000) => { key(code, true); const t0 = performance.now(); while (!cond() && performance.now() - t0 < max) await wait(16); key(code, false); await wait(60); return cond(); };
   while (typeof players === 'undefined' || typeof game === 'undefined') await wait(50);
   try {
+    CHAPTER.reset();
     while (game.chapter > 0) await wait(50);
     log(`start sis=${sis.x.toFixed(0)},f${sis.floor} bro=${bro.x.toFixed(0)},f${bro.floor} code=${game.code}`);
     // Brother: into the cupboard, walk to the cord and pull on the light
@@ -33,6 +34,7 @@
     // Brother joins her at the door: out they go
     await holdUntil('ArrowRight', () => bro.x >= 1712 || game.exitT >= 0); await wait(3500);
     log(`exitT=${game.exitT.toFixed(2)} done=${game.done}`);
-    log('PLAY ' + (game.done ? 'PASSED' : 'FAILED'));
+    await wait(300); log(`saved as finished=${CHAPTER.done('house')} next=${CHAPTER.next() && CHAPTER.next().id}`);
+    log('PLAY ' + (game.done && CHAPTER.done('house') && CHAPTER.next().id === 'park' ? 'PASSED' : 'FAILED'));
   } catch (e) { log('PLAY FAILED ' + e.stack); }
 })();

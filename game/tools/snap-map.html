@@ -3,7 +3,8 @@
      and sends the picture to the dev server log (SNAP), like tools/snap.js does for a level.
        ?done=park,city      which levels count as finished        ?from=city   as if coming from that level
        ?ended=1             the chapter's ending has been shown   ?wait=4000   milliseconds before the picture
-       ?keys=Enter          a key to press half-way through the wait (for the card and the mist) -->
+       ?keys=Enter          a key to press half-way through the wait (for the card and the mist)
+       ?unlock=all          the test view of the map (every level open, a TEST badge) -->
 <html lang="en"><head><meta charset="utf-8"><title>Chapter map picture</title>
 <style>html,body{margin:0;height:100%;background:#1c120a;overflow:hidden}iframe{width:100vw;height:100vh;border:0;display:block}</style></head>
 <body>
@@ -12,7 +13,7 @@
 (async () => {
   const q = new URLSearchParams(location.search), wait = (ms) => new Promise((r) => setTimeout(r, ms));
   CHAPTER.reset(); for (const id of (q.get('done') || '').split(',').filter(Boolean)) CHAPTER.mark(id); if (q.get('ended')) CHAPTER.ended(true);
-  const f = document.createElement('iframe'); f.src = '../map.html' + (q.get('from') ? '?from=' + q.get('from') : ''); document.body.appendChild(f);
+  const f = document.createElement('iframe'); const mq = new URLSearchParams(); for (const k of ['from', 'unlock']) if (q.get(k)) mq.set(k, q.get(k)); f.src = '../map.html' + (mq.toString() ? '?' + mq : ''); document.body.appendChild(f);
   await new Promise((r) => { f.onload = r; });
   const ms = +q.get('wait') || 4000; await wait(ms / 2);
   if (q.get('keys')) { const w = f.contentWindow; w.dispatchEvent(new w.KeyboardEvent('keydown', { code: q.get('keys') })); await wait(90); w.dispatchEvent(new w.KeyboardEvent('keyup', { code: q.get('keys') })); }
