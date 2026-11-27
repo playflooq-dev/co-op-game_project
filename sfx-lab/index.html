@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Sound Lab</title>
+<!-- The Sound Lab: listen to the versions of every sound the game needs, and pick favourites. Private testing only.
+     It works by double-clicking this file: the list of sounds is in sounds.js (written by tools/build.py). Picks,
+     "not good" marks and notes are kept in this browser (localStorage) and can be copied, downloaded and imported. -->
+<style>
+  :root{--paper:#f8ebc6;--paper2:#fbf3dc;--card:#fffaf0;--ink:#3a2618;--soft:#8a6a3a;--line:#e2cc9a;--gold:#d9a93c;--gold2:#f6dc8c;
+    --sis:#5f7a3c;--sis2:#e3ecca;--bro:#3f6f9c;--bro2:#d9e7f4;--bad:#b5544a;--bad2:#f4d9d2;--ok:#4f7a34;--shadow:0 2px 0 rgba(58,38,24,.12)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.45 Georgia,'Times New Roman',serif}
+  button,input,select,textarea{font:inherit;color:inherit}
+  header{padding:22px 16px 10px;max-width:1100px;margin:0 auto}
+  h1{margin:0;font-size:34px;letter-spacing:.5px}
+  .credit{margin:4px 0 0;font-size:14px;color:var(--soft);font-style:italic}
+  .how{margin:8px 0 0}
+  .bar{position:sticky;top:0;z-index:5;background:var(--paper2);border-bottom:2px solid var(--line);box-shadow:0 2px 8px rgba(58,38,24,.08)}
+  .bar-in{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+  .progress{flex:1 1 220px;min-width:200px}
+  .progress b{font-size:18px}
+  .meter{height:10px;border-radius:6px;background:#eadbb2;overflow:hidden;margin-top:4px}
+  .meter i{display:block;height:100%;background:linear-gradient(90deg,var(--sis),var(--bro));width:0;transition:width .3s}
+  .ctl{display:flex;align-items:center;gap:8px;font-size:15px}
+  .ctl input[type=range]{width:120px;accent-color:var(--soft)}
+  .switch{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;user-select:none}
+  .switch input{width:20px;height:20px;accent-color:var(--sis)}
+  select{padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--card);font-size:14px;max-width:210px}
+  .tools{max-width:1100px;margin:0 auto;padding:12px 16px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .btn{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:9px 14px;cursor:pointer;box-shadow:var(--shadow);min-height:44px}
+  .btn:hover{border-color:var(--gold)}
+  .btn[aria-pressed=true]{background:var(--gold2);border-color:var(--gold)}
+  .name{padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:var(--card);width:150px;min-height:44px}
+  .tabs{max-width:1100px;margin:0 auto;padding:12px 16px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+  .tab{flex:0 0 auto;border:2px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;cursor:pointer;min-height:44px;white-space:nowrap}
+  .tab small{opacity:.7}
+  .tab.sister{border-color:#b9c897}.tab.brother{border-color:#a9c4dd}
+  .tab[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .tab.sister[aria-selected=true]{background:var(--sis);border-color:var(--sis)}
+  .tab.brother[aria-selected=true]{background:var(--bro);border-color:var(--bro)}
+  main{max-width:1100px;margin:0 auto;padding:14px 16px 60px}
+  .cat-title{margin:22px 0 10px;font-size:24px;display:flex;align-items:center;gap:10px}
+  .cat-title .dot{width:14px;height:14px;border-radius:50%;background:var(--soft)}
+  .cat-title.sister .dot{background:var(--sis)}.cat-title.brother .dot{background:var(--bro)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+  .card.sister{border-color:#c4d2a3;background:linear-gradient(180deg,var(--sis2),var(--card) 70px)}
+  .card.brother{border-color:#b6cde3;background:linear-gradient(180deg,var(--bro2),var(--card) 70px)}
+  .card.picked{outline:3px solid var(--gold);outline-offset:-1px}
+  .card h3{margin:0;font-size:19px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .when{margin:0;font-size:14px;color:var(--soft)}
+  .badge{font-size:12px;font-weight:normal;border-radius:999px;padding:2px 8px;background:var(--bad2);color:var(--bad);border:1px solid #e6b3a8}
+  .badge.pri{background:#efe3c0;color:var(--soft);border-color:var(--line)}
+  .take{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:stretch}
+  .play{display:flex;align-items:center;gap:10px;text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 12px;cursor:pointer;min-height:52px}
+  .play .ic{flex:0 0 32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-size:13px}
+  .sister .play .ic{background:var(--sis)}.brother .play .ic{background:var(--bro)}
+  .play.on{border-color:var(--gold);background:#fff6dc}
+  .play.on .ic{background:var(--gold);color:var(--ink)}
+  .play .t{display:flex;flex-direction:column;line-height:1.2}
+  .play .t b{font-size:15px}.play .t span{font-size:13px;color:var(--soft)}
+  .play[disabled]{opacity:.55;cursor:not-allowed;background:#f4ecd8}
+  .mini{border:2px solid var(--line);background:#fff;border-radius:14px;min-width:52px;cursor:pointer;font-size:20px;display:grid;place-items:center}
+  .mini[aria-pressed=true].fav{background:var(--gold2);border-color:var(--gold)}
+  .mini[aria-pressed=true].no{background:var(--bad2);border-color:var(--bad)}
+  .mini[disabled]{opacity:.35;cursor:not-allowed}
+  .take.rejected .play{opacity:.6;text-decoration:line-through}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  textarea{width:100%;min-height:44px;resize:vertical;border:2px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;font-size:15px}
+  .others{font-size:13px;color:var(--soft);display:flex;flex-direction:column;gap:2px}
+  .others b{color:var(--ink)}
+  .empty{padding:30px;text-align:center;color:var(--soft)}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9;max-width:90vw}
+  .toast.show{opacity:1}
+  footer{max-width:1100px;margin:0 auto;padding:0 16px 30px;font-size:13px;color:var(--soft)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  @media (max-width:560px){body{font-size:16px}h1{font-size:28px}.grid{grid-template-columns:1fr}.ctl input[type=range]{width:90px}.name{width:120px}}
+</style></head>
+<body>
+<header>
+  <h1>Sound Lab</h1>
+  <p class="credit" id="credit"></p>
+  <p class="how">Tap a version to hear it (tap again to stop), give each sound one ★ favourite, mark the ones that are not good with ✕, and send your picks back with "Download my picks".</p>
+</header>
+<div class="bar"><div class="bar-in">
+  <div class="progress"><b id="count">0 of 0</b> sounds have a favourite<div class="meter"><i id="meter"></i></div></div>
+  <label class="ctl">Volume <input type="range" id="vol" min="0" max="100" value="80" aria-label="Volume"></label>
+  <label class="switch"><input type="checkbox" id="music"> Play over game music</label>
+  <select id="track" aria-label="Which game music"></select>
+</div></div>
+<div class="tools">
+  <span class="row" role="group" aria-label="Show">
+    <button class="btn" data-filter="all" aria-pressed="true">Show all</button>
+    <button class="btn" data-filter="open" aria-pressed="false">Not picked yet</button>
+    <button class="btn" data-filter="done" aria-pressed="false">Picked</button>
+  </span>
+  <input class="name" id="who" placeholder="Your name" aria-label="Your name (goes in the picks file)">
+  <button class="btn" id="copy">Copy my picks</button>
+  <button class="btn" id="download">Download my picks</button>
+  <button class="btn" id="importBtn">Import picks</button>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+</div>
+<nav class="tabs" id="tabs" role="tablist" aria-label="Categories"></nav>
+<main id="main"></main>
+<footer id="foot"></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="sounds.js"></script>
+<script>
+'use strict';
+const LAB = window.SOUND_LAB || { scenarios: [], categories: [], music: [], credit: '' };
+const KEY = 'soundlab-picks-v1', KEY_OTHERS = 'soundlab-imported-v1', KEY_SET = 'soundlab-settings-v1';
+const store = { // everything kept in this browser; if it will not store, the page still works for this visit
+  get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private window: kept until the page closes */ } },
+};
+let picks = store.get(KEY, {}), others = store.get(KEY_OTHERS, {}), settings = store.get(KEY_SET, { vol: 80, track: 0, filter: 'all', tab: 'all', who: '' });
+const $ = (id) => document.getElementById(id), el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const pickOf = (id) => (picks[id] = picks[id] || { favourite: null, rejected: [], notes: '' });
+const saveAll = () => { store.set(KEY, picks); store.set(KEY_SET, settings); };
+function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('show'), 2200); }
+
+// ---------- playing: one sound at a time, trimmed to where the sound really is, at an even loudness
+const player = { audio: null, btn: null, timer: null, queue: null };
+function stop() {
+  clearTimeout(player.timer); if (player.audio) { player.audio.pause(); player.audio = null; }
+  if (player.btn) { player.btn.classList.remove('on'); player.btn.querySelector('.ic').textContent = '▶'; player.btn.setAttribute('aria-pressed', 'false'); }
+  player.btn = null;
+}
+function play(take, btn, then) {
+  const same = player.btn === btn; stop(); if (!then) player.queue = null;
+  if (same && !then) return; // tapping a playing sound stops it
+  const a = new Audio(take.file); player.audio = a; player.btn = btn;
+  btn.classList.add('on'); btn.querySelector('.ic').textContent = '■'; btn.setAttribute('aria-pressed', 'true');
+  a.volume = Math.min(1, (settings.vol / 100) * (take.gain || 1));
+  const done = () => { if (player.audio !== a) return; stop(); if (then) then(); };
+  a.addEventListener('ended', done); a.addEventListener('error', () => { toast('This sound file could not be played.'); done(); });
+  const start = take.start || 0, end = take.end;
+  a.addEventListener('loadedmetadata', () => { try { a.currentTime = start; } catch (e) { /* plays from the start */ } }, { once: true });
+  a.play().then(() => { if (end) player.timer = setTimeout(done, Math.max(200, (end - start) * 1000 + 120)); }).catch(() => { toast('The browser did not allow the sound: tap again.'); done(); });
+}
+function playAll(s, card) {
+  stop(); const list = s.takes.filter((t) => t.file && t.status !== 'silent'); let i = 0;
+  player.queue = s.id;
+  const next = () => { if (player.queue !== s.id || i >= list.length) { player.queue = null; return; } const t = list[i++], b = card.querySelector(`[data-take="${t.take}"]`); play(t, b, () => setTimeout(next, 600)); };
+  next();
+}
+
+// ---------- game music underneath
+const music = { audio: null };
+function setMusic() {
+  if (music.audio) { music.audio.pause(); music.audio = null; }
+  if (!$('music').checked || !LAB.music.length) return;
+  const m = LAB.music[settings.track] || LAB.music[0]; let n = 0;
+  const tryFile = () => {
+    if (n >= m.files.length) { toast('The game music was not found next to the Sound Lab.'); $('music').checked = false; return; }
+    const a = new Audio(m.files[n++]); a.loop = true; a.volume = Math.min(1, 0.22 * (m.vol || 1) * (settings.vol / 100) * 1.6); music.audio = a;
+    a.addEventListener('error', () => { if (music.audio === a) tryFile(); }, { once: true });
+    a.play().catch(() => {});
+  };
+  tryFile();
+}
+
+// ---------- the cards
+function card(s) {
+  const p = pickOf(s.id), c = el('article', 'card ' + s.cat); c.dataset.id = s.id;
+  const h = el('h3', null, s.name);
+  const made = s.takes.filter((t) => t.file).length, failed = s.takes.filter((t) => t.status === 'failed').length, silent = s.takes.filter((t) => t.status === 'silent').length;
+  if (made < 3) h.appendChild(el('span', 'badge', made ? `only ${made} of 3 made` : 'not made yet'));
+  if (failed) h.appendChild(el('span', 'badge', failed + ' failed'));
+  if (silent) h.appendChild(el('span', 'badge', silent + ' nearly silent'));
+  c.appendChild(h); c.appendChild(el('p', 'when', s.when));
+  for (const t of s.takes) {
+    const row = el('div', 'take' + (p.rejected.includes(t.take) ? ' rejected' : '')), ok = t.file && t.status !== 'silent';
+    const b = el('button', 'play'); b.dataset.take = t.take; b.setAttribute('aria-pressed', 'false'); b.disabled = !ok;
+    b.title = t.prompt || '';
+    b.append(el('span', 'ic', '▶'));
+    const tx = el('span', 't'); tx.append(el('b', null, `${t.take} · ${t.flavour}`), el('span', null, ok ? `${t.seconds} s` : t.status === 'failed' ? 'failed' : t.status === 'silent' ? 'nearly silent' : 'not made (credits ran out)')); b.append(tx);
+    b.onclick = () => play(t, b);
+    const fav = el('button', 'mini fav', '★'); fav.title = 'Favourite'; fav.setAttribute('aria-label', `Favourite: ${t.take}`); fav.setAttribute('aria-pressed', String(p.favourite === t.take)); fav.disabled = !ok;
+    fav.onclick = () => { p.favourite = p.favourite === t.take ? null : t.take; if (p.favourite) p.rejected = p.rejected.filter((x) => x !== t.take); saveAll(); refresh(s.id); };
+    const no = el('button', 'mini no', '✕'); no.title = 'Not good'; no.setAttribute('aria-label', `Not good: ${t.take}`); no.setAttribute('aria-pressed', String(p.rejected.includes(t.take))); no.disabled = !ok;
+    no.onclick = () => { if (p.rejected.includes(t.take)) p.rejected = p.rejected.filter((x) => x !== t.take); else { p.rejected.push(t.take); if (p.favourite === t.take) p.favourite = null; } saveAll(); refresh(s.id); };
+    row.append(b, fav, no); c.appendChild(row);
+  }
+  const r = el('div', 'row'), all = el('button', 'btn', '▶ Play all'); all.disabled = !s.playable; all.onclick = () => playAll(s, c); r.appendChild(all); c.appendChild(r);
+  const notes = el('textarea'); notes.placeholder = 'Notes'; notes.setAttribute('aria-label', 'Notes for ' + s.name); notes.value = p.notes || '';
+  notes.oninput = () => { p.notes = notes.value; saveAll(); }; c.appendChild(notes);
+  const o = Object.entries(others).map(([who, set]) => [who, set[s.id]]).filter(([, v]) => v && (v.favourite || (v.rejected || []).length || v.notes));
+  if (o.length) { const d = el('div', 'others'); for (const [who, v] of o) { const line = el('div'); line.append(el('b', null, who + ': '), document.createTextNode([v.favourite ? '★ ' + v.favourite : 'no favourite', (v.rejected || []).length ? '✕ ' + v.rejected.join(', ') : '', v.notes ? '“' + v.notes + '”' : ''].filter(Boolean).join(' · '))); d.appendChild(line); } c.appendChild(d); }
+  if (p.favourite) c.classList.add('picked');
+  return c;
+}
+function visible(s) { const f = settings.filter, done = !!(picks[s.id] && picks[s.id].favourite); return (settings.tab === 'all' || s.cat === settings.tab) && (f === 'all' || (f === 'done' ? done : !done)); }
+function render() {
+  stop(); const main = $('main'); main.innerHTML = ''; let shown = 0;
+  for (const cat of LAB.categories) {
+    const list = LAB.scenarios.filter((s) => s.cat === cat.id && visible(s)); if (!list.length) continue;
+    const t = el('h2', 'cat-title ' + cat.id); t.append(el('span', 'dot'), document.createTextNode(cat.name)); main.appendChild(t);
+    const g = el('div', 'grid'); list.forEach((s) => g.appendChild(card(s))); main.appendChild(g); shown += list.length;
+  }
+  if (!shown) main.appendChild(el('p', 'empty', LAB.scenarios.length ? 'Nothing here with this filter.' : 'No sounds yet: sounds.js is missing.'));
+  counts();
+}
+function refresh(id) { const old = document.querySelector(`.card[data-id="${id}"]`), s = LAB.scenarios.find((x) => x.id === id); if (old && s) old.replaceWith(card(s)); counts(); }
+function counts() {
+  const n = LAB.scenarios.length, d = LAB.scenarios.filter((s) => picks[s.id] && picks[s.id].favourite).length;
+  $('count').textContent = `${d} of ${n}`; $('meter').style.width = (n ? 100 * d / n : 0) + '%';
+  for (const b of document.querySelectorAll('.tab')) { const cat = b.dataset.tab, l = LAB.scenarios.filter((s) => cat === 'all' || s.cat === cat); b.querySelector('small').textContent = ` ${l.filter((s) => picks[s.id] && picks[s.id].favourite).length}/${l.length}`; }
+}
+
+// ---------- picks out and in
+function picksFile() {
+  const out = {}; for (const s of LAB.scenarios) { const p = picks[s.id]; if (p && (p.favourite || p.rejected.length || p.notes)) out[s.id] = { name: s.name, favourite: p.favourite, rejected: p.rejected, notes: p.notes }; }
+  return { lab: 'sound-lab', who: settings.who || 'someone', date: new Date().toISOString().slice(0, 10), picked: Object.values(out).filter((p) => p.favourite).length, of: LAB.scenarios.length, picks: out };
+}
+$('copy').onclick = async () => { const t = JSON.stringify(picksFile(), null, 1); try { await navigator.clipboard.writeText(t); toast('Picks copied.'); } catch (e) { const a = el('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); toast('Picks copied.'); } catch (e2) { toast('Could not copy: use "Download my picks".'); } a.remove(); } };
+$('download').onclick = () => { const f = picksFile(), b = new Blob([JSON.stringify(f, null, 1)], { type: 'application/json' }), a = el('a'); a.href = URL.createObjectURL(b); a.download = `sound-picks-${(f.who || 'me').replace(/[^\w-]+/g, '-').toLowerCase()}-${f.date}.json`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast('Picks downloaded.'); };
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = async (e) => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const j = JSON.parse(await f.text()); if (j.lab !== 'sound-lab' || typeof j.picks !== 'object') throw new Error('not a picks file');
+    let who = String(j.who || f.name).slice(0, 40); if (who === (settings.who || 'someone')) who += ' (imported)';
+    const set = {}; for (const [id, v] of Object.entries(j.picks)) if (LAB.scenarios.some((s) => s.id === id)) set[id] = { favourite: v.favourite || null, rejected: Array.isArray(v.rejected) ? v.rejected : [], notes: String(v.notes || '') };
+    others[who] = set; store.set(KEY_OTHERS, others); render(); toast(`Imported ${Object.keys(set).length} picks from ${who}: they show on each card.`);
+  } catch (err) { toast('That file is not a Sound Lab picks file.'); }
+};
+
+// ---------- setting up
+$('credit').textContent = LAB.credit + '.';
+$('foot').textContent = `${LAB.credit}. Made on ${LAB.made || '?'}. Picks are kept in this browser only. Imported picks: ${Object.keys(others).length ? Object.keys(others).join(', ') : 'none'}.`;
+const tabs = $('tabs'), tab = (id, name, cls) => { const b = el('button', 'tab ' + cls); b.dataset.tab = id; b.setAttribute('role', 'tab'); b.append(document.createTextNode(name), el('small')); b.setAttribute('aria-selected', String(settings.tab === id)); b.onclick = () => { settings.tab = id; saveAll(); for (const x of tabs.children) x.setAttribute('aria-selected', String(x === b)); render(); }; tabs.appendChild(b); };
+tab('all', 'All', ''); for (const c of LAB.categories) tab(c.id, c.name, c.id);
+for (const b of document.querySelectorAll('[data-filter]')) { b.setAttribute('aria-pressed', String(b.dataset.filter === settings.filter)); b.onclick = () => { settings.filter = b.dataset.filter; saveAll(); for (const x of document.querySelectorAll('[data-filter]')) x.setAttribute('aria-pressed', String(x === b)); render(); }; }
+LAB.music.forEach((m, i) => { const o = el('option', null, m.name); o.value = i; $('track').appendChild(o); }); $('track').value = settings.track;
+$('track').onchange = () => { settings.track = +$('track').value; saveAll(); setMusic(); };
+$('music').onchange = setMusic;
+$('vol').value = settings.vol; $('vol').oninput = () => { settings.vol = +$('vol').value; saveAll(); if (player.audio && player.btn) { const s = LAB.scenarios.find((x) => x.id === player.btn.closest('.card').dataset.id), t = s && s.takes.find((x) => x.take === player.btn.dataset.take); if (t) player.audio.volume = Math.min(1, settings.vol / 100 * (t.gain || 1)); } if (music.audio) setMusic(); };
+$('who').value = settings.who || ''; $('who').oninput = () => { settings.who = $('who').value.trim(); saveAll(); };
+render();
+</script>
+</body></html>

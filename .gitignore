@@ -11,3 +11,4 @@ sfx-lab-share.zip
 # Sound Lab: the generator's run output (not needed in git)
 sfx-lab/gen-run.txt
 sfx-lab/tools/__pycache__/
+sfx-lab/tools/_shots/

@@ -142,14 +142,15 @@ SPENT = {'credits': 0}
 def SC_convert(client, prompt, dur):
     """One request. ElevenLabs says in its reply what it cost (the header character-cost): that is added to SPENT."""
     with client.text_to_sound_effects.with_raw_response.convert(text=prompt, model_id=MODEL, duration_seconds=dur, prompt_influence=0.5,
-                                                                output_format='mp3_44100_128') as resp:
+                                                                output_format='mp3_44100_128',
+                                                                request_options={'timeout_in_seconds': 60, 'max_retries': 1}) as resp:
         data = b''.join(resp.data)
         SPENT['credits'] += int(resp.headers.get('character-cost') or round(dur * 20))
     return data
 
 
 def credits(client):
-    s = client.user.subscription.get()
+    s = client.user.subscription.get(request_options={'timeout_in_seconds': 30, 'max_retries': 2})
     return s.character_limit - s.character_count, s.character_count, s.character_limit
 
 
