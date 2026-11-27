@@ -1,30 +1,70 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Treasure Hunt">
+<!-- (these let the game be added to a phone's home screen and open from there without the browser bar: the only
+     way to play without the bar on an iPhone, where Safari does not allow full screen for web pages) -->
 <title>Treasure Hunt</title>
 <!-- The game starts here, with Chapter 1: the house, the park, the city (the see-saw level) and the canal.
-     The first time, this page passes straight on to the house, house.html. Once a game has been started in this
-     browser, it opens the chapter map, map.html, where players go on from where they stopped.
+     First comes the start screen (shared/start.js): the two siblings and one big play button, no words. A tap, a
+     click or any key starts the sound, and on a phone or tablet that allows it, full screen. Then, as before: the
+     house the first time, the chapter map once a game has been started in this browser.
      What has been played is remembered by shared/chapter.js. The forest scene is forest.html.
 
-     FOR TESTING (players never see these):
+     FOR TESTING (players never see these). Any of them skips the start screen:
        index.html?unlock=all     the map with every level open to play, and a small TEST badge. Nothing is saved by it.
        index.html?level=house    straight into a level, skipping the map. Also: ?level=park  ?level=seesaw  ?level=canal
                                  (anything else in the address is passed on: index.html?level=canal&section=4)
        index.html?reset=1        the map, with everything that was remembered forgotten
-     Any other address option goes to the park as before (index.html?section=3 opens park.html?section=3). -->
-<style>html,body{margin:0;height:100%;background:#1c120a}</style>
+     Any other address option goes to the park as before (index.html?section=3 opens park.html?section=3).
+     index.html#frame shows the start screen and uses the full-screen frame on a computer too. -->
+<style>
+  html,body{margin:0;height:100%;background:#1c120a;overflow:hidden;touch-action:none}
+  canvas{display:block;cursor:pointer}
+  #load{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;background:#1c120a;color:#e9c98a;font:italic 22px Georgia,serif;transition:opacity .6s;pointer-events:none}
+  /* the game, inside the full-screen frame (only on phones and tablets that allow full screen) */
+  #game{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#1c120a}
+  /* back to full screen: a small button in the map's top left corner, shown only when full screen was left */
+  #fs{position:fixed;left:max(10px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top));z-index:5;width:44px;height:44px;padding:0;border:0;border-radius:12px;background:#0006;cursor:pointer}
+  #fs[hidden]{display:none}#fs svg{width:26px;height:26px;display:block;margin:auto}
+</style>
 <script src="shared/chapter.js"></script>
 <script>
-  var q = new URLSearchParams(location.search), to = 'house.html', level = null, started = false, rest;
-  try { started = CHAPTER.started(); level = q.has('level') ? CHAPTER.find(q.get('level')) : null; } catch (e) { started = false; }
-  if (level) { q.delete('level'); to = level.page; }                       // a test link: that level, now
-  else if (q.has('level')) { q.delete('level'); to = 'map.html'; }         // a level name nobody knows: the map
-  else if (q.has('unlock') || q.has('reset')) to = 'map.html';             // test options of the map
-  else if (location.search.length > 1) to = 'park.html';                   // the park's own options, as before
-  else if (started) to = 'map.html';
-  rest = q.toString();
-  location.replace(to + (rest ? '?' + rest : '') + location.hash);
+  // the test options go straight on, without the start screen
+  var GO_ON = null;
+  (function () {
+    var q = new URLSearchParams(location.search), to, level = null, rest;
+    if (location.search.length < 2) return;
+    try { level = q.has('level') ? CHAPTER.find(q.get('level')) : null; } catch (e) { level = null; }
+    if (level) { q.delete('level'); to = level.page; }                       // a test link: that level, now
+    else if (q.has('level')) { q.delete('level'); to = 'map.html'; }         // a level name nobody knows: the map
+    else if (q.has('unlock') || q.has('reset')) to = 'map.html';             // test options of the map
+    else to = 'park.html';                                                   // the park's own options, as before
+    rest = q.toString(); GO_ON = to + (rest ? '?' + rest : '') + location.hash;
+    location.replace(GO_ON);
+  })();
 </script>
 <noscript><meta http-equiv="refresh" content="0;url=house.html"></noscript>
-</head><body></body></html>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="load">Treasure Hunt</div>
+<button id="fs" hidden aria-label="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff6dc" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6"/></svg></button>
+<script src="shared/helpers.js"></script>
+<script src="worlds/forest/assets/manifest.js"></script>
+<script src="shared/characters/shared.js"></script>
+<script src="shared/characters/sister.js"></script>
+<script src="shared/characters/brother.js"></script>
+<script src="shared/sound.js"></script>
+<script src="shared/stage.js"></script>
+<script src="shared/physics.js"></script>
+<script src="shared/icons.js"></script>
+<script>const LOAD = GO_ON ? { title: 'Treasure Hunt', script: [], sets: [] } : { title: 'Treasure Hunt', script: ['shared/start.js'], sets: [ // (nothing is loaded when a test option goes straight on)
+  { assets: FOREST_ASSETS, base: 'worlds/forest/assets/', only: ['clouds', 'mountainsBack', 'mountainsFront', 'farPinesBack', 'farPinesFront', 'pines', 'trees', 'blossomTrees', 'bushes', 'flowers', 'rocks'] },
+] };</script>
+<script src="shared/loader.js"></script>
+</body></html>

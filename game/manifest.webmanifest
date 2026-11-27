@@ -1,0 +1,14 @@
+{
+  "name": "Treasure Hunt",
+  "short_name": "Treasure Hunt",
+  "description": "A two-player puzzle game for families: a sister and a brother on a treasure hunt.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1c120a",
+  "theme_color": "#1c120a",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

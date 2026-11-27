@@ -7,6 +7,7 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 
 | Checkpoint (git tag) | Date | What it holds | Where to play it |
 |---|---|---|---|
+| `checkpoint-2026-11-27-tap-to-play` | 2026-11-27 | **Approved.** Tap to play: a picture-only start screen; full screen on phones and tablets that allow it (Android, iPad), kept from level to level; a full-screen button on the map; the game can be added to a phone's home screen. For the trials with the client, the play button opens the map with every level open. On `main`. | https://tap-to-play.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-27-house-first` | 2026-11-27 | **Approved.** Chapter 1 with the house as the first stop on the map (house, park, city, canal, then the locked forest), older saves kept, and the test links (`?unlock=all`, `?level=...`). On `main`. | https://map-house.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-25-chapter-1-approved` | 2026-11-25 | **Chapter 1, approved.** The park (Level 1), the city to the Old Bridge (Level 2) and the canal (Level 3), with the picture map between them and progress saved in the browser. Two dead ends removed, the torn map taken out of the city, the log in the park fixed. All documents brought up to date. It is on `main`: the approved work of every branch was merged there on this day. | https://chapter-1.forest-trail-d56.pages.dev (the same game) |
 | `checkpoint-2026-11-chapter-1` | 2026-11-25 | Chapter 1 as first finished, on the branch `level-3/canal`, before the first plays by hand: Level 3 "The Canal", the chapter map and the save, `game/index.html` starting the chapter. It still has the dead end in the canal's section 6, the dead end at Fountain Square, and the torn map in the city. | (none: its address now shows the approved version) |
@@ -33,7 +34,7 @@ Now the folder holds that version: open `game/index.html` to play it. To come ba
 
 **Start new work from a checkpoint**
 
-    git switch -c my-new-branch checkpoint-2026-11-27-house-first
+    git switch -c my-new-branch checkpoint-2026-11-27-tap-to-play
 
 This makes a new branch that starts at that version. The checkpoint itself and `main` stay as they are.
 
@@ -52,12 +53,15 @@ or on GitHub.
 
 `main` holds everything. Until 2026-11-25 the work was done on branches, each starting from the one before; on that
 day they were merged into `main` in order. The branches still exist: `level-1/house-escape`, `level-2/city`,
-`lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`, and `fix/map-house-and-test-unlock` (merged on
-2026-11-27). The small commits that only add a row to this
+`lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`, `fix/map-house-and-test-unlock` and `feature/tap-to-play` (both
+merged on 2026-11-27). The small commits that only add a row to this
 table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `47721c8` | 2026-11-27 | *On the branch `feature/tap-to-play`.* After the first try on a phone: full screen now works on phones (it is asked for when the finger is lifted, not when it touches); the play button opens the map with every level open (for the trials with the client); a tap in the first second after a page opens is no longer lost on any page; the game can be added to a phone's home screen (an icon, `manifest.webmanifest`), which on an iPhone is the way to play without the browser bar. The full-screen check now taps with a finger. |
+| `ced6e7f` | 2026-11-27 | *On the branch `feature/tap-to-play`.* The documents for Tap to play: "Playing on phones and tablets" in `game/README.txt`, the start screen in `game/worlds/README.md`, proposal P in DECISIONS.md, real-device testing in OPEN_QUESTIONS.md, PROJECT_STATUS.md. |
+| `0488e7b` | 2026-11-27 | *On the branch `feature/tap-to-play`.* Tap to play: a picture-only start screen in `index.html`; on phones and tablets that allow it, full screen and sideways after the tap, with the game inside the start page so that full screen lasts; a full-screen button on the map. Test links skip it. New tests `tools/playtest-start.html` and `tools/check-fullscreen.mjs`. |
 | `2663c66` | 2026-11-27 | Merge of `fix/map-house-and-test-unlock` into `main`: the house as the first stop on the map, and the test links, approved this day. The checkpoint `checkpoint-2026-11-27-house-first` is on this commit. |
 | `6c98c4f` | 2026-11-27 | The approval recorded: decisions 40 and 41 in DECISIONS.md, parts of decisions 33 and 38 marked replaced, and the status pages brought up to date. |
 | `a082dbd` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`.* The documents for the change below: the test links in `game/README.txt`, the house as first stop in the README files and PROJECT_STATUS.md, proposals N and O in DECISIONS.md, and the review the house now needs in OPEN_QUESTIONS.md and PROGRESSION.md. The TEST badge made readable on a phone. |

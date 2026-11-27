@@ -163,3 +163,6 @@ function frame(now) {
 }
 addEventListener('resize', resizeScreen); resizeScreen();
 requestAnimationFrame((tm) => { last = tm; frame(tm); });
+// Inside the full-screen frame of the start screen (index.html, shared/start.js): say when the map is showing, so that
+// the small button that goes back to full screen shows over the map only.
+if (window.parent !== window) { try { parent.postMessage({ map: true }, '*'); addEventListener('message', (e) => { if (e.source === parent && e.data && e.data.mapAsk) parent.postMessage({ map: true }, '*'); }); } catch (e) { /* not in a frame we know */ } }
