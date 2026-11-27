@@ -21,7 +21,8 @@ itself. The main address still shows the older game: whether it should show Chap
 
 **Work that is not a checkpoint yet (waiting for approval).** On 2026-11-27, on the branch `feature/tap-to-play`
 (made from `main`): the "Tap to play" start screen and full screen on phones and tablets. It is not merged into
-`main`, not on GitHub and not on the web.
+`main` and not on GitHub. To try it, it was put on its own web address on 2026-11-27:
+https://tap-to-play.forest-trail-d56.pages.dev (the other addresses were not touched).
 
 ## How to go back to a checkpoint
 
