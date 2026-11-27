@@ -16,7 +16,7 @@ import { mkdtempSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const W = +process.argv[2] || 844, H = +process.argv[3] || 390, DESK = process.argv[4] === 'desktop', IPHONE = process.argv[4] === 'iphone', PORT = 9300 + Math.floor(Math.random() * 600), BASE = 'http://127.0.0.1:8780/';
+const W = +process.argv[2] || 844, H = +process.argv[3] || 390, DESK = process.argv[4] === 'desktop', IPHONE = process.argv[4] === 'iphone', PORT = 9300 + Math.floor(Math.random() * 600), BASE = process.env.BASE || 'http://127.0.0.1:8780/'; // (BASE=https://<address>/ checks a version on the web)
 const BROWSERS = ['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Google/Chrome/Application/chrome.exe', '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'];
 const exe = BROWSERS.find((b) => existsSync(b));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -69,7 +69,7 @@ try {
   if (DESK || IPHONE) {
     check(DESK ? 'on a computer the frame is not used' : 'a touch screen without full screen: the frame is not used', !(await js('USE_FRAME')) && (await js('TOUCH')) === IPHONE && !(await js('FS.can')) === IPHONE);
     await tap(W / 2, H / 2);
-    check(DESK ? 'a click goes straight on to the map with every level open' : 'a tap goes straight on to the map with every level open: the browser bar stays', await until(`location.pathname.endsWith('map.html') && location.search === '?unlock=all'`));
+    check(DESK ? 'a click goes straight on to the map with every level open' : 'a tap goes straight on to the map with every level open: the browser bar stays', await until(`location.pathname.replace(/\.html$/, '').endsWith('/map') && location.search === '?unlock=all'`));
     check('and full screen was never asked for', !(await js(`sessionStorage.asked`)) && !(await js(fsOn)));
     throw 'done';
   }
@@ -78,7 +78,7 @@ try {
   await tap(W / 2, H / 2); await wait(300);
   check('a real tap: full screen is on', await until(fsOn, 5000));
   check('the screen is held sideways where the browser allows it (here: reported, not required)', true, await js(`screen.orientation ? screen.orientation.type : 'no screen.orientation'`));
-  check('the game opens inside the frame, at the map with every level open', await until(`document.getElementById('game') && ${inner}.location.pathname.endsWith('map.html') && ${inner}.location.search === '?unlock=all' && ${inner}.eval('[0, 1, 2, 3].every(playable)') && ${inner}.eval('typeof MAP !== "undefined" && MAP.mode === "idle"')`));
+  check('the game opens inside the frame, at the map with every level open', await until(`document.getElementById('game') && ${inner}.location.pathname.replace(/\.html$/, '').endsWith('/map') && ${inner}.location.search === '?unlock=all' && ${inner}.eval('[0, 1, 2, 3].every(playable)') && ${inner}.eval('typeof MAP !== "undefined" && MAP.mode === "idle"')`));
   check('the full-screen button is hidden while in full screen', await js(`document.getElementById('fs').hidden`));
   await js(`${inner}.focus()`);
   if (H > W) { // held upright: the map asks for the phone to be turned (its picture covers it). Turn it, as a player would.
@@ -88,16 +88,16 @@ try {
   }
   const stop = await js(`(() => { const w = ${inner}, s = w.eval('stops()')[3], k = w.eval('S / DPR'); return { x: s.x * k, y: s.y * k }; })()`);
   await tap(stop.x, stop.y); // a finger on the canal's stop, which a new player could not play yet
-  check('a tap on any stop plays it: the canal opens', await until(`${inner}.location.pathname.endsWith('canal.html')`), JSON.stringify(stop));
+  check('a tap on any stop plays it: the canal opens', await until(`${inner}.location.pathname.replace(/\.html$/, '').endsWith('/canal')`), JSON.stringify(stop));
   check('full screen stays on in the level', await until(`${inner}.document.readyState === 'complete'`) && await js(fsOn));
   await js(`document.exitFullscreen()`); await wait(500);
-  check('full screen left (as with the back gesture): the level goes on', !(await js(fsOn)) && await js(`${inner}.location.pathname.endsWith('canal.html') && document.getElementById('fs').hidden`));
+  check('full screen left (as with the back gesture): the level goes on', !(await js(fsOn)) && await js(`${inner}.location.pathname.replace(/\.html$/, '').endsWith('/canal') && document.getElementById('fs').hidden`));
   await js(`${inner}.location.href = 'map.html?unlock=all'`);
   check('back on the map, out of full screen: the small button shows', await until(`!document.getElementById('fs').hidden && ${inner}.eval('typeof MAP !== "undefined"')`));
   const box = await js(`(() => { const r = document.getElementById('fs').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
   await tap(box.x, box.y);
   check('a tap on it: full screen again, and the button hides', await until(fsOn, 5000) && await until(`document.getElementById('fs').hidden`));
-  check('the map is still there', await js(`${inner}.location.pathname.endsWith('map.html')`));
+  check('the map is still there', await js(`${inner}.location.pathname.replace(/\.html$/, '').endsWith('/map')`));
   if (process.env.SHOT) { await js(`document.exitFullscreen()`); await wait(1500); const r = await send('Page.captureScreenshot', { format: 'png' }); const { writeFileSync } = await import('node:fs'); writeFileSync(join(process.env.SHOT, `map-button-${W}x${H}.png`), Buffer.from(r.result.data, 'base64')); console.log('     picture saved: map-button-' + W + 'x' + H + '.png'); }
   ws.close();
 } catch (e) { if (e !== 'done') { fails++; console.log('FAIL ' + (e.stack || e)); } }
