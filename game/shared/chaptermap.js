@@ -135,8 +135,8 @@ function drawStops(c, t, P) {
   });
 }
 function drawTestBadge(c) { // only with ?unlock=all: so that nobody takes the test view for the real thing. (A developer's view, so it uses a word.)
-  const w = 132, h = 44, x = VW - w - 64, y = 168; c.save(); c.globalAlpha = 0.82; rrect(c, x, y, w, h, 10); fs(c, '#3a2618', '#f2c94e', 3);
-  c.fillStyle = '#f2c94e'; c.font = '700 24px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TEST', x + w / 2, y + h / 2 + 1); c.restore(); c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  const b = Math.max(1, 0.6 * DPR / S), w = 132 * b, h = 44 * b, x = VW - w - 64, y = 168; c.save(); c.globalAlpha = 0.82; rrect(c, x, y, w, h, 10 * b); fs(c, '#3a2618', '#f2c94e', 3); // (b: it stays readable on a small screen)
+  c.fillStyle = '#f2c94e'; c.font = '700 ' + Math.round(24 * b) + 'px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TEST', x + w / 2, y + h / 2 + 1); c.restore(); c.textAlign = 'left'; c.textBaseline = 'alphabetic';
 }
 function drawCard(c, t) { // the end of the chapter, in pictures: a tick for each level, a high five, and an arrow to go on
   const a = Math.min(1, MAP.cardT * 1.6); c.fillStyle = `rgba(28,18,10,${a * 0.72})`; c.fillRect(0, 0, VW, VH);

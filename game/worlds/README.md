@@ -7,10 +7,10 @@ Each place in the game is a **world** with its own folder. A world can be change
 | `park/` | **Level 1**, "The Park": the plain first level (see "The park" below). Approved 2026-11-25. | `park.html` |
 | `city/` | **Level 2**, the city: the see-saw level, eight stations to the Old Bridge (see "The city" below). It began as a test level, "the city lab", and its files still carry that name: the lab and Level 2 are the same world. Approved 2026-11-25. | `city.html` |
 | `canal/` | **Level 3**, "The Canal": light-only planks and boats, and combinations (see "The canal" below). Approved 2026-11-25. | `canal.html` |
-| `house/` | "Home Alone", the first level ever built. It plays the old way (walking only, words on the screen) and is not part of Chapter 1; its future is an open question. | `house.html` |
+| `house/` | "Home Alone", the first level ever built, and since 2026-11-27 the first stop of Chapter 1, in front of the park (waiting for approval). It still plays the old way (walking only, words on the screen, a code) and has to be reviewed before release: see OPEN_QUESTIONS.md. | `house.html` |
 | `forest/` | The Forest Trail: the approved art scene. Chapter 2 will be built here. | `forest.html` |
 
-`index.html` starts Chapter 1 (Level 1 the first time, the chapter map `map.html` afterwards). The three levels and
+`index.html` starts Chapter 1 (the house the first time, the chapter map `map.html` afterwards). The levels and
 the map are tied together by `../shared/chapter.js`: see "The chapter" below.
 
 Every world folder has the same parts:
@@ -189,11 +189,26 @@ Rules that keep it fair, all checked by `tools/playtest-canal.html?solo=1`:
 
 ## The chapter (`../shared/chapter.js`, `../shared/chaptermap.js`, `../map.html`)
 
-Chapter 1 is three levels: the park, the city, the canal. `shared/chapter.js` lists them in order (`CHAPTER.LEVELS`:
-id, page, the picture for its stop, and how to open it part-way) and keeps what the browser remembers. Each level's
-page loads it, calls `CHAPTER.note(id, n)` when a new section is reached and `CHAPTER.mark(id)` when its end card
-comes up, and its end card leads to `map.html?from=<id>`. `shared/chaptermap.js` draws the map. To add a level to a
-chapter: one line in `CHAPTER.LEVELS`, those two calls in its level code, and its end card's address.
+Chapter 1 is the house, then three levels: the park, the city, the canal. `shared/chapter.js` lists them in order
+(`CHAPTER.LEVELS`: id, page, the picture for its stop, the names it answers to in a test link, and how to open it
+part-way) and keeps what the browser remembers. Each level's page loads it, calls `CHAPTER.note(id, n)` when a new
+section is reached and `CHAPTER.mark(id)` when its end card comes up, and its end card leads to `map.html?from=<id>`.
+(The house has no sections, so it only calls `mark`.) `shared/chaptermap.js` draws the map. To add a level to a
+chapter: one line in `CHAPTER.LEVELS`, those two calls in its level code, its end card's address, and a place for
+its stop in `STOP_X` and `STOP_Y` in `shared/chaptermap.js`.
+
+- **A level put in front of older saves.** The house was added on 2026-11-27, in front of levels that players had
+  already finished. Its line in `CHAPTER.LEVELS` has `added: true`: a save that has already finished, or started, a
+  later level is not sent back to it. On the map such a level is open to play, with no padlock and no tick, and
+  `CHAPTER.next()` passes over it.
+- **The first stop is always open**, whatever is saved.
+- **The test view.** `map.html?unlock=all` makes every level's stop playable (`UNLOCK` in `shared/chaptermap.js`)
+  and draws a TEST badge. It changes only what the map shows: it never writes to the save, and it does not show or
+  record the chapter's ending. Levels started from it start from their beginning.
+- **Test links.** `index.html?level=<name>` opens a level at once: `CHAPTER.find(name)` looks the name up in each
+  level's `names` (`house`, `park`, `seesaw` or `city`, `canal`). The rest of the address is passed on.
+- **Narrow screens.** The stops, the path and the siblings are drawn smaller when the picture is narrow (`mapK()`),
+  so that five stops fit on a phone.
 
 ## The city (`city/`)
 
@@ -318,8 +333,10 @@ at `http://127.0.0.1:8780/`.
   sends a picture of the park to the server log.
 - `tools/playtest-canal.html` plays Level 3 (about a minute and three quarters) and reports the time each section took;
   `?solo=1` tries every short cut with one sibling alone (45 checks). `tools/snap-canal.html?section=...` sends a
-  picture. `tools/playtest-chapter.html` checks the chapter: what `index.html` opens, the map's stops, the save
-  (30 checks). `tools/snap-map.html?done=park,city` sends a picture of the map in a chosen state.
+  picture. `tools/playtest-chapter.html` checks the chapter: what `index.html` opens, the map's stops, the save,
+  saves from before the house was added, the test view and the test links (70 checks).
+  `tools/snap-map.html?done=house,park` sends a picture of the map in a chosen state (`&unlock=all` for the test
+  view).
 - `tools/playtest-city.html` does the same for the city (all eight stations, about three minutes) and reports the time
   each station took. `tools/playtest-city.html?solo=1` is the other test: it tries the ways one sibling might finish a
   station alone, and passes when none of them works. Run both after changing a station.

@@ -6,7 +6,7 @@
 // (Each level's own play-through checks that finishing it is saved: tools/playtest-house, -park, -city and -canal.)
 (async () => {
   let sent = Promise.resolve(), fails = 0;
-  const log = (t) => (sent = sent.then(() => fetch('/log', { method: 'POST', body: t }).catch(() => {})));
+  const log = (t) => (sent = sent.then(() => fetch('/log', { method: 'POST', body: t }).catch(() => fetch('/log', { method: 'POST', body: t + '   (sent twice: the first try failed)' }).catch(() => {}))));
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const check = (name, ok, info = '') => { if (!ok) fails++; log(`${ok ? 'ok  ' : 'FAIL'} ${name}${info ? '   [' + info + ']' : ''}`); return ok; };
   const until = async (cond, max = 8000) => { const t0 = performance.now(); while (performance.now() - t0 < max) { try { if (cond()) return true; } catch (e) { /* the frame is between pages */ } await wait(40); } return false; };
@@ -32,10 +32,11 @@
     await tap(PARK); await tap(CITY); await tap(CANAL); await wait(300); check('tapping a stop with a padlock does nothing', page() === 'map.html' && M().going === null);
     await key('ArrowRight'); check('nor can a later stop be chosen with the keys', M().sel === HOUSE);
     check('nothing has been saved by looking at the map', saved() === null, saved());
-    await key('Enter'); check('jump on the map starts the house', await until(() => page() === 'house.html'), page());
+    await key('Enter'); check('jump on the map starts the house', await until(() => page() === 'house.html'), page()); await until(() => win().eval('typeof game !== "undefined"'), 30000); // (let it finish loading before the next page asks for the same files)
     // ---------- 2. the house finished (its end card, by the shortcut house.html?stage=end), and on down the chain
     CHAPTER.reset(); await open('../house.html?stage=end');
-    check('when the house\'s end card comes up, the house is saved as finished', await until(() => CHAPTER.done('house'), 30000), saved());
+    const houseSaved = await until(() => CHAPTER.done('house'), 30000), houseState = () => { try { const w = win(); return `page=${page()} ready=${w.document.readyState} hidden=${w.document.hidden} game=${w.eval('typeof game')} done=${w.eval('typeof game !== "undefined" && game.done')} endT=${w.eval('typeof game !== "undefined" && game.endT')}`; } catch (e) { return 'no state: ' + e.message; } };
+    check('when the house\'s end card comes up, the house is saved as finished', houseSaved, houseSaved ? saved() : houseState() + ' save=' + saved());
     check('and the next level is the park', CHAPTER.next().id === 'park');
     await wait(400); await key('Enter');
     check('jump on the end card goes back to the map', await until(() => page() === 'map.html?from=house', 8000), page());

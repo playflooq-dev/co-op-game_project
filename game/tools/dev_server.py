@@ -51,6 +51,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
+class Server(http.server.ThreadingHTTPServer):
+    # A test page that opens one level right after another asks for dozens of files at once. The usual queue of 5
+    # waiting connections is too short for that on Windows: now and then one was refused, and a page never finished
+    # loading (seen on 2026-11-27 as a chapter test that failed once in six runs).
+    request_queue_size = 128
+    daemon_threads = True
+
+
 if __name__ == '__main__':
     print(f'Serving {ROOT} at http://127.0.0.1:{PORT}/', flush=True)
-    http.server.ThreadingHTTPServer(('127.0.0.1', PORT), Handler).serve_forever()
+    Server(('127.0.0.1', PORT), Handler).serve_forever()

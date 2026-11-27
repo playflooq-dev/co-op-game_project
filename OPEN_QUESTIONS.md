@@ -63,11 +63,29 @@ Still to do:
 
 ## 3. The story
 
-- **How does the story begin now?** The game starts in the park. The old beginning (home alone, a treasure map on the
-  kitchen table, escaping the house) is no longer in the chapter.
-- **The house level's future.** "Home Alone" is still in the game folder ([game/house.html](game/house.html)), but it
-  plays the old way: walking only, words on the screen, a code to read. Rebuild it the new way (as an opening, or as
-  a later level), keep it as a curiosity, or drop it?
+- **The house comes first, and has to be reviewed before release.** Since 2026-11-27 the house, "Home Alone"
+  ([game/house.html](game/house.html)), is the first stop on the chapter map: new players start there, and the park
+  opens after it. So the story begins at home again (a treasure map on the kitchen table, escaping the house). But
+  the house was built with the older rules, and nothing in it was changed. Before the game is released it needs a
+  review against [PROGRESSION.md](PROGRESSION.md) and the "nothing needs reading" rule, because it is now the first
+  level players see. What that review will have to deal with:
+  - **It needs reading.** The opening card, the parents' letter, what the siblings say, the line at the top that
+    says what to do, the hints over their heads and the end card are all words.
+  - **There is no jump, and the keys mean something else.** In the house, up is "use" or "climb" and down is "go
+    down" or "crawl in". In the park, right after it, up is "jump" and down is "grab". The park then teaches the keys
+    as if nobody had played before.
+  - **Its puzzle is a code**: he reads three pictures in the dark cupboard and tells her, and she sets them on the
+    box. That is a harder first puzzle than anything in the park, and it is not an idea that comes back later.
+  - **Its cards say "Chapter One" and "Chapter One complete"**, although the chapter goes on with three more levels.
+    (Only the last line of the end card was changed, from "go on to Chapter Two" to "go on".)
+  - **Who is it for?** A child of 5 cannot read it; a parent would have to read it out.
+  - **What to do with it:** rebuild it the new way as a short, wordless opening; keep it but take the words out; or
+    move it off the main path again.
+- **How the levels are numbered.** The park, the city and the canal are still called Level 1, 2 and 3 everywhere,
+  and the house is called "the opening". Should the house be Level 1, and the others 2, 3 and 4?
+- **Is the house part of what "Chapter 1 finished" means?** Now the chapter's ending comes when all four are
+  finished. Players who finished the three levels before the house was added keep their ending and are not asked to
+  play the house.
 - **Is there still a treasure hunt?** The torn map was taken out of Level 2. What are the siblings looking for, and
   how is that shown without words?
 - **The siblings' names.** They are "the sister" and "the brother" for now.
