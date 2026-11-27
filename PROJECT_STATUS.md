@@ -31,6 +31,12 @@ house has not been timed):
 - **Test links**, so that any level can be opened at once without playing up to it. They are listed under "How to
   play it" below.
 
+**Waiting for your approval (built on 2026-11-27, not merged): Tap to play.** The game now opens with a start
+screen: the sister and the brother on a forest path, and one big round play button, with no words. On an Android
+phone or tablet, or an iPad, the tap also switches the game to full screen, held sideways; if players leave full
+screen, a small button on the map brings it back. An iPhone does not allow full screen for web pages, so there the
+game simply starts, with the browser bar still showing. On a computer the button only starts the game.
+
 Between the levels is a **picture map** of the city: finished levels get a tick, the next one is marked, and any
 finished level can be played again. The game **remembers progress** on the device (no account, no personal data).
 
@@ -65,6 +71,9 @@ buttons for each player).
 - **The map with the house, and the test links (2026-11-27):** checked by script (70 checks: a new player, each
   level unlocking the next, older saves, the test view saving nothing, every test link) and by pictures at computer,
   tablet and phone sizes. Not yet played by hand.
+- **Tap to play (2026-11-27):** checked by script on a computer pretending to be a phone (upright and sideways), a
+  tablet, an iPhone and a computer, with real taps. Full screen itself could not be shown: browsers without a
+  window refuse it, so a stand-in was used. Not yet tried on a real Android phone, iPhone or iPad.
 - **Not checked yet:** children of 5 to 10 playing it; a real tablet or phone; one person playing both characters;
   the sound, by ear. The lengths above are estimates until real players are timed.
 

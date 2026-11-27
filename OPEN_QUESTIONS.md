@@ -54,6 +54,11 @@ Still to do:
   Which hint gets them going (sparkle, arrow, ghost)? Where do they laugh? Does anybody only wait?
 - **A real tablet and a real phone.** The touch buttons were only checked at tablet and phone sizes on a computer.
   Are four buttons each reachable for two people holding one tablet? Is the picture big enough on a phone?
+- **Tap to play and full screen on real devices** (built 2026-11-27, checked only on a computer pretending to be a
+  phone or tablet). On a real Android phone, a real iPad and a real iPhone: does the tap give full screen (Android,
+  iPad) or start normally (iPhone)? Does the screen stay sideways? After the back gesture, does the small button on
+  the map bring full screen back? Does the sound start on the first tap, and the music in the first level? Does
+  everything still fit with the browser bar gone?
 - **One person playing both siblings.** The Old Bridge needs two keys held at once.
 - **Sound by ear**: do the pieces suit each place, and are the volumes right?
 - **How long the levels really take.** The scripts need about 2, 2.5 and 2 minutes; the guesses for real players
@@ -90,6 +95,10 @@ Still to do:
   how is that shown without words?
 - **The siblings' names.** They are "the sister" and "the brother" for now.
 - **Should they meet people** (a shopkeeper, a ferryman)? Chapter 1 has only animals.
+
+- **The start screen.** Should it show more (the game's name as a picture, the forest, a hint of the treasure)?
+  Should it be skipped for players coming back the same day? In full screen, the browser's address stays
+  `index.html`, and reloading goes back to the start screen: is that all right?
 
 ## 4. Chapter 2, the forest
 

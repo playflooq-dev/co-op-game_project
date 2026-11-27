@@ -19,6 +19,10 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
 itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
 
+**Work that is not a checkpoint yet (waiting for approval).** On 2026-11-27, on the branch `feature/tap-to-play`
+(made from `main`): the "Tap to play" start screen and full screen on phones and tablets. It is not merged into
+`main`, not on GitHub and not on the web.
+
 ## How to go back to a checkpoint
 
 Ask Claude, or run these in the `co-op-game_project` folder. None of them deletes anything.
@@ -58,6 +62,8 @@ table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| (next) | 2026-11-27 | *On the branch `feature/tap-to-play`, waiting for approval.* The documents for Tap to play: "Playing on phones and tablets" in `game/README.txt`, the start screen in `game/worlds/README.md`, proposal P in DECISIONS.md, real-device testing in OPEN_QUESTIONS.md, PROJECT_STATUS.md. |
+| `0488e7b` | 2026-11-27 | *On the branch `feature/tap-to-play`, waiting for approval.* Tap to play: a picture-only start screen in `index.html`; on phones and tablets that allow it, full screen and sideways after the tap, with the game inside the start page so that full screen lasts; a full-screen button on the map. Test links skip it. New tests `tools/playtest-start.html` and `tools/check-fullscreen.mjs`. |
 | `2663c66` | 2026-11-27 | Merge of `fix/map-house-and-test-unlock` into `main`: the house as the first stop on the map, and the test links, approved this day. The checkpoint `checkpoint-2026-11-27-house-first` is on this commit. |
 | `6c98c4f` | 2026-11-27 | The approval recorded: decisions 40 and 41 in DECISIONS.md, parts of decisions 33 and 38 marked replaced, and the status pages brought up to date. |
 | `a082dbd` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`.* The documents for the change below: the test links in `game/README.txt`, the house as first stop in the README files and PROJECT_STATUS.md, proposals N and O in DECISIONS.md, and the review the house now needs in OPEN_QUESTIONS.md and PROGRESSION.md. The TEST badge made readable on a phone. |

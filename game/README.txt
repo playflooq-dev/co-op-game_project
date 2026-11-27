@@ -2,11 +2,25 @@ TREASURE HUNT - game prototype
 ==============================
 
 HOW TO OPEN
-Double-click index.html. It opens in your web browser and starts Chapter 1: the first time with
-the house ("Home Alone"); after that with the chapter map, where players go on from where they
-stopped.
+Double-click index.html. It opens in your web browser with the start screen: the sister and the
+brother on a forest path, and one big round play button (no words). A tap, a click or any key
+starts Chapter 1: the first time with the house ("Home Alone"); after that with the chapter map,
+where players go on from where they stopped.
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
+
+PLAYING ON PHONES AND TABLETS (since 2026-11-27, waiting for approval)
+Hold the phone or tablet sideways and tap the play button.
+  Android phones and tablets, and iPads: the game goes full screen after the tap, and tries to
+    stay sideways. If full screen is left (for example with the back gesture), the game goes on
+    as before; a small full-screen button then shows in the top left corner of the chapter map,
+    and a tap on it goes back to full screen.
+  iPhone: Safari does not allow web pages to go full screen, so the browser's bar stays. The game
+    starts and plays normally.
+  On a computer the play button only starts the game: it never asks for full screen.
+In full screen, the start screen stays open around the game, so the address in the browser stays
+index.html while the map and the levels are played. Reloading the page goes back to the start
+screen; one more tap goes on from where the players were.
 
 CHAPTER 1: THE HOUSE, THEN THREE LEVELS IN THE CITY
 The order on the map: the house, the park, the city (the see-saw level), the canal. After them
@@ -49,6 +63,8 @@ Every puzzle needs both of them. Nobody can get hurt, lose, or get stuck.
 FOR TESTING: THE TEST LINKS (since 2026-11-27)
 Players never see these. Each is index.html with something added after it. On the web, put the
 same ending after the game's address, for example https://<address>/index.html?unlock=all
+All of them skip the start screen, so testing stays quick. (The sound then starts with the first
+key or tap in the level.)
   index.html?unlock=all     The map with every level open to play, also the ones not finished yet,
                             so any level can be tapped and played at once. The forest stays
                             locked. A small TEST badge shows in the top right corner. Unlocking
@@ -64,6 +80,8 @@ same ending after the game's address, for example https://<address>/index.html?u
 More can be added with "&" and is passed on to the level: index.html?level=canal&section=4
 The pages can also be opened directly: map.html?unlock=all, house.html, park.html, city.html,
 canal.html.
+  index.html#frame          The start screen, using the full-screen frame on a computer too, to
+                            try on a computer what a phone or tablet does.
 
 ADDRESS OPTIONS FOR TESTING (add to the address of a level page)
   park.html?section=3     start at section 3 of the park (1 to 6)
