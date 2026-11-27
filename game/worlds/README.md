@@ -212,7 +212,7 @@ its stop in `STOP_X` and `STOP_Y` in `shared/chaptermap.js`.
 
 ## The start screen (`../index.html`, `../shared/start.js`)
 
-Since 2026-11-27 (waiting for approval) `index.html` shows a start screen before the game: the two siblings on a
+Since 2026-11-27 (approved the same day) `index.html` shows a start screen before the game: the two siblings on a
 forest path, drawn with the forest's art (`only:` in its `LOAD`), and one big round play button. A tap, a click or
 any key (not M) starts the game. `shared/start.js`, in order, each step giving up quietly if refused:
 

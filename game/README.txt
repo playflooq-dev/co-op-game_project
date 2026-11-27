@@ -13,7 +13,7 @@ first time, and the chapter map after that. (index.html#normal does that for one
 No installation and no internet connection are needed.
 Use an up-to-date Chrome, Edge, Firefox or Safari.
 
-PLAYING ON PHONES AND TABLETS (since 2026-11-27, waiting for approval)
+PLAYING ON PHONES AND TABLETS (since 2026-11-27)
 Hold the phone or tablet sideways and tap the play button.
 (The first version did not go full screen on phones: it asked as soon as a finger touched the
 screen, and phones only allow it once the finger is lifted. Fixed on 2026-11-27.)

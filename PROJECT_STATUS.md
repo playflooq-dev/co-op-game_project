@@ -31,7 +31,7 @@ house has not been timed):
 - **Test links**, so that any level can be opened at once without playing up to it. They are listed under "How to
   play it" below.
 
-**Waiting for your approval (built on 2026-11-27, not merged; to try it: https://tap-to-play.forest-trail-d56.pages.dev): Tap to play.** The game now opens with a start
+**Tap to play (approved 2026-11-27; on the web at https://tap-to-play.forest-trail-d56.pages.dev).** The game now opens with a start
 screen: the sister and the brother on a forest path, and one big round play button, with no words. On an Android
 phone or tablet, or an iPad, the tap also switches the game to full screen, held sideways; if players leave full
 screen, a small button on the map brings it back. An iPhone does not allow full screen for web pages, so there the
