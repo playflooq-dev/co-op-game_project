@@ -18,6 +18,11 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
 itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
 
+**Work that is not a checkpoint yet (waiting for approval).** On 2026-11-27, on the branch
+`fix/map-house-and-test-unlock` (made from `main`): the house as the first stop on the chapter map, and the test
+links. It is not merged into `main`, not on GitHub and not on the web. When it is approved it will be merged, get a
+checkpoint here, and be pushed. Until then `main` and the newest checkpoint are unchanged.
+
 ## How to go back to a checkpoint
 
 Ask Claude, or run these in the `co-op-game_project` folder. None of them deletes anything.
@@ -56,6 +61,8 @@ table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
+| `a082dbd` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`, waiting for approval.* The documents for the change below: the test links in `game/README.txt`, the house as first stop in the README files and PROJECT_STATUS.md, proposals N and O in DECISIONS.md, and the review the house now needs in OPEN_QUESTIONS.md and PROGRESSION.md. The TEST badge made readable on a phone. |
+| `4af16ad` | 2026-11-27 | *On the branch `fix/map-house-and-test-unlock`, waiting for approval.* The chapter map shows the house as its first stop, before the park; new players start at the house, and its end card leads to the map. Older saves are kept and not sent back. Test links: `?unlock=all` (every level open, a TEST badge, nothing saved) and `?level=house`, `park`, `seesaw`, `canal`. The map's stops shrink on a narrow screen. The chapter test rewritten (70 checks). |
 | `b19e950` | 2026-11-25 | `CLAUDE.md`: the standing rules for every work session (read the documents first, a branch per task, keep the documents true, merge and tag when a version is approved, never rewrite history). |
 | `f037436` | 2026-11-25 | Merge of `level-3/canal` into `main`: the canal (Level 3), the chapter map and save, the fixes and the updated documents. The checkpoint `checkpoint-2026-11-25-chapter-1-approved` is on this commit. |
 | `0a4abf6` | 2026-11-25 | Merge of `level-1/plain` into `main`: the plain park (Level 1), and the city without stickers. |
