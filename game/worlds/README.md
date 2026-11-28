@@ -385,6 +385,11 @@ at `http://127.0.0.1:8780/`.
   390` (a phone held sideways), `390 844`, `1024 768`, `1920 1080 desktop`, `844 390 iphone`. It taps with a finger
   (touch down, then lift), so it catches full screen being asked for too early. Headless browsers refuse full screen
   to every page, so there it uses a stand-in that also needs a real tap; it cannot show what a real phone does.
+- `python tools/make-sounds.py` makes new sound effects with ElevenLabs, to listen to before any goes into the game
+  (`--list` shows what would be made without spending anything). It needs `pip install -r tools/requirements-sounds.txt`
+  and a key in `.env`, one folder above `game/` (made by `npx -y @elevenlabs/cli@latest onboard init`; git ignores it,
+  and it must never be committed). The results go to `tools/_eval/sounds/` with a page, `listen.html`, that plays old
+  and new side by side. These sounds are not CC0: using one in the game needs the user's approval first.
 - `tools/check-characters.html` reports a fingerprint of the two characters as the house and the forest draw them. It
   must stay the same after a change to `shared/characters/` or `shared/stage.js`.
 - The pages take options for jumping ahead: the house has `?stage=cupboard`, `bulb`, `lock`, `door`, `open` and `end`;
