@@ -7,7 +7,7 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 
 | Checkpoint (git tag) | Date | What it holds | Where to play it |
 |---|---|---|---|
-| `checkpoint-2026-11-28-sound-lab` | 2026-11-28 | The Sound Lab (`sfx-lab/`): 252 sounds made with ElevenLabs for 84 sounds the game needs, and the page for choosing favourites; also `game/tools/make-sounds.py`. **Private: on this computer only, not on GitHub, not on the web** (ElevenLabs free plan). The game is unchanged since `checkpoint-2026-11-27-tap-to-play`. | (none: private) |
+| `checkpoint-2026-11-28-sound-lab` | 2026-11-28 | The Sound Lab (`sfx-lab/`): 252 sounds made with ElevenLabs for 84 sounds the game needs, and the page for choosing favourites; also `game/tools/make-sounds.py`. On GitHub since 2026-11-28 (pushed at the user's request); not on any web address. ElevenLabs free plan: credit to elevenlabs.io. The game is unchanged since `checkpoint-2026-11-27-tap-to-play`. | (none: private) |
 | `checkpoint-2026-11-27-tap-to-play` | 2026-11-27 | **Approved.** Tap to play: a picture-only start screen; full screen on phones and tablets that allow it (Android, iPad), kept from level to level; a full-screen button on the map; the game can be added to a phone's home screen. For the trials with the client, the play button opens the map with every level open. On `main`. | https://tap-to-play.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-27-house-first` | 2026-11-27 | **Approved.** Chapter 1 with the house as the first stop on the map (house, park, city, canal, then the locked forest), older saves kept, and the test links (`?unlock=all`, `?level=...`). On `main`. | https://map-house.forest-trail-d56.pages.dev |
 | `checkpoint-2026-11-25-chapter-1-approved` | 2026-11-25 | **Chapter 1, approved.** The park (Level 1), the city to the Old Bridge (Level 2) and the canal (Level 3), with the picture map between them and progress saved in the browser. Two dead ends removed, the torn map taken out of the city, the log in the park fixed. All documents brought up to date. It is on `main`: the approved work of every branch was merged there on this day. | https://chapter-1.forest-trail-d56.pages.dev (the same game) |
@@ -21,11 +21,10 @@ later change goes wrong. The newest is at the top. Below the checkpoints is a li
 The web addresses are on Cloudflare Pages. Each was uploaded by hand from the checkpoint beside it; nothing uploads by
 itself. The main address still shows the older game: whether it should show Chapter 1 is an open question.
 
-**The Sound Lab is private (merged into `main` on this computer on 2026-11-28, at the user's request).** `sfx-lab/` is a
-page for listening to new sound effects made with ElevenLabs and choosing favourites. They come from ElevenLabs' free
-plan, for private testing only, and the GitHub repository is public: **pushing `main` now would publish them.** So
-`main` has not been pushed since this merge; it waits for the user's decision. The game itself does not use these
-sounds.
+**The Sound Lab** (`sfx-lab/`, merged into `main` on 2026-11-28 and pushed to GitHub the same day at the user's
+request) is a page for listening to new sound effects made with ElevenLabs and choosing favourites. The sounds come
+from ElevenLabs' free plan, which asks for credit to elevenlabs.io; the page and its documents give that credit. The
+game itself does not use these sounds, and the Sound Lab is not on any web address.
 
 ## How to go back to a checkpoint
 
@@ -61,12 +60,12 @@ or on GitHub.
 `main` holds everything. Until 2026-11-25 the work was done on branches, each starting from the one before; on that
 day they were merged into `main` in order. The branches still exist: `level-1/house-escape`, `level-2/city`,
 `lab/city-v2`, `level-1/gentle`, `level-1/plain`, `level-3/canal`, `fix/map-house-and-test-unlock` and `feature/tap-to-play` (both
-merged on 2026-11-27), and `feature/elevenlabs-sounds` and `sound/sfx-lab` (merged on 2026-11-28, not on GitHub). The small commits that only add a row to this
+merged on 2026-11-27), and `feature/elevenlabs-sounds` and `sound/sfx-lab` (merged on 2026-11-28). The small commits that only add a row to this
 table are not listed.
 
 | Commit | Date | What changed |
 |---|---|---|
-| `0af7265` | 2026-11-28 | Merge of `sound/sfx-lab` into `main`: the Sound Lab, private. The checkpoint `checkpoint-2026-11-28-sound-lab` is on this commit. Not pushed. |
+| `0af7265` | 2026-11-28 | Merge of `sound/sfx-lab` into `main`: the Sound Lab, private. The checkpoint `checkpoint-2026-11-28-sound-lab` is on this commit. Pushed to GitHub on 2026-11-28 at the user's request. |
 | `d8a47bf`, `d8fd6bc`, `f490dba` | 2026-11-27 | *On the branch `sound/sfx-lab`.* The Sound Lab: the list of 84 sounds and the generator, the page and its check, and the 252 sounds with their log and documents. |
 | `82a78e3` | 2026-11-28 | Merge of `feature/elevenlabs-sounds` into `main`: `game/tools/make-sounds.py`, a small tool for trying ElevenLabs sounds (commit `fad68ea`). |
 | `695e0a3` | 2026-11-27 | Merge of `feature/tap-to-play` into `main`: Tap to play, approved this day. The checkpoint `checkpoint-2026-11-27-tap-to-play` is on this commit. |
