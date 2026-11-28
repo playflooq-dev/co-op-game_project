@@ -75,8 +75,8 @@ Decisions made while building the Sound Lab on 2026-11-27, while the user was aw
     the music is in `music/`; in the project the page takes it straight from the game's folders.
 21. **A ✕ on the favourite removes the favourite**, and a ★ on a ✕-marked version removes the ✕.
 22. **On a phone** the top bar scrolls away with the page instead of staying pinned, so that the sounds have room.
-23. **Nothing is published.** The page has a `noindex` tag, the branch is not pushed, the zip is not in git
-    (`.gitignore`), and nothing was put on the web.
+23. **Not on the web.** The page has a `noindex` tag and is on no web address, and the zip is not in git
+    (`.gitignore`). On 2026-11-28 the user had the Sound Lab merged into `main` and pushed to GitHub (public).
 
 ## What to listen for
 
