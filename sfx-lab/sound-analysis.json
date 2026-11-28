@@ -1,0 +1,2270 @@
+{
+ "sounds/brother/bro-aww-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.3353,
+  "rms": 0.0789,
+  "start": 0.009999999999999998,
+  "end": 1.11,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-aww-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1508,
+  "rms": 0.0444,
+  "start": 0.009999999999999998,
+  "end": 1.02,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-aww-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.417,
+  "rms": 0.0866,
+  "start": 0.009999999999999998,
+  "end": 1.08,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-cheer-A.mp3": {
+  "seconds": 1.76,
+  "peak": 0.3534,
+  "rms": 0.094,
+  "start": 0.02,
+  "end": 1.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-cheer-B.mp3": {
+  "seconds": 1.76,
+  "peak": 0.4016,
+  "rms": 0.0937,
+  "start": 0.009999999999999998,
+  "end": 1.57,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-cheer-C.mp3": {
+  "seconds": 1.76,
+  "peak": 0.7632,
+  "rms": 0.121,
+  "start": 0.02,
+  "end": 1.6700000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-gasp-A.mp3": {
+  "seconds": 1,
+  "peak": 0.4222,
+  "rms": 0.1106,
+  "start": 0.030000000000000002,
+  "end": 0.5,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-gasp-B.mp3": {
+  "seconds": 1,
+  "peak": 0.4296,
+  "rms": 0.1179,
+  "start": 0,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-gasp-C.mp3": {
+  "seconds": 1,
+  "peak": 0.9431,
+  "rms": 0.2345,
+  "start": 0.02,
+  "end": 0.64,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-giggle-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3267,
+  "rms": 0.089,
+  "start": 0.06,
+  "end": 1.32,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-giggle-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.4399,
+  "rms": 0.087,
+  "start": 0.009999999999999998,
+  "end": 1.4000000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-giggle-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.4635,
+  "rms": 0.0784,
+  "start": 0.030000000000000002,
+  "end": 1.3800000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hmm-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2464,
+  "rms": 0.0533,
+  "start": 0.06,
+  "end": 1.35,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hmm-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3409,
+  "rms": 0.0739,
+  "start": 0.05,
+  "end": 1.11,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hmm-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.4385,
+  "rms": 0.1014,
+  "start": 0.05,
+  "end": 1.31,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hop-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.5037,
+  "rms": 0.1057,
+  "start": 0.009999999999999998,
+  "end": 0.37,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hop-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.6701,
+  "rms": 0.0859,
+  "start": 0.11,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-hop-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.3669,
+  "rms": 0.0707,
+  "start": 0.009999999999999998,
+  "end": 0.36000000000000004,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-laugh-A.mp3": {
+  "seconds": 2,
+  "peak": 0.3325,
+  "rms": 0.0579,
+  "start": 0.039999999999999994,
+  "end": 1.77,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-laugh-B.mp3": {
+  "seconds": 2,
+  "peak": 0.5353,
+  "rms": 0.0891,
+  "start": 0.11,
+  "end": 1.76,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-laugh-C.mp3": {
+  "seconds": 2,
+  "peak": 0.897,
+  "rms": 0.1463,
+  "start": 0,
+  "end": 1.2300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-lifted-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3704,
+  "rms": 0.0599,
+  "start": 0.02,
+  "end": 1.07,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-lifted-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5795,
+  "rms": 0.1198,
+  "start": 0.030000000000000002,
+  "end": 1.3900000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-lifted-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.7963,
+  "rms": 0.1202,
+  "start": 0.06,
+  "end": 1.36,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oh-A.mp3": {
+  "seconds": 1,
+  "peak": 0.6514,
+  "rms": 0.1279,
+  "start": 0.009999999999999998,
+  "end": 0.69,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oh-B.mp3": {
+  "seconds": 1,
+  "peak": 0.4858,
+  "rms": 0.1034,
+  "start": 0.009999999999999998,
+  "end": 0.76,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oh-C.mp3": {
+  "seconds": 1,
+  "peak": 0.5262,
+  "rms": 0.1214,
+  "start": 0,
+  "end": 0.9299999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oof-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.3145,
+  "rms": 0.0937,
+  "start": 0,
+  "end": 0.55,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oof-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.35,
+  "rms": 0.0853,
+  "start": 0,
+  "end": 0.54,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-oof-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.5129,
+  "rms": 0.1291,
+  "start": 0,
+  "end": 0.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-splutter-A.mp3": {
+  "seconds": 2,
+  "peak": 0.8473,
+  "rms": 0.0591,
+  "start": 0,
+  "end": 1.6500000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-splutter-B.mp3": {
+  "seconds": 2,
+  "peak": 0.5882,
+  "rms": 0.0775,
+  "start": 0,
+  "end": 1.06,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-splutter-C.mp3": {
+  "seconds": 2,
+  "peak": 0.5635,
+  "rms": 0.1317,
+  "start": 0.06,
+  "end": 0.61,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-wheee-A.mp3": {
+  "seconds": 2,
+  "peak": 0.4268,
+  "rms": 0.0741,
+  "start": 0.06,
+  "end": 1.7300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-wheee-B.mp3": {
+  "seconds": 2,
+  "peak": 0.3121,
+  "rms": 0.1045,
+  "start": 0.06,
+  "end": 1.7300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-wheee-C.mp3": {
+  "seconds": 2,
+  "peak": 0.3725,
+  "rms": 0.08,
+  "start": 0.09,
+  "end": 1.79,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-worried-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.1556,
+  "rms": 0.0429,
+  "start": 0.06,
+  "end": 1.4100000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-worried-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.32,
+  "rms": 0.0917,
+  "start": 0.039999999999999994,
+  "end": 1.3900000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-worried-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2205,
+  "rms": 0.0633,
+  "start": 0.009999999999999998,
+  "end": 1.37,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yawn-A.mp3": {
+  "seconds": 2.48,
+  "peak": 0.3733,
+  "rms": 0.0946,
+  "start": 0.2,
+  "end": 1.9800000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yawn-B.mp3": {
+  "seconds": 2.48,
+  "peak": 0.4693,
+  "rms": 0.1026,
+  "start": 0.009999999999999998,
+  "end": 1.9200000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yawn-C.mp3": {
+  "seconds": 2.48,
+  "peak": 0.3619,
+  "rms": 0.09,
+  "start": 0.06999999999999999,
+  "end": 2.12,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yay-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.4067,
+  "rms": 0.0713,
+  "start": 0.02,
+  "end": 1.04,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yay-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6482,
+  "rms": 0.1254,
+  "start": 0.009999999999999998,
+  "end": 1.11,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/brother/bro-yay-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6443,
+  "rms": 0.1325,
+  "start": 0.009999999999999998,
+  "end": 0.9,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-grass-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2002,
+  "rms": 0.0295,
+  "start": 0.05,
+  "end": 0.34,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-grass-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.0895,
+  "rms": 0.0182,
+  "start": 0.039999999999999994,
+  "end": 0.31,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-grass-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2823,
+  "rms": 0.0251,
+  "start": 0.11,
+  "end": 0.5,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-wood-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.1966,
+  "rms": 0.0163,
+  "start": 0.05,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-wood-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.3005,
+  "rms": 0.0418,
+  "start": 0,
+  "end": 0.44,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/land-wood-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2386,
+  "rms": 0.0212,
+  "start": 0.009999999999999998,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-carpet-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.259,
+  "rms": 0.0263,
+  "start": 0.06999999999999999,
+  "end": 1,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-carpet-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.3454,
+  "rms": 0.0352,
+  "start": 0,
+  "end": 1.07,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-carpet-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.3421,
+  "rms": 0.029,
+  "start": 0,
+  "end": 1.04,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-grass-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.0391,
+  "rms": 0.0052,
+  "start": 0.8,
+  "end": 1.05,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/footsteps/step-grass-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.0292,
+  "rms": 0.0032,
+  "start": 0.039999999999999994,
+  "end": 1.1700000000000002,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/footsteps/step-grass-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.0997,
+  "rms": 0.0109,
+  "start": 0,
+  "end": 1.06,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-pavement-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6708,
+  "rms": 0.0288,
+  "start": 0.15000000000000002,
+  "end": 1.09,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-pavement-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.4171,
+  "rms": 0.0218,
+  "start": 0.009999999999999998,
+  "end": 1.2,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-pavement-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.8414,
+  "rms": 0.0335,
+  "start": 0,
+  "end": 1.1400000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-puddle-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.8283,
+  "rms": 0.0338,
+  "start": 0.030000000000000002,
+  "end": 0.51,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-puddle-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5295,
+  "rms": 0.0292,
+  "start": 0.030000000000000002,
+  "end": 1.02,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-puddle-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5203,
+  "rms": 0.0284,
+  "start": 0.02,
+  "end": 0.7899999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-stone-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.3414,
+  "rms": 0.0079,
+  "start": 0,
+  "end": 1.1500000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-stone-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.243,
+  "rms": 0.0102,
+  "start": 0.06999999999999999,
+  "end": 1.03,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-stone-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6494,
+  "rms": 0.0259,
+  "start": 0.030000000000000002,
+  "end": 1.1300000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-wood-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1921,
+  "rms": 0.0147,
+  "start": 0.06999999999999999,
+  "end": 0.91,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-wood-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5848,
+  "rms": 0.0314,
+  "start": 0,
+  "end": 1.1400000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/footsteps/step-wood-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6475,
+  "rms": 0.0301,
+  "start": 0,
+  "end": 1.12,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-chapter-A.mp3": {
+  "seconds": 4,
+  "peak": 0.9443,
+  "rms": 0.0804,
+  "start": 0,
+  "end": 2.04,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-chapter-B.mp3": {
+  "seconds": 4,
+  "peak": 0.8965,
+  "rms": 0.1199,
+  "start": 0,
+  "end": 2.03,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-chapter-C.mp3": {
+  "seconds": 4,
+  "peak": 0.6356,
+  "rms": 0.0647,
+  "start": 0.02,
+  "end": 3.6100000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-hint-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.305,
+  "rms": 0.0477,
+  "start": 0.030000000000000002,
+  "end": 0.95,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-hint-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.4839,
+  "rms": 0.0813,
+  "start": 0,
+  "end": 0.7,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-hint-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1908,
+  "rms": 0.0279,
+  "start": 0,
+  "end": 0.75,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-level-A.mp3": {
+  "seconds": 3.48,
+  "peak": 0.66,
+  "rms": 0.1006,
+  "start": 0,
+  "end": 2.3400000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-level-B.mp3": {
+  "seconds": 3.48,
+  "peak": 0.7483,
+  "rms": 0.0823,
+  "start": 0,
+  "end": 2.01,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-level-C.mp3": {
+  "seconds": 3.48,
+  "peak": 0.6649,
+  "rms": 0.096,
+  "start": 0,
+  "end": 3.0500000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-locked-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.1219,
+  "rms": 0.0469,
+  "start": 0,
+  "end": 0.4,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-locked-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.1067,
+  "rms": 0.0109,
+  "start": 0,
+  "end": 0.38,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-locked-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.8307,
+  "rms": 0.202,
+  "start": 0,
+  "end": 0.4,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-play-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5684,
+  "rms": 0.1026,
+  "start": 0.030000000000000002,
+  "end": 0.96,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-play-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.8496,
+  "rms": 0.0456,
+  "start": 0.009999999999999998,
+  "end": 0.85,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-play-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3642,
+  "rms": 0.0594,
+  "start": 0,
+  "end": 0.58,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-solved-A.mp3": {
+  "seconds": 2,
+  "peak": 0.3142,
+  "rms": 0.0772,
+  "start": 0,
+  "end": 1.6300000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-solved-B.mp3": {
+  "seconds": 2,
+  "peak": 0.6051,
+  "rms": 0.0944,
+  "start": 0,
+  "end": 1.49,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-solved-C.mp3": {
+  "seconds": 2,
+  "peak": 0.9371,
+  "rms": 0.1601,
+  "start": 0,
+  "end": 1.4100000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-stop-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.0667,
+  "rms": 0.0058,
+  "start": 0.27999999999999997,
+  "end": 0.69,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/interface/ui-stop-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.2583,
+  "rms": 0.0416,
+  "start": 0,
+  "end": 0.59,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-stop-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.7594,
+  "rms": 0.1123,
+  "start": 0,
+  "end": 0.41000000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-tap-A.mp3": {
+  "seconds": 0.48,
+  "peak": 0.6478,
+  "rms": 0.0554,
+  "start": 0.06999999999999999,
+  "end": 0.28,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-tap-B.mp3": {
+  "seconds": 0.48,
+  "peak": 0.8545,
+  "rms": 0.1616,
+  "start": 0,
+  "end": 0.14,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-tap-C.mp3": {
+  "seconds": 0.48,
+  "peak": 0.7239,
+  "rms": 0.1985,
+  "start": 0,
+  "end": 0.14,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-unlock-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.4745,
+  "rms": 0.0233,
+  "start": 0,
+  "end": 0.61,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-unlock-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.7931,
+  "rms": 0.0443,
+  "start": 0.030000000000000002,
+  "end": 0.77,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-unlock-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5227,
+  "rms": 0.0854,
+  "start": 0,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-walk-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.0528,
+  "rms": 0.0031,
+  "start": 1.06,
+  "end": 1.32,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/interface/ui-walk-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.7032,
+  "rms": 0.1027,
+  "start": 0,
+  "end": 0.73,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/interface/ui-walk-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.607,
+  "rms": 0.0973,
+  "start": 0,
+  "end": 1.48,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/bird-chirp-A.mp3": {
+  "seconds": 1,
+  "peak": 0.5701,
+  "rms": 0.0831,
+  "start": 0.030000000000000002,
+  "end": 0.69,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/bird-chirp-B.mp3": {
+  "seconds": 1,
+  "peak": 0.6328,
+  "rms": 0.1254,
+  "start": 0,
+  "end": 0.95,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/bird-chirp-C.mp3": {
+  "seconds": 1,
+  "peak": 0.7262,
+  "rms": 0.1212,
+  "start": 0,
+  "end": 0.74,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/birds-away-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.0916,
+  "rms": 0.0203,
+  "start": 0.15000000000000002,
+  "end": 1.2000000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/birds-away-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.1412,
+  "rms": 0.0185,
+  "start": 0.19,
+  "end": 1.04,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/birds-away-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5404,
+  "rms": 0.0965,
+  "start": 0,
+  "end": 1.4300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/cat-meow-A.mp3": {
+  "seconds": 1,
+  "peak": 0.2122,
+  "rms": 0.0491,
+  "start": 0.030000000000000002,
+  "end": 0.96,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/cat-meow-B.mp3": {
+  "seconds": 1,
+  "peak": 0.2387,
+  "rms": 0.0519,
+  "start": 0,
+  "end": 0.9199999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/cat-meow-C.mp3": {
+  "seconds": 1,
+  "peak": 0.3407,
+  "rms": 0.075,
+  "start": 0.030000000000000002,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/dog-bark-A.mp3": {
+  "seconds": 1,
+  "peak": 0.7764,
+  "rms": 0.0869,
+  "start": 0,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/dog-bark-B.mp3": {
+  "seconds": 1,
+  "peak": 0.9205,
+  "rms": 0.1905,
+  "start": 0.030000000000000002,
+  "end": 0.37,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/dog-bark-C.mp3": {
+  "seconds": 1,
+  "peak": 0.3426,
+  "rms": 0.074,
+  "start": 0.05,
+  "end": 0.64,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ducks-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5513,
+  "rms": 0.0651,
+  "start": 0.14,
+  "end": 0.88,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ducks-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.55,
+  "rms": 0.0821,
+  "start": 0.05,
+  "end": 1.33,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ducks-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5851,
+  "rms": 0.0948,
+  "start": 0,
+  "end": 0.44,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/leaves-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.0723,
+  "rms": 0.0069,
+  "start": 0.32,
+  "end": 0.87,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/nature/leaves-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.0977,
+  "rms": 0.0139,
+  "start": 0.22,
+  "end": 0.88,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/leaves-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.112,
+  "rms": 0.0145,
+  "start": 0.22,
+  "end": 0.87,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ripples-A.mp3": {
+  "seconds": 3,
+  "peak": 0.1185,
+  "rms": 0.0092,
+  "start": 0.45,
+  "end": 1.9300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ripples-B.mp3": {
+  "seconds": 3,
+  "peak": 0.2014,
+  "rms": 0.011,
+  "start": 0.29,
+  "end": 2.56,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/ripples-C.mp3": {
+  "seconds": 3,
+  "peak": 0.1892,
+  "rms": 0.0216,
+  "start": 0.16,
+  "end": 2.8000000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-big-A.mp3": {
+  "seconds": 1.36,
+  "peak": 0.4459,
+  "rms": 0.0329,
+  "start": 0.05,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-big-B.mp3": {
+  "seconds": 1.36,
+  "peak": 0.1966,
+  "rms": 0.0477,
+  "start": 0,
+  "end": 1.26,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-big-C.mp3": {
+  "seconds": 1.36,
+  "peak": 0.3448,
+  "rms": 0.0576,
+  "start": 0.009999999999999998,
+  "end": 1.1,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-small-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.6281,
+  "rms": 0.0544,
+  "start": 0.009999999999999998,
+  "end": 0.43000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-small-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.5481,
+  "rms": 0.0418,
+  "start": 0,
+  "end": 0.39,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/splash-small-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.425,
+  "rms": 0.0468,
+  "start": 0,
+  "end": 0.37,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/wind-mist-A.mp3": {
+  "seconds": 3,
+  "peak": 0.3438,
+  "rms": 0.0546,
+  "start": 0.23,
+  "end": 1.76,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/wind-mist-B.mp3": {
+  "seconds": 3,
+  "peak": 0.4092,
+  "rms": 0.0684,
+  "start": 0.06999999999999999,
+  "end": 1.6600000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/nature/wind-mist-C.mp3": {
+  "seconds": 3,
+  "peak": 0.4214,
+  "rms": 0.073,
+  "start": 0.09999999999999999,
+  "end": 2.12,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/balloon-squeak-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.4641,
+  "rms": 0.0925,
+  "start": 0.09999999999999999,
+  "end": 0.65,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/balloon-squeak-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.522,
+  "rms": 0.0957,
+  "start": 0.039999999999999994,
+  "end": 0.7999999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/balloon-squeak-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.8397,
+  "rms": 0.1359,
+  "start": 0,
+  "end": 0.45,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/bell-ding-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3749,
+  "rms": 0.0322,
+  "start": 0.05,
+  "end": 0.95,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/bell-ding-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.6508,
+  "rms": 0.1171,
+  "start": 0.030000000000000002,
+  "end": 1.1500000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/bell-ding-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5813,
+  "rms": 0.086,
+  "start": 0.009999999999999998,
+  "end": 1.1,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/boat-bob-A.mp3": {
+  "seconds": 1.6,
+  "peak": 0.6075,
+  "rms": 0.0616,
+  "start": 0.039999999999999994,
+  "end": 1.1900000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/boat-bob-B.mp3": {
+  "seconds": 1.6,
+  "peak": 0.5415,
+  "rms": 0.0824,
+  "start": 0.05,
+  "end": 1.27,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/boat-bob-C.mp3": {
+  "seconds": 1.6,
+  "peak": 0.3908,
+  "rms": 0.0577,
+  "start": 0.06999999999999999,
+  "end": 1.1300000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-pick-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2281,
+  "rms": 0.0266,
+  "start": 0.09999999999999999,
+  "end": 0.48000000000000004,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-pick-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.446,
+  "rms": 0.055,
+  "start": 0.08,
+  "end": 0.49000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-pick-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.436,
+  "rms": 0.047,
+  "start": 0.06,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-put-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2456,
+  "rms": 0.0413,
+  "start": 0.08,
+  "end": 0.4,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-put-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.5167,
+  "rms": 0.0642,
+  "start": 0.14,
+  "end": 0.42000000000000004,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-put-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.9126,
+  "rms": 0.1,
+  "start": 0,
+  "end": 0.36000000000000004,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-slide-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.2744,
+  "rms": 0.0413,
+  "start": 0.15000000000000002,
+  "end": 1.09,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-slide-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.2574,
+  "rms": 0.0557,
+  "start": 0.06999999999999999,
+  "end": 1.1800000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/box-slide-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5747,
+  "rms": 0.0482,
+  "start": 0.11,
+  "end": 0.95,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/code-dial-A.mp3": {
+  "seconds": 0.48,
+  "peak": 0.5139,
+  "rms": 0.0352,
+  "start": 0,
+  "end": 0.39,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/code-dial-B.mp3": {
+  "seconds": 0.48,
+  "peak": 0.4423,
+  "rms": 0.0289,
+  "start": 0,
+  "end": 0.35000000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/code-dial-C.mp3": {
+  "seconds": 0.48,
+  "peak": 0.4541,
+  "rms": 0.0195,
+  "start": 0.009999999999999998,
+  "end": 0.44,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/cord-pull-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.549,
+  "rms": 0.0575,
+  "start": 0.2,
+  "end": 0.39,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/cord-pull-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.3673,
+  "rms": 0.032,
+  "start": 0.02,
+  "end": 0.31,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/cord-pull-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.7566,
+  "rms": 0.0372,
+  "start": 0.030000000000000002,
+  "end": 0.41000000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/crate-drag-A.mp3": {
+  "seconds": 1.6,
+  "peak": 0.7045,
+  "rms": 0.1166,
+  "start": 0.13,
+  "end": 1.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/crate-drag-B.mp3": {
+  "seconds": 1.6,
+  "peak": 0.5329,
+  "rms": 0.087,
+  "start": 0.08,
+  "end": 1.58,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/crate-drag-C.mp3": {
+  "seconds": 1.6,
+  "peak": 0.3528,
+  "rms": 0.0614,
+  "start": 0.15000000000000002,
+  "end": 1.59,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/door-creak-A.mp3": {
+  "seconds": 1.6,
+  "peak": 0.0707,
+  "rms": 0.0095,
+  "start": 0.08,
+  "end": 1.3,
+  "silent": false,
+  "quiet": true
+ },
+ "sounds/objects/door-creak-B.mp3": {
+  "seconds": 1.6,
+  "peak": 0.1491,
+  "rms": 0.0268,
+  "start": 0.030000000000000002,
+  "end": 1.5,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/door-creak-C.mp3": {
+  "seconds": 1.6,
+  "peak": 0.3363,
+  "rms": 0.057,
+  "start": 0.05,
+  "end": 1.4400000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/door-unlock-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.207,
+  "rms": 0.0171,
+  "start": 0.51,
+  "end": 0.91,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/door-unlock-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5197,
+  "rms": 0.0128,
+  "start": 0.11,
+  "end": 1.04,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/door-unlock-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.7045,
+  "rms": 0.0369,
+  "start": 0.12000000000000001,
+  "end": 0.7999999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-close-A.mp3": {
+  "seconds": 1,
+  "peak": 0.4861,
+  "rms": 0.0464,
+  "start": 0,
+  "end": 0.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-close-B.mp3": {
+  "seconds": 1,
+  "peak": 0.796,
+  "rms": 0.0607,
+  "start": 0.009999999999999998,
+  "end": 0.57,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-close-C.mp3": {
+  "seconds": 1,
+  "peak": 0.8422,
+  "rms": 0.0891,
+  "start": 0,
+  "end": 0.64,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-open-A.mp3": {
+  "seconds": 1.36,
+  "peak": 0.8761,
+  "rms": 0.0415,
+  "start": 0.009999999999999998,
+  "end": 0.6699999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-open-B.mp3": {
+  "seconds": 1.36,
+  "peak": 0.7559,
+  "rms": 0.074,
+  "start": 0.009999999999999998,
+  "end": 0.48000000000000004,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/gate-open-C.mp3": {
+  "seconds": 1.36,
+  "peak": 0.869,
+  "rms": 0.055,
+  "start": 0.05,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/ladder-down-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5357,
+  "rms": 0.0425,
+  "start": 0.52,
+  "end": 0.96,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/ladder-down-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6894,
+  "rms": 0.0369,
+  "start": 0.25,
+  "end": 1.09,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/ladder-down-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6886,
+  "rms": 0.0378,
+  "start": 0.21000000000000002,
+  "end": 1.12,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/lever-pull-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.4158,
+  "rms": 0.0515,
+  "start": 0,
+  "end": 0.57,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/lever-pull-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.5505,
+  "rms": 0.047,
+  "start": 0.11,
+  "end": 0.62,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/lever-pull-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.7888,
+  "rms": 0.0719,
+  "start": 0,
+  "end": 0.46,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/paper-rustle-A.mp3": {
+  "seconds": 1,
+  "peak": 0.156,
+  "rms": 0.0087,
+  "start": 0.17,
+  "end": 0.89,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/paper-rustle-B.mp3": {
+  "seconds": 1,
+  "peak": 0.3877,
+  "rms": 0.02,
+  "start": 0.11,
+  "end": 0.85,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/paper-rustle-C.mp3": {
+  "seconds": 1,
+  "peak": 0.3772,
+  "rms": 0.0228,
+  "start": 0.009999999999999998,
+  "end": 0.87,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/parasol-pop-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.37,
+  "rms": 0.0594,
+  "start": 0.11,
+  "end": 0.49000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/parasol-pop-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.6015,
+  "rms": 0.0827,
+  "start": 0.09,
+  "end": 0.51,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/parasol-pop-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.7322,
+  "rms": 0.1087,
+  "start": 0.02,
+  "end": 0.5,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-bend-A.mp3": {
+  "seconds": 1.36,
+  "peak": 0.3927,
+  "rms": 0.0324,
+  "start": 0.030000000000000002,
+  "end": 1.25,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-bend-B.mp3": {
+  "seconds": 1.36,
+  "peak": 0.1887,
+  "rms": 0.0209,
+  "start": 0.09,
+  "end": 1.1400000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-bend-C.mp3": {
+  "seconds": 1.36,
+  "peak": 0.8245,
+  "rms": 0.0671,
+  "start": 0.009999999999999998,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-creak-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1966,
+  "rms": 0.0122,
+  "start": 0.12000000000000001,
+  "end": 1.03,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-creak-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.439,
+  "rms": 0.0321,
+  "start": 0.08,
+  "end": 0.99,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plank-creak-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.4945,
+  "rms": 0.0996,
+  "start": 0.06999999999999999,
+  "end": 1.08,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-down-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.7943,
+  "rms": 0.0619,
+  "start": 0.05,
+  "end": 0.32,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-down-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.8988,
+  "rms": 0.047,
+  "start": 0,
+  "end": 0.5,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-down-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.8973,
+  "rms": 0.0663,
+  "start": 0,
+  "end": 0.45,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-up-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.6818,
+  "rms": 0.044,
+  "start": 0,
+  "end": 0.45,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-up-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.4598,
+  "rms": 0.0531,
+  "start": 0,
+  "end": 0.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/plate-up-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.8217,
+  "rms": 0.0745,
+  "start": 0,
+  "end": 0.52,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/rope-pull-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1053,
+  "rms": 0.0119,
+  "start": 0.23,
+  "end": 1.09,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/rope-pull-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6944,
+  "rms": 0.1245,
+  "start": 0.06,
+  "end": 1.07,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/rope-pull-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.5135,
+  "rms": 0.0671,
+  "start": 0.06999999999999999,
+  "end": 1.01,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-creak-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1852,
+  "rms": 0.0241,
+  "start": 0.08,
+  "end": 1.07,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-creak-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.1786,
+  "rms": 0.0201,
+  "start": 0.12000000000000001,
+  "end": 1.02,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-creak-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.7825,
+  "rms": 0.092,
+  "start": 0.030000000000000002,
+  "end": 1.2,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-thump-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.6204,
+  "rms": 0.0665,
+  "start": 0,
+  "end": 0.32,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-thump-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.4664,
+  "rms": 0.0518,
+  "start": 0,
+  "end": 0.49000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/objects/seesaw-thump-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.5565,
+  "rms": 0.0667,
+  "start": 0,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-aww-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.3297,
+  "rms": 0.0861,
+  "start": 0.05,
+  "end": 1.1,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-aww-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.2192,
+  "rms": 0.0543,
+  "start": 0,
+  "end": 1.2,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-aww-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.4035,
+  "rms": 0.1008,
+  "start": 0.02,
+  "end": 1.1400000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-cheer-A.mp3": {
+  "seconds": 1.76,
+  "peak": 0.6835,
+  "rms": 0.1699,
+  "start": 0.15000000000000002,
+  "end": 1.7300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-cheer-B.mp3": {
+  "seconds": 1.76,
+  "peak": 0.5159,
+  "rms": 0.0949,
+  "start": 0.039999999999999994,
+  "end": 1.52,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-cheer-C.mp3": {
+  "seconds": 1.76,
+  "peak": 0.6283,
+  "rms": 0.1278,
+  "start": 0.05,
+  "end": 1.4500000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-effort-A.mp3": {
+  "seconds": 1,
+  "peak": 0.4165,
+  "rms": 0.1455,
+  "start": 0.009999999999999998,
+  "end": 0.75,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-effort-B.mp3": {
+  "seconds": 1,
+  "peak": 0.2629,
+  "rms": 0.0602,
+  "start": 0.06999999999999999,
+  "end": 0.82,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-effort-C.mp3": {
+  "seconds": 1,
+  "peak": 0.6295,
+  "rms": 0.1508,
+  "start": 0,
+  "end": 0.86,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-gasp-A.mp3": {
+  "seconds": 1,
+  "peak": 0.3866,
+  "rms": 0.0942,
+  "start": 0.030000000000000002,
+  "end": 0.61,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-gasp-B.mp3": {
+  "seconds": 1,
+  "peak": 0.4731,
+  "rms": 0.1553,
+  "start": 0.06,
+  "end": 0.8099999999999999,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-gasp-C.mp3": {
+  "seconds": 1,
+  "peak": 0.7856,
+  "rms": 0.241,
+  "start": 0.06999999999999999,
+  "end": 0.65,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-giggle-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2423,
+  "rms": 0.0581,
+  "start": 0.009999999999999998,
+  "end": 1.2300000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-giggle-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.1525,
+  "rms": 0.0465,
+  "start": 0.02,
+  "end": 1.37,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-giggle-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3966,
+  "rms": 0.094,
+  "start": 0.009999999999999998,
+  "end": 1.2000000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hmm-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2854,
+  "rms": 0.0747,
+  "start": 0.09999999999999999,
+  "end": 1.3900000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hmm-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2418,
+  "rms": 0.0723,
+  "start": 0.18000000000000002,
+  "end": 1.48,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hmm-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2307,
+  "rms": 0.0677,
+  "start": 0.14,
+  "end": 1.34,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hop-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.4519,
+  "rms": 0.0888,
+  "start": 0.009999999999999998,
+  "end": 0.49000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hop-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.4793,
+  "rms": 0.086,
+  "start": 0.06,
+  "end": 0.43000000000000005,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hop-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.4819,
+  "rms": 0.0737,
+  "start": 0.06999999999999999,
+  "end": 0.6,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hup-A.mp3": {
+  "seconds": 0.8,
+  "peak": 0.2563,
+  "rms": 0.0749,
+  "start": 0.06,
+  "end": 0.27,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hup-B.mp3": {
+  "seconds": 0.8,
+  "peak": 0.8635,
+  "rms": 0.1923,
+  "start": 0.009999999999999998,
+  "end": 0.31,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-hup-C.mp3": {
+  "seconds": 0.8,
+  "peak": 0.5423,
+  "rms": 0.0922,
+  "start": 0.24000000000000002,
+  "end": 0.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-laugh-A.mp3": {
+  "seconds": 2,
+  "peak": 0.5201,
+  "rms": 0.0809,
+  "start": 0.05,
+  "end": 1.7100000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-laugh-B.mp3": {
+  "seconds": 2,
+  "peak": 0.5704,
+  "rms": 0.0578,
+  "start": 0.11,
+  "end": 1.76,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-laugh-C.mp3": {
+  "seconds": 2,
+  "peak": 0.647,
+  "rms": 0.0876,
+  "start": 0.33999999999999997,
+  "end": 1.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oh-A.mp3": {
+  "seconds": 1,
+  "peak": 0.2502,
+  "rms": 0.0623,
+  "start": 0.009999999999999998,
+  "end": 0.78,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oh-B.mp3": {
+  "seconds": 1,
+  "peak": 0.6942,
+  "rms": 0.1768,
+  "start": 0,
+  "end": 0.75,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oh-C.mp3": {
+  "seconds": 1,
+  "peak": 0.4918,
+  "rms": 0.1301,
+  "start": 0,
+  "end": 0.95,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oof-A.mp3": {
+  "seconds": 0.6,
+  "peak": 0.216,
+  "rms": 0.0563,
+  "start": 0.009999999999999998,
+  "end": 0.51,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oof-B.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2609,
+  "rms": 0.0617,
+  "start": 0,
+  "end": 0.53,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-oof-C.mp3": {
+  "seconds": 0.6,
+  "peak": 0.2436,
+  "rms": 0.083,
+  "start": 0,
+  "end": 0.39,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-worried-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2286,
+  "rms": 0.0597,
+  "start": 0.09999999999999999,
+  "end": 1.28,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-worried-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.5838,
+  "rms": 0.1367,
+  "start": 0.11,
+  "end": 1.29,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-worried-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.1563,
+  "rms": 0.0514,
+  "start": 0.08,
+  "end": 1.4100000000000001,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yawn-A.mp3": {
+  "seconds": 2.48,
+  "peak": 0.267,
+  "rms": 0.0521,
+  "start": 0.11,
+  "end": 2.0900000000000003,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yawn-B.mp3": {
+  "seconds": 2.48,
+  "peak": 0.3228,
+  "rms": 0.0761,
+  "start": 0.17,
+  "end": 2.27,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yawn-C.mp3": {
+  "seconds": 2.48,
+  "peak": 0.6375,
+  "rms": 0.0737,
+  "start": 0.12000000000000001,
+  "end": 2.23,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yay-A.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6782,
+  "rms": 0.1722,
+  "start": 0,
+  "end": 1.1900000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yay-B.mp3": {
+  "seconds": 1.2,
+  "peak": 0.6156,
+  "rms": 0.1172,
+  "start": 0,
+  "end": 0.88,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/sister/sis-yay-C.mp3": {
+  "seconds": 1.2,
+  "peak": 0.8707,
+  "rms": 0.1568,
+  "start": 0,
+  "end": 1.2,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-highfive-A.mp3": {
+  "seconds": 1.48,
+  "peak": 0.2846,
+  "rms": 0.0516,
+  "start": 0,
+  "end": 1.48,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-highfive-B.mp3": {
+  "seconds": 1.48,
+  "peak": 0.6055,
+  "rms": 0.1133,
+  "start": 0,
+  "end": 1.12,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-highfive-C.mp3": {
+  "seconds": 1.48,
+  "peak": 0.3488,
+  "rms": 0.0181,
+  "start": 0.030000000000000002,
+  "end": 1.36,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-laugh-A.mp3": {
+  "seconds": 2.48,
+  "peak": 0.4262,
+  "rms": 0.0635,
+  "start": 0.12000000000000001,
+  "end": 2.35,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-laugh-B.mp3": {
+  "seconds": 2.48,
+  "peak": 0.2716,
+  "rms": 0.0389,
+  "start": 0.33999999999999997,
+  "end": 2.46,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-laugh-C.mp3": {
+  "seconds": 2.48,
+  "peak": 0.6007,
+  "rms": 0.0926,
+  "start": 0.08,
+  "end": 2.47,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-tada-A.mp3": {
+  "seconds": 2,
+  "peak": 0.7095,
+  "rms": 0.1483,
+  "start": 0,
+  "end": 1.83,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-tada-B.mp3": {
+  "seconds": 2,
+  "peak": 0.8468,
+  "rms": 0.1351,
+  "start": 0,
+  "end": 1.6900000000000002,
+  "silent": false,
+  "quiet": false
+ },
+ "sounds/together/both-tada-C.mp3": {
+  "seconds": 2,
+  "peak": 0.5441,
+  "rms": 0.1185,
+  "start": 0.24000000000000002,
+  "end": 1.9100000000000001,
+  "silent": false,
+  "quiet": false
+ }
+}
